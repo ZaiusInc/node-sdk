@@ -1,0 +1,83 @@
+meta:
+  name:
+  version:
+  author:
+  docs:
+  desc:
+  contact:
+
+lifecycle:
+  #These could use the function spec as below
+  install: #what to run when the app is installed
+    #System will suspend pre-existing webhooks for the installation
+    #System will unschedule pre-existing jobs for the installation
+    #Note: we will need this for ops anyways to suspend/remove misbehaving apps
+    migrateData: ...
+    installExternalWebhooks: ....
+    #System will update webhooks and re-enable them
+    #System will reschedule jobs
+  uninstall: #what to run on uninstall
+    #Suspend webhooks
+    #Unschedule jobs
+
+#Future: environment: to apply as baseline for all functions/jobs in the app
+
+functions:
+  foo:
+    #Function spec
+    entry_point: functions.doFoo
+    runtime: node8
+    environment:
+      ENV_VAR1: 123
+    timeout: 10 seconds #Can validate this at compile time to sanity check
+    permissions:
+      -READ_WRITE_KV
+      -READ_DOCUMENTS
+      -WRITE_ZAIUS_ORDERS
+      -<READ|WRITE>_<SVC>
+    triggers:
+      interval: x seconds | minutes | hours | days | weeks | months
+      cron: <cron_expression>
+      #Always exposed as a webhook
+      #Future: events
+    resources:
+      mem: 100mb
+      cpu: 1
+    deployment: #internal only
+      backend: ECS | Lambda | OpenFaas | ...
+      scaling:
+        min: 1
+        max: 5
+
+jobs:
+  importMyData:
+    entry_point: jobs.importMyData
+    triggers:
+      interval: x seconds | minutes | hours | days | weeks | months
+      cron: <cron_expression>
+      #Always allow via webhook for testing/debugging
+      #Future: events
+    runtime: ruby@2.10
+    permissions:
+    environment:
+    timeout: 10 minutes #Can apply a limit to this at compile time to sanity check
+    resource:
+      mem: 1GB
+      cpu: 4
+      disk: 16GB
+    deployment: #internal only
+      backend: AwsBatch | ECS | K8S
+      scaling:
+        min: 1
+        max: 5
+
+schema:
+  objects:
+    products:
+      <app_id>_FIELD_1:
+        type: string
+        display_name:
+        constraints:
+        meta_1: "SOME INFO HERE"
+      <app_id>_FIELD_2:
+        type: string
