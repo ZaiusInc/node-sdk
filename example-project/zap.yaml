@@ -2,11 +2,12 @@ meta:
   app_id:
   display_name:
   version:
-  vendor: Shopify
+  vendor: shopify
   support_url:
   description:
   contact_email:
-  #Future: Cost info, release notes?
+  pricing_url: #optional
+  #Future: release notes?
 
 runtime: node11
 
@@ -20,21 +21,19 @@ defaults:
     environment:
       ENV_VAR1: @my_secret@ #inherit defaults
 
-webhooks:
+functions:
   foo:
     #Function spec
     entry_point: functions.doFoo
-    environment:
-      ENV_VAR2: 2 #inherit defaults
-    permissions:
-      -WRITE_ZAIUS_ORDERS #inherits defaults
     triggers:
+      url: post | get // if not included, inferred to be private
       interval: x seconds | minutes | hours | days | weeks | months
       cron: <cron_expression>
-      #Always exposed as a webhook
-      #Future: events
-    size: small | medium | large
-    visibility: public | private
+      events:
+        - type: consent
+          action: opt-in
+        - type: list
+          action: subscribe
 
 jobs:
   importMyData:
@@ -43,10 +42,11 @@ jobs:
       interval: x seconds | minutes | hours | days | weeks | months
       cron: <cron_expression>
       #Always allow via webhook for testing/debugging
-      #Future: events
-    runtime: ruby@2.10
-    permissions:
-    environment:
-    timeout: 10 minutes #Can apply a limit to this at compile time to sanity check
-    size: small | medium | large
-    visibility: public | private
+
+schema: #discuss format
+  objects:
+    - reviews
+  fields:
+    - products.fieldname
+  relationships:
+    - 
