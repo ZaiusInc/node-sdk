@@ -1,5 +1,6 @@
 meta:
   app_id:
+  type: #data | channel
   display_name:
   version:
   vendor: shopify
