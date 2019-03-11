@@ -16,9 +16,34 @@ runtime: node11
 #i.e. install.js, upgrade.js, uninstall.js for node11
 defaults:
     permissions:
-      -READ_WRITE_KV
-      -READ_DOCUMENTS
-      -<READ|WRITE>_<SVC>
+      read:
+        - consent
+        - lists
+        - schema: # can request "schema" for all underlying
+          - relationships
+          - fields
+          - objects
+          - identifiers
+        - objects:
+          - products
+          - orders
+          - zendesk_tickets
+      write:
+        - consent
+        - lists
+        - compliance_consent
+        - schema: 
+          - relationships
+          - fields
+          - objects
+          - identifiers
+        - objects:
+          - products
+          - orders
+          - zendesk_tickets
+          - customers
+          - events
+         
     environment:
       ENV_VAR1: @my_secret@ #inherit defaults
 
@@ -27,7 +52,7 @@ functions:
     #Function spec
     entry_point: functions.doFoo
     triggers:
-      url: post | get // if not included, inferred to be private
+      url: post | get | delete | patch | put // if not included, it is assumed that this function can only be accessed from zap logic (i.e. there is no URL created)
       interval: x seconds | minutes | hours | days | weeks | months
       cron: <cron_expression>
       events:
