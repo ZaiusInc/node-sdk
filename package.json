@@ -1,0 +1,33 @@
+{
+  "name": "@zaius/zip-node-sdk",
+  "version": "1.0.0",
+  "description": "Node SDK for Zaius Apps",
+  "repository": "https://github.com/ZaiusInc/zip-node-sdk",
+  "license": "UNLICENSED",
+  "author": "Zaius, Inc",
+  "files": [
+    "./dist/",
+    "./src/"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo tbd",
+    "lint": "tslint --project ./tsconfig.json --config ./tslint.json",
+    "build": "tsc",
+    "build-watch": "tsc -w"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^11.11.3",
+    "ts-node": "^8.0.3",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "tslint": "^5.14.0",
+    "typescript": "^3.3.3333"
+  },
+  "peerDependencies": {}
+}
