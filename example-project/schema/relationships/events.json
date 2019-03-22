@@ -1,0 +1,11 @@
+{
+  "name": "my_object",
+  "display_name": "Related Object",
+  "child_object": "my_objects",
+  "join_fields": [
+    {
+      "parent": "my_object_id",
+      "child": "id"
+    }
+  ]
+}
