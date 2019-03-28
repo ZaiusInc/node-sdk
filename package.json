@@ -16,14 +16,22 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo tbd",
+    "test": "jest",
     "lint": "tslint --project ./tsconfig.json --config ./tslint.json",
     "build": "tsc",
     "build-watch": "tsc -w"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/deep-freeze": "^0.1.1",
+    "axios": "^0.18.0"
+  },
   "devDependencies": {
+    "@types/jest": "^24.0.11",
     "@types/node": "^11.11.3",
+    "deep-freeze": "0.0.1",
+    "jest": "^24.5.0",
+    "ts-jest": "^24.0.0",
     "ts-node": "^8.0.3",
     "ts-node-dev": "^1.0.0-pre.32",
     "tslint": "^5.14.0",
