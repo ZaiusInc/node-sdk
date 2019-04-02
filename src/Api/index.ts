@@ -1,8 +1,11 @@
 import {event} from './Events/event';
-import * as _Zaius from './Types';
+import {config, configure} from './lib';
+import * as Zaius from './Types';
 
-export const z = {
+const z = {
+  configure,
+  config,
   event
 };
 
-export import Zaius = _Zaius;
+export {z, Zaius};
