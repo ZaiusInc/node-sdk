@@ -1,8 +1,0 @@
-[
-  {
-    "name": "my_object_id",
-    "type": "number",
-    "display_name": "Object Id",
-    "description": "The object id related to the event"
-  }
-]

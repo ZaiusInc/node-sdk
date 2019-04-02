@@ -23,7 +23,7 @@ functions:
   foo:
     method: POST
     entry_point: functions.doFoo
-    summary:
+    description:
 
 jobs:
   importMyData:

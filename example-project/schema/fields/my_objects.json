@@ -1,8 +1,0 @@
-[
-  {
-    "name": "name",
-    "type": "string",
-    "display_name": "Object Name",
-    "description": "Name of the object"
-  }
-]
