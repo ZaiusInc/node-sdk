@@ -1,6 +1,6 @@
 'use strict';
 
-//This may change depending on the contract we choose
+// TBD: This may change depending on the contract we choose
 module.exports.doFoo = async (event, context) => {
   return {
     statusCode: 200,
