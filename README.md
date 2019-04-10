@@ -1,2 +1,2 @@
-# zip-node-sdk
-NodeJS ZIP SDK
+# Node SDK
+Zaius node sdk for apps running in the Zaius app store.

@@ -1,8 +1,8 @@
 {
-  "name": "@zaius/zip-node-sdk",
+  "name": "@zaius/node-sdk",
   "version": "1.0.0",
   "description": "Node SDK for Zaius Apps",
-  "repository": "https://github.com/ZaiusInc/zip-node-sdk",
+  "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "UNLICENSED",
   "author": "Zaius, Inc",
   "files": [
@@ -37,5 +37,8 @@
     "tslint": "^5.14.0",
     "typescript": "^3.3.3333"
   },
-  "peerDependencies": {}
+  "peerDependencies": {},
+  "publishConfig": {
+    "registry": "http://npm-registry.prod.zaius"
+  }
 }
