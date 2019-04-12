@@ -12,15 +12,15 @@ module.exports = {
     ...defaults.moduleFileExtensions,
     "ts"
   ],
-  setupTestFrameworkScriptFile: './src/test/setup.ts',
+  setupFilesAfterEnv: ['./src/test/setup.ts'],
   verbose: true,
   collectCoverageFrom: ['src/**/*', '!src/test/**/*', '!src/**/index.ts'],
   coverageThreshold: {
     global: {
       branches: 90,
-      functions: 90,
-      lines: 90,
-      statements: 90
+      functions: 95,
+      lines: 95,
+      statements: 95
     }
   },
   testEnvironment: 'node'
