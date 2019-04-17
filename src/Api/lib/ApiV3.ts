@@ -25,7 +25,7 @@ export namespace ApiV3 {
     data: T;
     status: number;
     statusText: string;
-    headers: any;
+    headers: {[name: string]: string};
   }
 
   export enum ErrorCode {
@@ -73,6 +73,7 @@ export namespace ApiV3 {
   ): Promise<HttpResponse<T>> {
     const url = joinUri(config.apiBasePath, path);
     const data = JSON.stringify(payload);
+
     return new Promise((resolve, reject) => {
       Axios.request({
         method,
@@ -141,9 +142,11 @@ export namespace ApiV3 {
       'x-api-key': config.publicApiKey,
       'Content-Type': 'application/json'
     };
-    if (config.requestId) {
-      headersObject['z-request-id'] = config.requestId;
-    }
+    // TODO: Need a way to send an originating request id rather than have
+    // all v3 api calls use the same request id for a webhook
+    // if (config.requestId) {
+    //   headersObject['z-request-id'] = config.requestId;
+    // }
     return headersObject;
   }
 }
