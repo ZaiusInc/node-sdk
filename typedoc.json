@@ -1,0 +1,11 @@
+{
+  "out": "./docs/",
+  "mode": "file",
+  "module": "commonjs",
+  "target": "ES6",
+  "theme": "default",
+  "stripInternal": true,
+  "excludeNotExported": false,
+  "excludePrivate": true,
+  "exclude": "./src/Api/lib/**/*"
+}

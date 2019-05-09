@@ -1,6 +1,25 @@
-import {ApiV3} from './ApiV3';
+import {ApiV3} from '../lib/ApiV3';
 
-export interface ApiConfig {
+export interface Config {
+  /**
+   * The public API key for making v3 API requests.
+   * Usually the Zaius tracker ID for the account
+   */
+  publicApiKey: string;
+  /**
+   * The private API key for making v3 API requests.
+   */
+  privateApiKey?: string;
+  /**
+   * A request ID to be added to all logging
+   */
+  requestId?: string;
+}
+
+/**
+ * @hidden
+ */
+export interface InternalConfig extends Config {
   trackerId: string;
   apiBasePath: string;
   publicApiKey: string;
@@ -8,11 +27,10 @@ export interface ApiConfig {
   requestId?: string;
 }
 
-interface Config extends ApiConfig {
-  trackerId: string;
-}
-
-const DEFAULT_CONFIG: Config = Object.freeze({
+/**
+ * @hidden
+ */
+const DEFAULT_CONFIG: InternalConfig = Object.freeze({
   trackerId: process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
   apiBasePath: process.env['ZAIUS_SDK_API_BASE_PATH'] || 'https://api.zaius.com/v3/',
   requestId: process.env['ZAIUS_SDK_TEST_REQUEST_ID'],
@@ -20,7 +38,10 @@ const DEFAULT_CONFIG: Config = Object.freeze({
   privateApiKey: process.env['ZAIUS_SDK_PRIVATE_API_KEY']
 });
 
-let configuration: Config = DEFAULT_CONFIG;
+/**
+ * @hidden
+ */
+let configuration: InternalConfig = DEFAULT_CONFIG;
 
 /**
  * Exposed method to set the configuration options
@@ -28,11 +49,11 @@ let configuration: Config = DEFAULT_CONFIG;
  * usage z.configure({...})
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
-export function configure(newConfig: Config | null) {
+export function configure(newConfig: Config | InternalConfig | null) {
   if (newConfig == null) {
     configuration = DEFAULT_CONFIG;
   } else {
-    configuration = newConfig;
+    configuration = Object.assign({}, DEFAULT_CONFIG, newConfig);
   }
 
   ApiV3.configure(configuration);
@@ -41,7 +62,7 @@ export function configure(newConfig: Config | null) {
 /**
  * A wrapper around the public SDK configuration values
  */
-export class ConfigWrapper {
+export class PublicConfig {
   /**
    * @returns Tracker ID, your Zaius account identifier used for collecting data and accessing APIs
    */
@@ -50,4 +71,7 @@ export class ConfigWrapper {
   }
 }
 
-export const config = new ConfigWrapper();
+/**
+ * Read access to the public values of the current configuration
+ */
+export const config = new PublicConfig();

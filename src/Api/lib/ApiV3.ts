@@ -1,14 +1,20 @@
 import Axios, {AxiosError, AxiosResponse} from 'axios';
-import {ApiConfig} from './configure';
+import {InternalConfig} from '../config/configure';
 import {joinUri} from './joinUri';
 
-let config!: ApiConfig;
+let config!: InternalConfig;
 
+/**
+ * The core of all v3 API interfaces.
+ */
 export namespace ApiV3 {
-  export function configure(newConfig: ApiConfig) {
+  export function configure(newConfig: InternalConfig) {
     config = newConfig;
   }
 
+  /**
+   * The response payload format of a Zaius v3 API call
+   */
   export interface V3Response {
     title: string;
     status: number;
@@ -20,6 +26,9 @@ export namespace ApiV3 {
     };
   }
 
+  /**
+   * An http response from a v3 API call
+   */
   export interface HttpResponse<T extends V3Response = V3Response> {
     success: boolean;
     data: T;

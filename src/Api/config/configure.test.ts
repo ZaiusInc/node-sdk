@@ -1,5 +1,5 @@
 import 'jest';
-import {ApiV3} from './ApiV3';
+import {ApiV3} from '../lib/ApiV3';
 import {config, configure} from './configure';
 
 jest.mock('./ApiV3');
