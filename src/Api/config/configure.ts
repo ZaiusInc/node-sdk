@@ -69,6 +69,14 @@ export class PublicConfig {
   public get trackerId(): string {
     return configuration.trackerId;
   }
+
+  /**
+   * @returns The public API key for making v3 API requests.
+   * Usually the Zaius tracker ID for the account
+   */
+  public get publicApiKey(): string {
+    return configuration.publicApiKey;
+  }
 }
 
 /**
