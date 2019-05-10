@@ -25,12 +25,22 @@ describe('configure', () => {
   it('exposes the tracker id', () => {
     const configuration = {
       trackerId: 'my_tracker_id',
-      apiBasePath: 'https://api.zaius.com/v3/',
       publicApiKey: 'pub_api_key'
     };
 
     configure(configuration);
 
     expect(config.trackerId).toEqual('my_tracker_id');
+  });
+
+  it('exposes the public API key', () => {
+    const configuration = {
+      trackerId: 'my_tracker_id',
+      publicApiKey: 'pub_api_key'
+    };
+
+    configure(configuration);
+
+    expect(config.publicApiKey).toEqual('pub_api_key');
   });
 });
