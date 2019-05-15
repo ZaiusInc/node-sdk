@@ -1,7 +1,7 @@
 import Axios, {AxiosError, AxiosResponse} from 'axios';
 import 'jest';
+import {configure} from '../config/configure';
 import {ApiV3} from './ApiV3';
-import {configure} from './configure';
 import deepFreeze = require('deep-freeze');
 
 jest.mock('axios');
