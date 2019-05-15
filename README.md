@@ -3,7 +3,7 @@ Send events and data to Zaius from Node JS.
 
 ## Getting Started
 
-Install using [yarn](https://yarnpkg.com/en/package/jest):
+Install using [yarn](https://yarnpkg.com/en/):
 
 ```bash
 yarn add @zaius/node-sdk
