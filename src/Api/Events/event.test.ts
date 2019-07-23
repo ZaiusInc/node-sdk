@@ -26,7 +26,7 @@ describe('event', () => {
     try {
       await event(payload);
     } catch (error) {
-      expect(error.message).toMatch(/maximum of 500/);
+      expect(error.message).toMatch(/maximum batch size/);
       expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     }
   });

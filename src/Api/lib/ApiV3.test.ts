@@ -1,30 +1,8 @@
-import Axios, {AxiosError, AxiosResponse} from 'axios';
 import 'jest';
+import * as nock from 'nock';
+import {Headers} from 'node-fetch';
 import {configure} from '../config/configure';
 import {ApiV3} from './ApiV3';
-import deepFreeze = require('deep-freeze');
-
-jest.mock('axios');
-
-const mockSuccess: AxiosResponse = deepFreeze({
-  data: 'data',
-  status: 200,
-  statusText: 'OK',
-  headers: {
-    'request-id': '00000000-0000-0000-0000-000000000001'
-  },
-  config: {url: 'https://foo.bar/foo'},
-  request: 'request'
-});
-
-const mockError: AxiosError = deepFreeze({
-  name: 'HTTP Error',
-  message: 'received bad request status',
-  code: 'EIDK',
-  response: undefined,
-  config: {url: 'https://foo.bar/foo'},
-  request: 'request'
-});
 
 describe('post', () => {
   beforeAll(() => {
@@ -33,18 +11,16 @@ describe('post', () => {
 
   it('performs a POST request', async () => {
     const payload = Object.freeze({foo: 'bar'});
-    (Axios.request as jest.Mock).mockReturnValue(Promise.resolve(mockSuccess));
+    nock('https://api.zaius.com').post('/v3/foo/bar', {key: 'value'}).reply(200, payload);
 
-    await ApiV3.post('/foo/bar', payload);
+    const result = await ApiV3.post('/foo/bar', {key: 'value'});
 
-    expect(Axios.request).toHaveBeenCalledWith({
-      method: 'POST',
-      url: 'https://api.zaius.com/v3/foo/bar',
-      headers: {
-        'x-api-key': 'test_tracker_id',
-        'Content-Type': 'application/json',
-      },
-      data: JSON.stringify(payload)
+    expect(result).toEqual({
+      success: true,
+      status: 200,
+      data: payload,
+      statusText: 'OK',
+      headers: new Headers({'content-type': 'application/json'})
     });
   });
 });
@@ -59,140 +35,68 @@ describe('request', () => {
   });
 
   it('normalizes successful responses', async () => {
-    (Axios.request as jest.Mock).mockReturnValue(Promise.resolve<AxiosResponse>({
-      ...mockSuccess,
-      data: 'bar'
-    } as AxiosResponse));
+    nock('https://api.zaius.com').post('/v3/foo', {}).reply(200, '"bar"', {'request-id': '00000000'});
 
     const result = await ApiV3.request('POST', '/foo', {});
     expect(result).toEqual({
       success: true,
-      data: 'bar',
       status: 200,
+      data: 'bar',
       statusText: 'OK',
-      headers: {
-        'request-id': '00000000-0000-0000-0000-000000000001'
-      }
+      headers: new Headers({'request-id': '00000000'})
     });
   });
 
   it('normalizes error responses', async () => {
-    (Axios.request as jest.Mock).mockReturnValue(Promise.reject<AxiosError>({
-      ...mockError,
-      response: {
-        success: false,
-        data: 'bar',
-        status: 400,
-        statusText: 'Bad Request',
-        headers: {
-          'request-id': '00000000-0000-0000-0000-000000000002'
-        },
-        config: {url: 'https://foo.bar/foo'}
-      }
-    } as AxiosError));
+    nock('https://api.zaius.com').post('/v3/foo', {}).reply(400, '"bar"', {'request-id': '00000001'});
 
-    const result = await ApiV3.request('POST', '/foo', {retry: false}).catch((e) => e.response);
+    const result = await ApiV3.request('POST', '/foo', {}, {retry: false}).catch((e) => e.response);
     expect(result).toEqual({
       success: false,
       data: 'bar',
       status: 400,
       statusText: 'Bad Request',
-      headers: {
-        'request-id': '00000000-0000-0000-0000-000000000002'
-      }
+      headers: new Headers({'request-id': '00000001'})
     });
   });
 
   describe('retries', () => {
     it('retries once when the response is a 502', async () => {
-      (Axios.request as jest.Mock).mockReturnValue(Promise.reject<AxiosError>({
-        ...mockError,
-        code: 'EIDK',
-        response: {
-          success: false,
-          data: null,
-          status: 502,
-          statusText: 'Bad Gateway',
-          headers: {
-            'request-id': '00000000-0000-0000-0000-000000000002'
-          },
-          config: {url: 'https://foo.bar/foo'}
-        }
-      } as AxiosError));
+      nock('https://api.zaius.com').post('/v3/bar', {})
+        .times(2).reply(502, '502');
 
-      await ApiV3.request('POST', '/foo', {retry: false}).catch((e) => e.response);
-
-      expect(Axios.request).toHaveBeenCalledTimes(2);
-    });
-
-    it('retries once when a response was not received', async () => {
-      (Axios.request as jest.Mock).mockReturnValue(Promise.reject<AxiosError>({
-        ...mockError,
-        code: 'ETIMEDOUT',
-      } as AxiosError));
-
-      await ApiV3.request('POST', '/foo', {retry: false}).catch((e) => e.response);
-
-      expect(Axios.request).toHaveBeenCalledTimes(2);
+      const requestFn = jest.spyOn(ApiV3, 'request');
+      await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      expect(requestFn).toHaveBeenCalledTimes(2);
     });
 
     it('does not retry when it receives a 4XX', async () => {
-      (Axios.request as jest.Mock).mockReturnValue(Promise.reject<AxiosError>({
-        ...mockError,
-        code: 'EIDK',
-        response: {
-          success: false,
-          data: null,
-          status: 400,
-          statusText: 'Bad Request',
-          headers: {
-            'request-id': '00000000-0000-0000-0000-000000000002'
-          },
-          config: {url: 'https://foo.bar/foo'}
-        }
-      } as AxiosError));
+      nock('https://api.zaius.com').post('/v3/bar', {}).reply(400, '400');
 
-      await ApiV3.request('POST', '/foo', {retry: false}).catch((e) => e.response);
-
-      expect(Axios.request).toHaveBeenCalledTimes(1);
+      const requestFn = jest.spyOn(ApiV3, 'request');
+      await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      expect(requestFn).toHaveBeenCalledTimes(1);
     });
 
     it('can succeed after a retry', async () => {
-      let time = 1;
-      (Axios.request as jest.Mock).mockImplementation(() => {
-        if (time === 1) {
-          time = 2;
-          return Promise.reject<AxiosError>({
-            ...mockError,
-            code: 'ETIMEDOUT',
-          } as AxiosError);
-        }
-        return Promise.resolve<AxiosResponse>(mockSuccess as AxiosResponse);
-      });
+      nock('https://api.zaius.com')
+        .post('/v3/bar', {}).reply(502, '"NO"')
+        .post('/v3/bar', {}).reply(200, '"OK"');
 
-      const result = await ApiV3.request('POST', '/foo', {retry: false}).catch((e) => e.response);
-
-      expect(Axios.request).toHaveBeenCalledTimes(2);
-
-      expect(result).toEqual({
-        success: true,
-        data: 'data',
-        status: 200,
-        statusText: 'OK',
-        headers: {
-          'request-id': '00000000-0000-0000-0000-000000000001'
-        }
-      });
+      const requestFn = jest.spyOn(ApiV3, 'request');
+      const result = await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      expect(requestFn).toHaveBeenCalledTimes(2);
+      expect(result.status).toEqual(200);
+      expect(result.data).toEqual('OK');
     });
   });
 });
 
 describe('errorForCode', () => {
   it('returns an http error for a given error code', () => {
-    expect(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded)).toEqual({
-      name: ApiV3.ErrorCode.BatchLimitExceeded,
-      message: expect.stringMatching(/maximum of 500/),
-      code: ApiV3.ErrorCode.BatchLimitExceeded,
-    });
+    const error = ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded);
+    expect(error).toBeInstanceOf(ApiV3.HttpError);
+    expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
+    expect(error.message).toMatch(/maximum batch size/);
   });
 });

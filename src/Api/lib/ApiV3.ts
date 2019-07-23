@@ -1,4 +1,4 @@
-import Axios, {AxiosError, AxiosResponse} from 'axios';
+import fetch, {Headers} from 'node-fetch';
 import {InternalConfig} from '../config/configure';
 import {joinUri} from './joinUri';
 
@@ -34,20 +34,25 @@ export namespace ApiV3 {
     data: T;
     status: number;
     statusText: string;
-    headers: {[name: string]: string};
+    headers: Headers;
   }
 
   export enum ErrorCode {
-    BatchLimitExceeded = 'BatchLimitExceeded'
+    BatchLimitExceeded = 'BatchLimitExceeded',
+    Non2xx = 'Non2xx',
+    Unexpected = 'Unexpected'
   }
 
   const ERROR_CODE_MESSAGES: {[key in ErrorCode]: string} = {
-    [ErrorCode.BatchLimitExceeded]: 'A maximum of 500 events are allowed in a single request'
+    [ErrorCode.BatchLimitExceeded]: 'A maximum batch size of 500 is allowed in a single request',
+    [ErrorCode.Non2xx]: 'Http response was outside 2xx',
+    [ErrorCode.Unexpected]: 'An unexpected error occurred making the request'
   };
 
-  export interface HttpError<T extends V3Response = V3Response> extends Error {
-    code?: string;
-    response?: HttpResponse<T>;
+  export class HttpError<T extends V3Response = V3Response> extends Error {
+    constructor(message: string, public code?: string, public response?: HttpResponse<T>) {
+      super(message);
+    }
   }
 
   type Payload = object | object[];
@@ -63,11 +68,7 @@ export namespace ApiV3 {
   };
 
   export function errorForCode(code: ErrorCode): ApiV3.HttpError {
-    return {
-      name: code,
-      message: ERROR_CODE_MESSAGES[code],
-      code
-    };
+    return new HttpError(ERROR_CODE_MESSAGES[code], code);
   }
 
   export function post<T extends V3Response>(path: string, payload: Payload) {
@@ -81,68 +82,55 @@ export namespace ApiV3 {
     options: RequestOptions = {...DEFAULT_REQUEST_OPTIONS}
   ): Promise<HttpResponse<T>> {
     const url = joinUri(config.apiBasePath, path);
-    const data = JSON.stringify(payload);
+    const body = JSON.stringify(payload);
 
-    return new Promise((resolve, reject) => {
-      Axios.request({
-        method,
-        url,
-        headers: buildHeaders(),
-        data
-      }).then((response: AxiosResponse<T>) => {
-        const {status, statusText, headers, data: result} = response;
-        const httpResponse: HttpResponse<T> = {
-          success: true,
-          data: result,
-          status,
-          statusText,
-          headers
-        };
-        resolve(httpResponse);
-      }, (error: AxiosError) => {
-        let retryable = false;
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          if (error.response.status >= 502 && error.response.status <= 504) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await fetch(url, {method, headers: buildHeaders(), body});
+
+        const {status, statusText, headers} = response;
+        if (status >= 200 && status <= 299) {
+          const data: T = await response.json();
+          const httpResponse: HttpResponse<T> = {
+            success: true,
+            data,
+            status,
+            statusText,
+            headers
+          };
+          resolve(httpResponse);
+        } else {
+          let retryable = false;
+          if (response.status >= 502 && response.status <= 504) {
             retryable = true;
           }
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of http.ClientRequest in node.js
-          retryable = true;
-        }
 
-        if (retryable && options.retry) {
-          request<T>(method, path, payload, {retry: false}).then((_result) => {
-            resolve(_result);
-          }, (_error) => {
-            console.error(_error);
-            reject(_error);
-          });
-        } else {
-          let httpResponse: HttpResponse<T> | undefined;
-          if (error.response) {
-            const {status, statusText, headers, data: result} = error.response;
+          if (retryable && options.retry) {
+            ApiV3.request<T>(method, path, payload, {retry: false}).then((_result) => {
+              resolve(_result);
+            }, (_error) => {
+              console.error(_error);
+              reject(_error);
+            });
+          } else {
+            let httpResponse: HttpResponse<T> | undefined;
             httpResponse = {
               success: false,
-              data: result,
+              data: await response.json(),
               status,
               statusText,
               headers
             };
+            const httpError = new HttpError<T>(response.statusText, ErrorCode.Non2xx, httpResponse);
+            console.error(httpError);
+            reject(httpError);
           }
-          const httpError: HttpError<T> = {
-            name: error.name,
-            message: error.message,
-            code: error.code,
-            response: httpResponse,
-            stack: error.stack
-          };
-          console.error(httpError);
-          reject(httpError);
         }
-      });
+      } catch (error) {
+        const httpError = new HttpError<T>(error.message, ErrorCode.Unexpected);
+        httpError.stack = error.stack;
+        reject(httpError);
+      }
     });
   }
 
