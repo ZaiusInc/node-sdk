@@ -32,7 +32,7 @@ describe('fields', () => {
 
     it('sends a post to /schema/objects', async () => {
       const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
-      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'text'};
+      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await createField('my_object', field);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/my_object/fields', field);
     });
@@ -40,7 +40,7 @@ describe('fields', () => {
     it('throws an error if too many events are sent in one call', async () => {
       const payload: ZaiusField[] = [];
       for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
-        payload.push({name: `my_field_${i}`, display_name: `My Field ${i}`, type: 'text'});
+        payload.push({name: `my_field_${i}`, display_name: `My Field ${i}`, type: 'string'});
       }
 
       expect.assertions(2);
@@ -54,7 +54,7 @@ describe('fields', () => {
 
     it('throws an error if the api returns an error', async () => {
       jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
-      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'text'};
+      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError('Bad Request');
     });
 
@@ -69,7 +69,7 @@ describe('fields', () => {
           }
         }
       } as any));
-      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'text'};
+      const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError(ApiFieldExistsError);
     });
   });
@@ -81,21 +81,21 @@ describe('fields', () => {
 
     it('allows fields prefixed with app_id', async () => {
       const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
-      const field: ZaiusField = {name: 'test_my_field', display_name: 'Test App My Field', type: 'text'};
+      const field: ZaiusField = {name: 'test_my_field', display_name: 'Test App My Field', type: 'string'};
       await createField('my_object', field);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/my_object/fields', field);
     });
 
     it('throws a validation error if a field is not prefixed with app_id', async () => {
       const fields: ZaiusField[] = [
-        {name: 'test_my_field', display_name: 'Test App My Field', type: 'text'},
-        {name: 'other_field', display_name: 'Other Field', type: 'text'}
+        {name: 'test_my_field', display_name: 'Test App My Field', type: 'string'},
+        {name: 'other_field', display_name: 'Other Field', type: 'string'}
       ];
       await expect(createField('customers', fields)).rejects.toThrowError(ApiSchemaValidationError);
     });
 
     it('throws a validation error if a field display name is not prefixed with app display name', async () => {
-      const field: ZaiusField = {name: 'test_my_field', display_name: 'My Field', type: 'text'};
+      const field: ZaiusField = {name: 'test_my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('customers', field)).rejects.toThrowError(/field display name.*must be prefixed/);
     });
   });
