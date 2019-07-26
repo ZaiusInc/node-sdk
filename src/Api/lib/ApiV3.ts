@@ -153,7 +153,7 @@ export namespace ApiV3 {
 
   function buildHeaders() {
     const headersObject: {[key: string]: string} = {
-      'x-api-key': config.publicApiKey,
+      'x-api-key': config.apiKey,
       'Content-Type': 'application/json'
     };
     // TODO: Need a way to send an originating request id rather than have

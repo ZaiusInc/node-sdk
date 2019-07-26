@@ -104,13 +104,13 @@ describe('request', () => {
         expect(info).toEqual({
           method: 'POST',
           body: JSON.stringify({foo: 'bar'}),
-          headers: {'Content-Type': 'application/json', 'x-api-key': 'test_tracker_id'}
+          headers: {'Content-Type': 'application/json', 'x-api-key': 'private.api_key'}
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
     } as Partial<InternalConfig> as InternalConfig);
 
-    nock('https://foo.bar').put('/v3/foo', '"foo"').reply(200, '"bar"', {});
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}}).put('/v3/foo', '"foo"').reply(200, '"bar"', {});
 
     const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
     expect(result).toEqual({
