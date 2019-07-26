@@ -1,9 +1,10 @@
 import {ApiV3} from '../lib/ApiV3';
+import {RequestInterceptor} from './RequestInterceptor';
 
 export interface Config {
   /**
    * The public API key for making v3 API requests.
-   * Usually the Zaius tracker ID for the account
+   * Usually the Zaius tracker ID for the account.
    */
   publicApiKey: string;
   /**
@@ -11,7 +12,7 @@ export interface Config {
    */
   privateApiKey?: string;
   /**
-   * A request ID to be added to all logging
+   * A request ID to be added to all logging.
    */
   requestId?: string;
 }
@@ -25,6 +26,19 @@ export interface InternalConfig extends Config {
   publicApiKey: string;
   privateApiKey?: string;
   requestId?: string;
+  requestInterceptor?: RequestInterceptor;
+  appContext?: AppContext;
+}
+
+/**
+ * @hidden
+ * preferably to be removed when no longer needed
+ */
+export interface AppContext {
+  app_id: string;
+  display_name: string;
+  version: string;
+  vendor: string;
 }
 
 /**

@@ -32,7 +32,7 @@ describe('customer', () => {
 
   it('throws an error if too many customers are sent in one call', async () => {
     const payload: Customer[] = [];
-    for (let i = 0; i < 501; i++) {
+    for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({identifiers: {email: 'test@zaius.com'}, attributes: {name: 'Jim Bob'}});
     }
 

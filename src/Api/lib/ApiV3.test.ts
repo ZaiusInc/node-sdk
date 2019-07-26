@@ -1,7 +1,8 @@
 import 'jest';
 import * as nock from 'nock';
 import {Headers} from 'node-fetch';
-import {configure} from '../config/configure';
+import {configure, InternalConfig} from '../config/configure';
+import {RequestDetail} from '../config/RequestInterceptor';
 import {ApiV3} from './ApiV3';
 
 describe('post', () => {
@@ -26,7 +27,7 @@ describe('post', () => {
 });
 
 describe('request', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     configure(null);
   });
 
@@ -88,6 +89,36 @@ describe('request', () => {
       expect(requestFn).toHaveBeenCalledTimes(2);
       expect(result.status).toEqual(200);
       expect(result.data).toEqual('OK');
+    });
+  });
+
+  it('allows requests to be manipuated by an interceptor', async () => {
+    const updatedRequest: RequestDetail = Object.freeze({
+      method: 'PUT' as ApiV3.HttpMethod,
+      headers: {'x-foo': 'foo'},
+      body: '"foo"'
+    });
+    configure({
+      requestInterceptor: (url, info) => {
+        expect(url).toBe('https://api.zaius.com/v3/bar');
+        expect(info).toEqual({
+          method: 'POST',
+          body: JSON.stringify({foo: 'bar'}),
+          headers: {'Content-Type': 'application/json', 'x-api-key': 'test_tracker_id'}
+        });
+        return ['https://foo.bar/v3/foo', updatedRequest];
+      }
+    } as Partial<InternalConfig> as InternalConfig);
+
+    nock('https://foo.bar').put('/v3/foo', '"foo"').reply(200, '"bar"', {});
+
+    const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
+    expect(result).toEqual({
+      success: true,
+      status: 200,
+      data: 'bar',
+      statusText: 'OK',
+      headers: new Headers()
     });
   });
 });

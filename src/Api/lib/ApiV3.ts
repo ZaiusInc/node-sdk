@@ -1,5 +1,6 @@
 import fetch, {Headers} from 'node-fetch';
 import {InternalConfig} from '../config/configure';
+import {RequestDetail} from '../config/RequestInterceptor';
 import {joinUri} from './joinUri';
 
 let config!: InternalConfig;
@@ -8,6 +9,7 @@ let config!: InternalConfig;
  * The core of all v3 API interfaces.
  */
 export namespace ApiV3 {
+  export const BATCH_LIMIT = 100;
   export function configure(newConfig: InternalConfig) {
     config = newConfig;
   }
@@ -43,8 +45,15 @@ export namespace ApiV3 {
     Unexpected = 'Unexpected'
   }
 
+  /**
+   * @hidden
+   */
+  export function getAppContext() {
+    return config.appContext;
+  }
+
   const ERROR_CODE_MESSAGES: {[key in ErrorCode]: string} = {
-    [ErrorCode.BatchLimitExceeded]: 'A maximum batch size of 500 is allowed in a single request',
+    [ErrorCode.BatchLimitExceeded]: `A maximum batch size of ${BATCH_LIMIT} is allowed in a single request`,
     [ErrorCode.Non2xx]: 'Http response was outside 2xx',
     [ErrorCode.Unexpected]: 'An unexpected error occurred making the request'
   };
@@ -57,7 +66,10 @@ export namespace ApiV3 {
 
   type Payload = object | object[];
 
-  type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE';
+  /**
+   * http request method
+   */
+  export type HttpMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE';
 
   interface RequestOptions {
     retry: boolean;
@@ -78,15 +90,20 @@ export namespace ApiV3 {
   export function request<T extends V3Response>(
     method: HttpMethod,
     path: string,
-    payload: Payload,
+    payload: Payload | undefined,
     options: RequestOptions = {...DEFAULT_REQUEST_OPTIONS}
   ): Promise<HttpResponse<T>> {
-    const url = joinUri(config.apiBasePath, path);
-    const body = JSON.stringify(payload);
+    let url = joinUri(config.apiBasePath, path);
+    const body = payload === undefined ? undefined : JSON.stringify(payload);
 
     return new Promise(async (resolve, reject) => {
       try {
-        const response = await fetch(url, {method, headers: buildHeaders(), body});
+        // Allow requests to be monitored or manipulated
+        let requestInfo: RequestDetail = {method, headers: buildHeaders(), body};
+        if (config.requestInterceptor) {
+          [url, requestInfo] = config.requestInterceptor(url, requestInfo);
+        }
+        const response = await fetch(url, requestInfo);
 
         const {status, statusText, headers} = response;
         if (status >= 200 && status <= 299) {

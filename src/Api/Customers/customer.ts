@@ -5,12 +5,12 @@ import {Customer} from '../Types';
  * Send a customer or a batch of customers to Zaius.
  * @param payload a Zaius customer payload or an array of customer payloads
  * @returns the response from the API if successful
- * @throws [[HttpError]] if it receives a non-2XX result or if the batch size is > 500
+ * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
 export function customer(payload: Customer | Customer[]): Promise<ApiV3.HttpResponse> {
   let transformedPayload;
   if (Array.isArray(payload)) {
-    if (payload.length > 500) {
+    if (payload.length > ApiV3.BATCH_LIMIT) {
       return Promise.reject(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
     }
     transformedPayload = payload.map(transformPayload);

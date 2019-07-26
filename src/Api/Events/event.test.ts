@@ -18,7 +18,7 @@ describe('event', () => {
 
   it('throws an error if too many events are sent in one call', async () => {
     const payload: Event[] = [];
-    for (let i = 0; i < 501; i++) {
+    for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({type: 'pageview', identifiers: {email: 'test@zaius.com'}, data: {page: 'foo'}});
     }
 
