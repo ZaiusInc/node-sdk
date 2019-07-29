@@ -6,7 +6,7 @@ import {Identifiers} from './Identifiers';
  * [V3 Customers API](https://zaius.services/docs/zaius_api.html#tag/Customer-Profiles/operation/upsertCustomers)
  * for details.
  */
-export interface Customer {
+export interface CustomerPayload {
   /**
    * A set of identifiers that uniquely identify the customer.
    * At least one identifier is required.

@@ -1,5 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
-import {Customer} from '../Types';
+import {CustomerPayload} from '../Types';
 import {customer} from './customer';
 
 describe('customer', () => {
@@ -9,14 +9,14 @@ describe('customer', () => {
   });
 
   it('sends a transformed post with one customer to /profiles', async () => {
-    const payload: Customer = {identifiers: {email: 'test@zaius.com'}, attributes: {name: 'Jim Bob'}};
+    const payload: CustomerPayload = {identifiers: {email: 'test@zaius.com'}, attributes: {name: 'Jim Bob'}};
     const transformedPayload = {attributes: {name: 'Jim Bob', email: 'test@zaius.com'}};
     await customer(payload);
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);
   });
 
   it('sends a transformed post with several customers to /profiles', async () => {
-    const payload: Customer[] = [
+    const payload: CustomerPayload[] = [
       {identifiers: {email: 'test1@zaius.com'}, attributes: {name: 'Jim Bob'}},
       {identifiers: {email: 'test2@zaius.com'}, attributes: {name: 'Bob Joe'}},
       {identifiers: {email: 'test3@zaius.com'}, attributes: {name: 'Joe Jim'}}
@@ -31,7 +31,7 @@ describe('customer', () => {
   });
 
   it('throws an error if too many customers are sent in one call', async () => {
-    const payload: Customer[] = [];
+    const payload: CustomerPayload[] = [];
     for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({identifiers: {email: 'test@zaius.com'}, attributes: {name: 'Jim Bob'}});
     }

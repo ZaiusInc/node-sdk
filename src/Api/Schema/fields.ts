@@ -1,5 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
-import {ZaiusField} from '../Types/Schema';
+import {FieldDefinition} from '../Types';
 import {ApiFieldExistsError} from './ApiFieldExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 
@@ -9,7 +9,7 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
  * @param field the field or array of fields to create
  * @throws {ApiFieldExistsError} if the field name already exists
  */
-export async function createField(object: string, field: ZaiusField): Promise<ApiV3.HttpResponse> {
+export async function createField(object: string, field: FieldDefinition): Promise<ApiV3.HttpResponse> {
   validateCreateField(object, field);
 
   try {
@@ -34,7 +34,7 @@ interface InvalidDetail {
  * @hidden
  * Temporary validation until we update milton
  */
-function validateCreateField(object: string, field: ZaiusField) {
+function validateCreateField(object: string, field: FieldDefinition) {
   const context = ApiV3.getAppContext();
   if (context && context.app_id) {
     const prefix = `${context.app_id}_`;

@@ -1,7 +1,7 @@
 import * as deepFreeze from 'deep-freeze';
 import 'jest';
 import {ApiV3} from '../lib/ApiV3';
-import {ZaiusObject} from '../Types';
+import {ObjectPayload} from '../Types';
 import {object} from './object';
 
 describe('object', () => {
@@ -17,7 +17,7 @@ describe('object', () => {
   });
 
   it('throws an error if too many objects are sent in one call', async () => {
-    const payload: ZaiusObject[] = [];
+    const payload: ObjectPayload[] = [];
     for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({product_id: 'P1234', name: 'Something Cool'});
     }

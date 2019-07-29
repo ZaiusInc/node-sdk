@@ -14,7 +14,7 @@ export interface EventData {
  * The Zaius Event payload.
  * See [V3 Event API](https://zaius.services/docs/zaius_api.html#tag/Events/operation/insertEvents) for details.
  */
-export interface Event {
+export interface EventPayload {
   /**
    * Event type (required), e.g., `product`
    */

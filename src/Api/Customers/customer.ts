@@ -1,5 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
-import {Customer} from '../Types';
+import {CustomerPayload} from '../Types';
 
 /**
  * Send a customer or a batch of customers to Zaius.
@@ -7,7 +7,7 @@ import {Customer} from '../Types';
  * @returns the response from the API if successful
  * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
-export function customer(payload: Customer | Customer[]): Promise<ApiV3.HttpResponse> {
+export function customer(payload: CustomerPayload | CustomerPayload[]): Promise<ApiV3.HttpResponse> {
   let transformedPayload;
   if (Array.isArray(payload)) {
     if (payload.length > ApiV3.BATCH_LIMIT) {
@@ -20,7 +20,7 @@ export function customer(payload: Customer | Customer[]): Promise<ApiV3.HttpResp
   return ApiV3.post('/profiles', transformedPayload);
 }
 
-function transformPayload(payload: Customer) {
+function transformPayload(payload: CustomerPayload) {
   // For now, we have to combine the identifiers back in with the rest of the attributes. This will go away once the
   // HTTP API is updated to accept the identifiers separately.
   return {attributes: {...payload.attributes, ...payload.identifiers}};
