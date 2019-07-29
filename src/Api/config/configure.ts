@@ -1,17 +1,15 @@
 import {ApiV3} from '../lib/ApiV3';
+import {RequestInterceptor} from './RequestInterceptor';
 
 export interface Config {
   /**
-   * The public API key for making v3 API requests.
-   * Usually the Zaius tracker ID for the account
+   * The public or private API key for making v3 API requests.
+   * The public API key is usually the Zaius tracker ID for the account.
+   * If you need to make calls to private APIs, this must be a private API key.
    */
-  publicApiKey: string;
+  apiKey: string;
   /**
-   * The private API key for making v3 API requests.
-   */
-  privateApiKey?: string;
-  /**
-   * A request ID to be added to all logging
+   * A request ID to be added to all logging.
    */
   requestId?: string;
 }
@@ -22,9 +20,21 @@ export interface Config {
 export interface InternalConfig extends Config {
   trackerId: string;
   apiBasePath: string;
-  publicApiKey: string;
-  privateApiKey?: string;
+  apiKey: string;
   requestId?: string;
+  requestInterceptor?: RequestInterceptor;
+  appContext?: AppContext;
+}
+
+/**
+ * @hidden
+ * preferably to be removed when no longer needed
+ */
+export interface AppContext {
+  app_id: string;
+  display_name: string;
+  version: string;
+  vendor: string;
 }
 
 /**
@@ -34,8 +44,7 @@ const DEFAULT_CONFIG: InternalConfig = Object.freeze({
   trackerId: process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
   apiBasePath: process.env['ZAIUS_SDK_API_BASE_PATH'] || 'https://api.zaius.com/v3/',
   requestId: process.env['ZAIUS_SDK_TEST_REQUEST_ID'],
-  publicApiKey: process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
-  privateApiKey: process.env['ZAIUS_SDK_PRIVATE_API_KEY']
+  apiKey: process.env['ZAIUS_SDK_API_KEY'] || process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
 });
 
 /**
@@ -68,14 +77,6 @@ export class PublicConfig {
    */
   public get trackerId(): string {
     return configuration.trackerId;
-  }
-
-  /**
-   * @returns The public API key for making v3 API requests.
-   * Usually the Zaius tracker ID for the account
-   */
-  public get publicApiKey(): string {
-    return configuration.publicApiKey;
   }
 }
 

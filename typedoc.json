@@ -7,6 +7,5 @@
   "theme": "./doc-theme",
   "stripInternal": true,
   "excludeNotExported": false,
-  "excludePrivate": true,
-  "exclude": "./src/Api/lib/**/*"
+  "excludePrivate": true
 }

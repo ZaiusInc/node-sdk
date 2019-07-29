@@ -18,7 +18,7 @@ describe('object', () => {
 
   it('throws an error if too many objects are sent in one call', async () => {
     const payload: ZaiusObject[] = [];
-    for (let i = 0; i < 501; i++) {
+    for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({product_id: 'P1234', name: 'Something Cool'});
     }
 
@@ -26,7 +26,7 @@ describe('object', () => {
     try {
       await object('products', payload);
     } catch (error) {
-      expect(error.message).toMatch(/maximum of 500/);
+      expect(error.message).toMatch(/maximum batch size/);
       expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     }
   });
