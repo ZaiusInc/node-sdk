@@ -7,15 +7,10 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
  * Create a custom field on a Zaius object
  * @param object the Zaius object to create the field on, e.g., `customers`
  * @param field the field or array of fields to create
- * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  * @throws {ApiFieldExistsError} if the field name already exists
  */
-export async function createField(object: string, field: ZaiusField | ZaiusField[]): Promise<ApiV3.HttpResponse> {
-  if (Array.isArray(field) && field.length > ApiV3.BATCH_LIMIT) {
-    return Promise.reject(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
-  }
-
-  validateCreateFields(object, Array.isArray(field) ? field : [field]);
+export async function createField(object: string, field: ZaiusField): Promise<ApiV3.HttpResponse> {
+  validateCreateField(object, field);
 
   try {
     return await ApiV3.post(`/schema/objects/${object}/fields`, field);
@@ -39,21 +34,19 @@ interface InvalidDetail {
  * @hidden
  * Temporary validation until we update milton
  */
-function validateCreateFields(object: string, fields: ZaiusField[]) {
+function validateCreateField(object: string, field: ZaiusField) {
   const context = ApiV3.getAppContext();
   if (context && context.app_id) {
     const prefix = `${context.app_id}_`;
     if (!object.startsWith(prefix)) {
-      fields.forEach((field) => {
-        if (!field.name.startsWith(prefix)) {
-          throw new ApiSchemaValidationError(`field name ${field.name} must be prefixed with ${prefix}`);
-        }
-        if (!field.display_name.startsWith(context.display_name)) {
-          throw new ApiSchemaValidationError(
-            `field display name ${field.display_name} must be prefixed with ${context.display_name}`
-          );
-        }
-      });
+      if (!field.name.startsWith(prefix)) {
+        throw new ApiSchemaValidationError(`field name ${field.name} must be prefixed with ${prefix}`);
+      }
+      if (!field.display_name.startsWith(context.display_name)) {
+        throw new ApiSchemaValidationError(
+          `field display name ${field.display_name} must be prefixed with ${context.display_name}`
+        );
+      }
     }
   }
 }

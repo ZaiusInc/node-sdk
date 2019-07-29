@@ -37,21 +37,6 @@ describe('fields', () => {
       expect(postFn).toHaveBeenCalledWith('/schema/objects/my_object/fields', field);
     });
 
-    it('throws an error if too many events are sent in one call', async () => {
-      const payload: ZaiusField[] = [];
-      for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
-        payload.push({name: `my_field_${i}`, display_name: `My Field ${i}`, type: 'string'});
-      }
-
-      expect.assertions(2);
-      try {
-        await createField('my_object', payload);
-      } catch (error) {
-        expect(error.message).toMatch(/maximum batch size/);
-        expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
-      }
-    });
-
     it('throws an error if the api returns an error', async () => {
       jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const field: ZaiusField = {name: 'my_field', display_name: 'My Field', type: 'string'};
@@ -87,11 +72,8 @@ describe('fields', () => {
     });
 
     it('throws a validation error if a field is not prefixed with app_id', async () => {
-      const fields: ZaiusField[] = [
-        {name: 'test_my_field', display_name: 'Test App My Field', type: 'string'},
-        {name: 'other_field', display_name: 'Other Field', type: 'string'}
-      ];
-      await expect(createField('customers', fields)).rejects.toThrowError(ApiSchemaValidationError);
+      const field: ZaiusField = {name: 'other_field', display_name: 'Other Field', type: 'string'};
+      await expect(createField('customers', field)).rejects.toThrowError(ApiSchemaValidationError);
     });
 
     it('throws a validation error if a field display name is not prefixed with app display name', async () => {
