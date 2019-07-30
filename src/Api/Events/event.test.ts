@@ -1,7 +1,7 @@
 import * as deepFreeze from 'deep-freeze';
 import 'jest';
 import {ApiV3} from '../lib/ApiV3';
-import {Event} from '../Types';
+import {EventPayload} from '../Types';
 import {event} from './event';
 
 describe('event', () => {
@@ -17,7 +17,7 @@ describe('event', () => {
   });
 
   it('throws an error if too many events are sent in one call', async () => {
-    const payload: Event[] = [];
+    const payload: EventPayload[] = [];
     for (let i = 0; i < ApiV3.BATCH_LIMIT + 1; i++) {
       payload.push({type: 'pageview', identifiers: {email: 'test@zaius.com'}, data: {page: 'foo'}});
     }

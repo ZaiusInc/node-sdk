@@ -1,5 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
-import {ZaiusObject} from '../Types';
+import {ObjectPayload} from '../Types';
 
 /**
  * Send an object or a batch of objects to Zaius
@@ -8,7 +8,7 @@ import {ZaiusObject} from '../Types';
  * @returns the response from the API if successful
  * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
-export function object(type: string, payload: ZaiusObject | ZaiusObject[]): Promise<ApiV3.HttpResponse> {
+export function object(type: string, payload: ObjectPayload | ObjectPayload[]): Promise<ApiV3.HttpResponse> {
   if (Array.isArray(payload) && payload.length > ApiV3.BATCH_LIMIT) {
     return Promise.reject(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
   }
