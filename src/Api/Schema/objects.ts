@@ -4,6 +4,14 @@ import {ApiObjectExistsError} from './ApiObjectExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 
 /**
+ * @hidden
+ */
+interface InvalidDetail {
+  field: string;
+  reason: string;
+}
+
+/**
  * Create a custom Zaius object
  * @param object the object to create
  * @throws {ApiObjectExistsError} if the object name already exists
@@ -22,11 +30,6 @@ export async function createObject(object: ObjectDefinition): Promise<ApiV3.Http
     }
     throw e;
   }
-}
-
-interface InvalidDetail {
-  field: string;
-  reason: string;
 }
 
 /**
