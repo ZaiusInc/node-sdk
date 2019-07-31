@@ -6,7 +6,7 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 /**
  * Create a custom field on a Zaius object
  * @param object the Zaius object to create the field on, e.g., `customers`
- * @param field the field or array of fields to create
+ * @param field the field to create
  * @throws {ApiFieldExistsError} if the field name already exists
  */
 export async function createField(object: string, field: FieldDefinition): Promise<ApiV3.HttpResponse> {
