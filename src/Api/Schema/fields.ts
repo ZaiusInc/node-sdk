@@ -4,6 +4,14 @@ import {ApiFieldExistsError} from './ApiFieldExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 
 /**
+ * @hidden
+ */
+interface InvalidDetail {
+  field: string;
+  reason: string;
+}
+
+/**
  * Create a custom field on a Zaius object
  * @param object the Zaius object to create the field on, e.g., `customers`
  * @param field the field to create
@@ -23,11 +31,6 @@ export async function createField(object: string, field: FieldDefinition): Promi
     }
     throw e;
   }
-}
-
-interface InvalidDetail {
-  field: string;
-  reason: string;
 }
 
 /**
