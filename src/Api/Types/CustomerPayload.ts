@@ -19,3 +19,12 @@ export interface CustomerPayload {
     [field: string]: FieldValue
   };
 }
+
+/**
+ * The response format for a successful post to the V3 Customers API.
+ */
+export interface CustomerResponse {
+  title: string;
+  status: number;
+  timestamp: string;
+}

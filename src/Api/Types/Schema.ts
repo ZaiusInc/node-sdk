@@ -25,7 +25,7 @@ export interface FieldDefinition {
    * Used when creating new objects to denote this field should be used as the primary key for the object.
    * Should be undefined or false for all other fields.
    */
-  primary_key?: boolean;
+  primary?: boolean;
 }
 
 /**
@@ -100,4 +100,11 @@ interface JoinField {
    * The field name on the child or "target" object.
    */
   child: string;
+}
+
+/**
+ * Response format for a successful get or post to the V3 Modules API.
+ */
+export interface ModulesResponse {
+  enabled_modules: string[];
 }

@@ -15,23 +15,47 @@ export namespace ApiV3 {
   }
 
   /**
-   * The response payload format of a Zaius v3 API call
+   * Generic response format of any Zaius v3 API call
    */
   export interface V3Response {
+    [key: string]: any;
+  }
+
+  /**
+   * The error response payload format of a Zaius v3 API call
+   */
+  export interface V3ErrorResponse {
     title: string;
     status: number;
     timestamp: string;
     message?: string;
     detail?: {
-      invalids?: Array<{event: number, message: string, [key: string]: any}>
+      invalids?: V3InvalidEventDetail[] | V3InvalidSchemaDetail[]
       [key: string]: any;
     };
   }
 
   /**
+   * Embedded error response detail format for invalid event
+   */
+  export interface V3InvalidEventDetail {
+    event: number;
+    message: string;
+    [key: string]: any;
+  }
+
+  /**
+   * Embedded error response detail format for invalid schema
+   */
+  export interface V3InvalidSchemaDetail {
+    field: string;
+    reason: string | string[];
+  }
+
+  /**
    * An http response from a v3 API call
    */
-  export interface HttpResponse<T extends V3Response = V3Response> {
+  export interface HttpResponse<T extends V3Response> {
     success: boolean;
     data: T;
     status: number;
@@ -58,8 +82,8 @@ export namespace ApiV3 {
     [ErrorCode.Unexpected]: 'An unexpected error occurred making the request'
   };
 
-  export class HttpError<T extends V3Response = V3Response> extends Error {
-    constructor(message: string, public code?: string, public response?: HttpResponse<T>) {
+  export class HttpError extends Error {
+    constructor(message: string, public code?: string, public response?: HttpResponse<V3ErrorResponse>) {
       super(message);
     }
   }
@@ -81,6 +105,10 @@ export namespace ApiV3 {
 
   export function errorForCode(code: ErrorCode): ApiV3.HttpError {
     return new HttpError(ERROR_CODE_MESSAGES[code], code);
+  }
+
+  export function get<T extends V3Response>(path: string) {
+    return request<T>('GET', path, undefined);
   }
 
   export function post<T extends V3Response>(path: string, payload: Payload) {
@@ -130,21 +158,20 @@ export namespace ApiV3 {
               reject(_error);
             });
           } else {
-            let httpResponse: HttpResponse<T> | undefined;
-            httpResponse = {
+            const httpResponse: HttpResponse<V3ErrorResponse> = {
               success: false,
               data: await response.json(),
               status,
               statusText,
               headers
             };
-            const httpError = new HttpError<T>(response.statusText, ErrorCode.Non2xx, httpResponse);
+            const httpError = new HttpError(response.statusText, ErrorCode.Non2xx, httpResponse);
             console.error(httpError);
             reject(httpError);
           }
         }
       } catch (error) {
-        const httpError = new HttpError<T>(error.message, ErrorCode.Unexpected);
+        const httpError = new HttpError(error.message, ErrorCode.Unexpected);
         httpError.stack = error.stack;
         reject(httpError);
       }
