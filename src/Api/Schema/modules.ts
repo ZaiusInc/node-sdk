@@ -1,7 +1,7 @@
 import {ApiV3} from '../lib/ApiV3';
 import {ModulesResponse} from '../Types';
 import {ApiModuleAlreadyEnabledError} from './ApiModuleAlreadyEnabledError';
-import {checkInvalids} from './checkInvalids';
+import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
@@ -25,7 +25,7 @@ export async function enableModule(module: string): Promise<ApiV3.HttpResponse<M
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && e.response.data.detail.invalids as V3InvalidSchemaDetail[];
-      if (checkInvalids(invalids, 'module', (reason) => reason === 'already enabled')) {
+      if (invalidsContain(invalids, 'module', (reason) => reason === 'already enabled')) {
         throw new ApiModuleAlreadyEnabledError(e);
       }
     }

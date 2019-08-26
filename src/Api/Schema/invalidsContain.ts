@@ -1,7 +1,7 @@
 import {ApiV3} from '../lib/ApiV3';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
-export function checkInvalids(
+export function invalidsContain(
   invalids: V3InvalidSchemaDetail[] | undefined,
   field: string,
   matcher: (reason: string) => boolean

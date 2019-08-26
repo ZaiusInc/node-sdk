@@ -2,7 +2,7 @@ import {ApiV3} from '../lib/ApiV3';
 import {ObjectDefinition} from '../Types';
 import {ApiObjectExistsError} from './ApiObjectExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
-import {checkInvalids} from './checkInvalids';
+import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
@@ -20,7 +20,7 @@ export async function createObject(object: ObjectDefinition): Promise<ApiV3.Http
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && e.response.data.detail.invalids as V3InvalidSchemaDetail[];
-      if (checkInvalids(invalids, 'name', (reason) => /^already used/.test(reason))) {
+      if (invalidsContain(invalids, 'name', (reason) => /^already used/.test(reason))) {
         throw new ApiObjectExistsError(e);
       }
     }
