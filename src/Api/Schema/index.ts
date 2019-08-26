@@ -5,3 +5,4 @@ export * from './ApiSchemaValidationError';
 export * from './fields';
 export * from './objects';
 export * from './relations';
+export * from './modules';

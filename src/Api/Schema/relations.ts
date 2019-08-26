@@ -2,30 +2,29 @@ import {ApiV3} from '../lib/ApiV3';
 import {RelationDefinition} from '../Types';
 import {ApiRelationExistsError} from './ApiRelationExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
-
-/**
- * @hidden
- */
-interface InvalidDetail {
-  field: string;
-  reason: string;
-}
+import {invalidsContain} from './invalidsContain';
+import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Create a custom Zaius relation between two objects
  * @param object the object to create the foreign key on
  * @param relation the relation to create
  * @throws {ApiRelationExistsError} if the relation name is already in use by another field or relation
+ * @throws {HttpError} if it receives any other non-2XX result
  */
-export async function createRelation(object: string, relation: RelationDefinition): Promise<ApiV3.HttpResponse> {
+export async function createRelation(
+  object: string,
+  relation: RelationDefinition
+): Promise<ApiV3.HttpResponse<RelationDefinition>> {
   validateCreateRelation(relation);
 
   try {
     return await ApiV3.post(`/schema/objects/${object}/relations`, relation);
   } catch (e) {
     if (e instanceof ApiV3.HttpError && e.response) {
-      const invalids: InvalidDetail[] = e.response.data && e.response.data.detail && e.response.data.detail.invalids;
-      if (invalids && invalids.find((detail) => detail.field === 'name' && /^already used/.test(detail.reason))) {
+      const invalids: V3InvalidSchemaDetail[] | undefined =
+        e.response.data && e.response.data.detail && e.response.data.detail.invalids as V3InvalidSchemaDetail[];
+      if (invalidsContain(invalids, 'name', (reason) => /^already used/.test(reason))) {
         throw new ApiRelationExistsError(e);
       }
     }

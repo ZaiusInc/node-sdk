@@ -33,3 +33,12 @@ export interface EventPayload {
    */
   data: EventData;
 }
+
+/**
+ * The response format for a successful post to the V3 Event API.
+ */
+export interface EventResponse {
+  title: string;
+  status: number;
+  timestamp: string;
+}

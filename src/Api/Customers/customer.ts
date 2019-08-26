@@ -1,5 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
-import {CustomerPayload} from '../Types';
+import {CustomerPayload, CustomerResponse} from '../Types';
 
 /**
  * Send a customer or a batch of customers to Zaius.
@@ -7,7 +7,7 @@ import {CustomerPayload} from '../Types';
  * @returns the response from the API if successful
  * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
-export function customer(payload: CustomerPayload | CustomerPayload[]): Promise<ApiV3.HttpResponse> {
+export function customer(payload: CustomerPayload | CustomerPayload[]): Promise<ApiV3.HttpResponse<CustomerResponse>> {
   let transformedPayload;
   if (Array.isArray(payload)) {
     if (payload.length > ApiV3.BATCH_LIMIT) {
