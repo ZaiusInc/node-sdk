@@ -124,7 +124,6 @@ describe('request', () => {
 
   it('logs requests post interceptor when enabled', async () => {
     process.env.LOG_REQUESTS = 'true';
-    const debugFn = jest.spyOn(console, 'debug');
     const updatedRequest: RequestDetail = Object.freeze({
       method: 'PUT' as ApiV3.HttpMethod,
       headers: Object.freeze({'x-foo': 'foo'}),
@@ -153,13 +152,44 @@ describe('request', () => {
       headers: new Headers()
     });
 
-    expect(debugFn).toHaveBeenCalledWith(
+    expect(console.debug).toHaveBeenCalledWith(
       'API V3 Request: https://foo.bar/v3/foo',
       updatedRequest,
       '(200) body:',
-      'bar'
+      '"bar"'
     );
-    debugFn.mockRestore();
+  });
+
+  it('logs requests that fail when enabled', async () => {
+    process.env.LOG_REQUESTS = 'true';
+    const updatedRequest: RequestDetail = Object.freeze({
+      method: 'PUT' as ApiV3.HttpMethod,
+      headers: Object.freeze({'x-foo': 'foo'}),
+      body: '"foo"'
+    });
+    configure({
+      requestInterceptor: (url, info) => {
+        expect(url).toBe('https://api.zaius.com/v3/bar');
+        expect(info).toEqual({
+          method: 'POST',
+          body: JSON.stringify({foo: 'bar'}),
+          headers: {'Content-Type': 'application/json', 'x-api-key': 'private.api_key'}
+        });
+        return ['https://foo.bar/v3/foo', updatedRequest];
+      }
+    } as Partial<InternalConfig> as InternalConfig);
+
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}}).put('/v3/foo', '"foo"')
+      .reply(400, '{"errors": ["bar"]}', {});
+
+    await ApiV3.request('POST', '/bar', {foo: 'bar'}).catch((e) => e.response);
+
+    expect(console.debug).toHaveBeenCalledWith(
+      'API V3 Request: https://foo.bar/v3/foo',
+      updatedRequest,
+      '(400) body:',
+      '{"errors":["bar"]}'
+    );
   });
 });
 
