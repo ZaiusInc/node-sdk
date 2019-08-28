@@ -125,17 +125,26 @@ export namespace ApiV3 {
     const body = payload === undefined ? undefined : JSON.stringify(payload);
 
     return new Promise(async (resolve, reject) => {
+      const requestLog = [];
       try {
         // Allow requests to be monitored or manipulated
         let requestInfo: RequestDetail = {method, headers: buildHeaders(), body};
         if (config.requestInterceptor) {
           [url, requestInfo] = config.requestInterceptor(url, requestInfo);
         }
+
+        if (process.env['LOG_REQUESTS'] === 'true') {
+          requestLog.push(`API V3 Request: ${url}`, requestInfo);
+        }
         const response = await fetch(url, requestInfo);
 
         const {status, statusText, headers} = response;
         if (status >= 200 && status <= 299) {
           const data: T = await response.json();
+          if (process.env['LOG_REQUESTS'] === 'true') {
+            requestLog.push(`(${response.status}) body:`, data);
+            console.debug(...requestLog);
+          }
           const httpResponse: HttpResponse<T> = {
             success: true,
             data,
@@ -171,6 +180,10 @@ export namespace ApiV3 {
           }
         }
       } catch (error) {
+        if (process.env['LOG_REQUESTS'] === 'true') {
+          requestLog.push('Unexpected Error:', error.message, error.stack);
+          console.debug(...requestLog);
+        }
         const httpError = new HttpError(error.message, ErrorCode.Unexpected);
         httpError.stack = error.stack;
         reject(httpError);
