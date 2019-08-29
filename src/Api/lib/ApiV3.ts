@@ -125,17 +125,26 @@ export namespace ApiV3 {
     const body = payload === undefined ? undefined : JSON.stringify(payload);
 
     return new Promise(async (resolve, reject) => {
+      const requestLog: any[] = [];
       try {
         // Allow requests to be monitored or manipulated
         let requestInfo: RequestDetail = {method, headers: buildHeaders(), body};
         if (config.requestInterceptor) {
           [url, requestInfo] = config.requestInterceptor(url, requestInfo);
         }
+
+        if (process.env['LOG_REQUESTS'] === 'true') {
+          requestLog.push(`API V3 Request: ${url}`, requestInfo);
+        }
         const response = await fetch(url, requestInfo);
 
         const {status, statusText, headers} = response;
         if (status >= 200 && status <= 299) {
           const data: T = await response.json();
+          if (process.env['LOG_REQUESTS'] === 'true') {
+            requestLog.push(`(${response.status}) body:`, JSON.stringify(data));
+            console.debug(...requestLog);
+          }
           const httpResponse: HttpResponse<T> = {
             success: true,
             data,
@@ -151,11 +160,10 @@ export namespace ApiV3 {
           }
 
           if (retryable && options.retry) {
-            ApiV3.request<T>(method, path, payload, {retry: false}).then((_result) => {
-              resolve(_result);
-            }, (_error) => {
-              console.error(_error);
-              reject(_error);
+            ApiV3.request<T>(method, path, payload, {retry: false}).then((result) => {
+              resolve(result);
+            }, (error) => {
+              reject(error);
             });
           } else {
             const httpResponse: HttpResponse<V3ErrorResponse> = {
@@ -166,11 +174,20 @@ export namespace ApiV3 {
               headers
             };
             const httpError = new HttpError(response.statusText, ErrorCode.Non2xx, httpResponse);
-            console.error(httpError);
+            if (process.env['LOG_REQUESTS'] === 'true') {
+              requestLog.push(`(${response.status}) body:`, JSON.stringify(httpResponse.data));
+              console.debug(...requestLog);
+            } else {
+              console.error(httpError, JSON.stringify(httpResponse.data));
+            }
             reject(httpError);
           }
         }
       } catch (error) {
+        if (process.env['LOG_REQUESTS'] === 'true') {
+          requestLog.push('Unexpected Error:', error.message, error.stack);
+          console.debug(...requestLog);
+        }
         const httpError = new HttpError(error.message, ErrorCode.Unexpected);
         httpError.stack = error.stack;
         reject(httpError);

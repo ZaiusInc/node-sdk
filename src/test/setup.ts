@@ -5,7 +5,8 @@ process.env = Object.assign(process.env, {
 });
 
 // silence expected console.error()
-jest.spyOn(global.console, 'error').mockImplementation(() => jest.fn());
+jest.spyOn(global.console, 'error').mockImplementation();
+jest.spyOn(global.console, 'debug').mockImplementation();
 
 beforeEach(() => {
   expect.hasAssertions();
