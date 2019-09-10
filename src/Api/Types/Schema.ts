@@ -1,6 +1,6 @@
 /**
  * The Zaius Field definition payload for schema APIs.
- * See [V3 Schema API](https://old.developers.zaius.com/v3/reference#create-fields-2) for details.
+ * See [V3 Schema API](https://docs.developers.zaius.com/api/rest-api/advanced/schema#create-field) for details.
  */
 export interface FieldDefinition {
   /**
@@ -30,7 +30,7 @@ export interface FieldDefinition {
 
 /**
  * The Zaius Object definition payload for schema APIs.
- * See [V3 Schema API](https://old.developers.zaius.com/reference#create-object) for details.
+ * See [V3 Schema API](https://docs.developers.zaius.com/api/rest-api/advanced/schema#create-object) for details.
  */
 export interface ObjectDefinition {
   /**
@@ -64,7 +64,7 @@ export interface ObjectDefinition {
 
 /**
  * The Zaius Relation definition payload for schema APIs.
- * See [V3 Schema API](https://old.developers.zaius.com/v3/reference#relationships) for details.
+ * See [V3 Schema API](https://docs.developers.zaius.com/api/rest-api/advanced/schema#create-relationship) for details.
  */
 export interface RelationDefinition {
   /**

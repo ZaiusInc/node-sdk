@@ -12,7 +12,7 @@ export interface EventData {
 
 /**
  * The Zaius Event payload.
- * See [V3 Event API](https://zaius.services/docs/zaius_api.html#tag/Events/operation/insertEvents) for details.
+ * See [V3 Event API](https://docs.developers.zaius.com/api/rest-api/events) for details.
  */
 export interface EventPayload {
   /**

@@ -40,10 +40,12 @@ describe('relations', () => {
       };
       await createRelation('customers', relation);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/customers/relations', relation);
+      postFn.mockRestore();
     });
 
     it('throws an error if the api returns an error', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
+      const postFn = jest.spyOn(ApiV3, 'post')
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const relation: RelationDefinition = {
         name: 'favorite_product',
         display_name: 'Favorite product',
@@ -51,10 +53,11 @@ describe('relations', () => {
         join_fields: [{parent: 'favorite_product_id', child: 'product_id'}]
       };
       await expect(createRelation('customers', relation)).rejects.toThrowError('Bad Request');
+      postFn.mockRestore();
     });
 
     it('throws an exists error if the relation already exists', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
         data: {
           detail: {
             invalids: [{
@@ -71,6 +74,7 @@ describe('relations', () => {
         join_fields: [{parent: 'favorite_product_id', child: 'product_id'}]
       };
       await expect(createRelation('customers', relation)).rejects.toThrowError(ApiRelationExistsError);
+      postFn.mockRestore();
     });
   });
 
@@ -89,6 +93,7 @@ describe('relations', () => {
       };
       await createRelation('test_profile', relation);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/test_profile/relations', relation);
+      postFn.mockRestore();
     });
 
     it('allows relations prefixed with app_id', async () => {
@@ -101,6 +106,7 @@ describe('relations', () => {
       };
       await createRelation('customers', relation);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/customers/relations', relation);
+      postFn.mockRestore();
     });
 
     it('throws a validation error if an relation is not prefixed with app_id', async () => {

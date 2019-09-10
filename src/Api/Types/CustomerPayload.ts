@@ -3,7 +3,7 @@ import {Identifiers} from './Identifiers';
 
 /**
  * The Zaius Customer payload. See
- * [V3 Customers API](https://zaius.services/docs/zaius_api.html#tag/Customer-Profiles/operation/upsertCustomers)
+ * [V3 Customers API](https://docs.developers.zaius.com/api/rest-api/customers)
  * for details.
  */
 export interface CustomerPayload {

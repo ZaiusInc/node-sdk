@@ -35,16 +35,19 @@ describe('fields', () => {
       const field: FieldDefinition = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await createField('my_object', field);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/my_object/fields', field);
+      postFn.mockRestore();
     });
 
     it('throws an error if the api returns an error', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
+      const postFn = jest.spyOn(ApiV3, 'post')
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const field: FieldDefinition = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError('Bad Request');
+      postFn.mockRestore();
     });
 
     it('throws an exists error if the field already exists', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
         data: {
           detail: {
             invalids: [{
@@ -56,6 +59,7 @@ describe('fields', () => {
       } as any));
       const field: FieldDefinition = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError(ApiFieldExistsError);
+      postFn.mockRestore();
     });
   });
 
@@ -69,6 +73,7 @@ describe('fields', () => {
       const field: FieldDefinition = {name: 'test_my_field', display_name: 'Test App My Field', type: 'string'};
       await createField('my_object', field);
       expect(postFn).toHaveBeenCalledWith('/schema/objects/my_object/fields', field);
+      postFn.mockRestore();
     });
 
     it('throws a validation error if a field is not prefixed with app_id', async () => {
