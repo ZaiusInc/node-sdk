@@ -32,11 +32,14 @@ describe('modules', () => {
       const getFn = jest.spyOn(ApiV3, 'get').mockResolvedValueOnce({} as any);
       await getEnabledModules();
       expect(getFn).toHaveBeenCalledWith('/schema/modules');
+      getFn.mockRestore();
     });
 
     it('throws an error if the api returns an error', async () => {
-      jest.spyOn(ApiV3, 'get').mockRejectedValueOnce(new ApiV3.HttpError("I'm a teapot", undefined, {} as any));
+      const getFn = jest.spyOn(ApiV3, 'get')
+        .mockRejectedValueOnce(new ApiV3.HttpError("I'm a teapot", undefined, {} as any));
       await expect(getEnabledModules()).rejects.toThrowError("I'm a teapot");
+      getFn.mockRestore();
     });
   });
 
@@ -49,15 +52,18 @@ describe('modules', () => {
       const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
       await enableModule('foo');
       expect(postFn).toHaveBeenCalledWith('/schema/modules', {module: 'foo'});
+      postFn.mockRestore();
     });
 
     it('throws an error if the api returns an error', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
+      const postFn = jest.spyOn(ApiV3, 'post')
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       await expect(enableModule('foo')).rejects.toThrowError('Bad Request');
+      postFn.mockRestore();
     });
 
     it('throws an already enabled error if the module is already enabled', async () => {
-      jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
         data: {
           detail: {
             invalids: [{
@@ -68,6 +74,7 @@ describe('modules', () => {
         }
       } as any));
       await expect(enableModule('foo')).rejects.toThrowError(ApiModuleAlreadyEnabledError);
+      postFn.mockRestore();
     });
   });
 });

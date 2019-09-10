@@ -1,9 +1,35 @@
 import {ApiV3} from '../lib/ApiV3';
 import {ObjectDefinition} from '../Types';
 import {ApiObjectExistsError} from './ApiObjectExistsError';
+import {ApiObjectNotFoundError} from './ApiObjectNotFoundError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
+
+/**
+ * Gets the definition of a Zaius object.
+ * @param name the object name
+ * @throws {ApiObjectNotFoundError} if there is no object with the given name
+ * @throws {HttpError} if it receives any other non-2XX result
+ */
+export async function getObject(name: string): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
+  try {
+    return await ApiV3.get(`/schema/objects/${name}`);
+  } catch (e) {
+    if (e instanceof ApiV3.HttpError && e.response && e.response.status === 404) {
+      throw new ApiObjectNotFoundError(e);
+    }
+    throw e;
+  }
+}
+
+/**
+ * Gets the definitions of all Zaius objects.
+ * @throws {HttpError} if it receives a non-2XX result
+ */
+export async function getAllObjects(): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> {
+  return await ApiV3.get('/schema/objects');
+}
 
 /**
  * Create a custom Zaius object
@@ -15,7 +41,7 @@ export async function createObject(object: ObjectDefinition): Promise<ApiV3.Http
   validateCreateObject(object);
 
   try {
-    return await ApiV3.post(`/schema/objects`, object);
+    return await ApiV3.post('/schema/objects', object);
   } catch (e) {
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
