@@ -1,4 +1,3 @@
-import * as deepFreeze from 'deep-freeze';
 import 'jest';
 import {ApiV3} from '../lib/ApiV3';
 import {ObjectPayload} from '../Types';
@@ -11,7 +10,7 @@ describe('object', () => {
   });
 
   it('sends a post to /objects/{type}', async () => {
-    const payload = deepFreeze({product_id: 'P1234', name: 'Something Cool'});
+    const payload = {product_id: 'P1234', name: 'Something Cool'};
     await object('products', payload);
     expect(postMock).toHaveBeenCalledWith('/objects/products', payload);
   });
