@@ -2,7 +2,7 @@ import {PayloadSanitizer} from './PayloadSanitizer';
 
 describe('PayloadSanitizer', () => {
   describe('sanitize', () => {
-    var fixture = {};
+    let fixture = {};
     beforeEach(() => fixture = {
       empty: '',
       blank: '   ',

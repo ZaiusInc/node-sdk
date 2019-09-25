@@ -20,14 +20,14 @@ describe('object', () => {
     const payload = {...expectedPayload, ...{blank: ' ', nullValue: null}};
     await object('products', payload);
     expect(postMock).toHaveBeenCalledWith('/objects/products', expectedPayload);
-  })
+  });
 
   it('applies PayloadOptions', async () => {
     const expectedPayload = {product_id: 'P1234', name: 'Something Cool', blank: ' '};
     const payload = {product_id: 'P1234', name: 'Something Cool', blank: ' ', nullValue: null};
     await object('products', payload, {trimToNull: false});
     expect(postMock).toHaveBeenCalledWith('/objects/products', expectedPayload);
-  })
+  });
 
   it('throws an error if too many objects are sent in one call', async () => {
     const payload: ObjectPayload[] = [];
