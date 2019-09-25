@@ -5,8 +5,8 @@ export interface Payload {
 }
 
 export interface PayloadOptions {
-  trimToNull: boolean;
-  excludeNulls: boolean;
+  trimToNull?: boolean;
+  excludeNulls?: boolean;
 }
 
 export const DEFAULT_PAYLOAD_OPTIONS = {
@@ -20,17 +20,17 @@ export class PayloadSanitizer {
    * @param payload to sanitize
    * @param opts for processing default {trimToNull & excludeNulls}
    */
-  public static sanitize<T extends Payload>(payload: T, opts: PayloadOptions = DEFAULT_PAYLOAD_OPTIONS): void {
+  public static sanitize<T extends Payload>(payload: T, opts: PayloadOptions = {}): void {
+    opts = {...DEFAULT_PAYLOAD_OPTIONS, ...opts};
     Object.entries(payload).forEach(([key, value]) => {
       if (typeof value === 'string') {
         if (opts.trimToNull) {
           value = value!.trim();
           payload[key] = value!.length === 0 ? null : value;
         }
-
-        if (opts.excludeNulls && !payload[key]) {
-          delete payload[key];
-        }
+      }
+      if (opts.excludeNulls && payload[key] === null) {
+        delete payload[key];
       }
     });
   }
