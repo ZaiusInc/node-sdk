@@ -1,7 +1,7 @@
 import {FieldValue} from '../Types';
 
 export interface Payload {
-  [field: string]: FieldValue;
+  [field: string]: FieldValue | undefined;
 }
 
 export interface PayloadOptions {
@@ -29,7 +29,7 @@ export class PayloadSanitizer {
           payload[key] = value!.length === 0 ? null : value;
         }
       }
-      if (opts.excludeNulls && payload[key] === null) {
+      if (opts.excludeNulls && payload[key] == null) {
         delete payload[key];
       }
     });

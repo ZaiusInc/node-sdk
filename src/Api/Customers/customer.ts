@@ -1,6 +1,12 @@
 import {ApiV3} from '../lib/ApiV3';
-import {CustomerPayload, CustomerResponse} from '../Types';
+import {CustomerPayload, CustomerResponse, FieldValue} from '../Types';
 import {PayloadSanitizer, PayloadOptions} from '../lib/PayloadSanitizer';
+
+interface TransformedCustomerPayload {
+  attributes: {
+    [field: string]: FieldValue | undefined
+  };
+}
 
 /**
  * Send a customer or a batch of customers to Zaius.
@@ -18,16 +24,16 @@ export function customer(
     if (payload.length > ApiV3.BATCH_LIMIT) {
       return Promise.reject(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
     }
-    payload.forEach((p) => PayloadSanitizer.sanitize(p.attributes, opts));
     transformedPayload = payload.map(transformPayload);
+    transformedPayload.forEach((p) => PayloadSanitizer.sanitize(p.attributes, opts));
   } else {
-    PayloadSanitizer.sanitize(payload.attributes, opts);
     transformedPayload = transformPayload(payload);
+    PayloadSanitizer.sanitize(transformedPayload.attributes, opts);
   }
   return ApiV3.post('/profiles', transformedPayload);
 }
 
-function transformPayload(payload: CustomerPayload) {
+function transformPayload(payload: CustomerPayload): TransformedCustomerPayload {
   // For now, we have to combine the identifiers back in with the rest of the attributes. This will go away once the
   // HTTP API is updated to accept the identifiers separately.
   return {attributes: {...payload.attributes, ...payload.identifiers}};
