@@ -1,7 +1,10 @@
 import {ApiV3} from '../lib/ApiV3';
-import {CustomerPayload, CustomerResponse, FieldValue} from '../Types';
-import {PayloadSanitizer, PayloadOptions} from '../lib/PayloadSanitizer';
+import {CustomerPayload, CustomerResponse, FieldValue, PayloadOptions} from '../Types';
+import {PayloadSanitizer} from '../lib/PayloadSanitizer';
 
+/**
+ * @hidden
+ */
 interface TransformedCustomerPayload {
   attributes: {
     [field: string]: FieldValue | undefined
