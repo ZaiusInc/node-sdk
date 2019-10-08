@@ -1,6 +1,6 @@
 import {ApiV3} from '../lib/ApiV3';
-import {ObjectPayload, ObjectResponse} from '../Types';
-import {PayloadSanitizer, PayloadOptions} from '../lib/PayloadSanitizer';
+import {ObjectPayload, ObjectResponse, PayloadOptions} from '../Types';
+import {PayloadSanitizer} from '../lib/PayloadSanitizer';
 
 /**
  * Send an object or a batch of objects to Zaius

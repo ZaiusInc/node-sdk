@@ -1,19 +1,23 @@
-import {FieldValue} from '../Types';
+import {FieldValue, PayloadOptions} from '../Types';
 
+/**
+ * @hidden
+ */
 export interface Payload {
   [field: string]: FieldValue | undefined;
 }
 
-export interface PayloadOptions {
-  trimToNull?: boolean;
-  excludeNulls?: boolean;
-}
-
-export const DEFAULT_PAYLOAD_OPTIONS = {
+/**
+ * @hidden
+ */
+const DEFAULT_PAYLOAD_OPTIONS = {
   trimToNull: true,
   excludeNulls: true
 };
 
+/**
+ * @hidden
+ */
 export class PayloadSanitizer {
   /**
    * Inline update of the payload based on the provided/default options
