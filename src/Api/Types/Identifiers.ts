@@ -12,7 +12,7 @@ export interface Identifiers {
    */
   vuid?: string;
   /**
-   * Other identifiers known to the account, such as `zaius_alias_my_identifier`
+   * Other identifiers known to the account, such as `my_app_cart_token`
    */
   [field: string]: string | undefined;
 }

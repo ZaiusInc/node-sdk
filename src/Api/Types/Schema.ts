@@ -108,3 +108,42 @@ interface JoinField {
 export interface ModulesResponse {
   enabled_modules: string[];
 }
+
+/**
+ * The Zaius Identifier definition payload for schema API.
+ * See [V3 Schema API](https://docs.developers.zaius.com/api/rest-api/advanced/identifiers) for details.
+ */
+export interface IdentifierDefinition {
+  /**
+   * The field name of the identifier, ending with of the known suffixes: id, hash, number, token, alias, address, key.
+   */
+  name: string;
+  /**
+   * The human-readable name, ending with title-case version of the name suffix: ID, Hash, Number, Token, Alias,
+   * Address, Key.
+   */
+  display_name: string;
+  /**
+   * The level of confidence that this identifier can be used to merge customer profiles together and is NOT shared
+   * between individuals (eg, a shared device token).
+   */
+  merge_confidence: 'low' | 'high';
+  /**
+   * Whether this identifier can be used to message customers within campaigns.
+   */
+  messaging?: boolean;
+}
+
+/**
+ * Response format for a successful post to the V3 Identifiers API.
+ */
+export interface CreateIdentifierResponse {
+  /**
+   * The fields that were added to the Events object as a result of creating the identifier.
+   */
+  events: FieldDefinition[];
+  /**
+   * The fields that were added to the Customers object as a result of creating the identifier.
+   */
+  customers: FieldDefinition[];
+}
