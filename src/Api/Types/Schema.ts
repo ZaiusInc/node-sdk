@@ -115,17 +115,19 @@ export interface ModulesResponse {
  */
 export interface IdentifierDefinition {
   /**
-   * The field name of the identifier, ending with of the known suffixes: id, hash, number, token, alias, address, key.
+   * The field name of the identifier, ending with one of the known suffixes: "_id", "_hash", "_number", "_token",
+   * "_alias", "_address", or "_key".
    */
   name: string;
   /**
-   * The human-readable name, ending with title-case version of the name suffix: ID, Hash, Number, Token, Alias,
-   * Address, Key.
+   * The human-readable name, ending with title-case version of the name suffix: " ID", " Hash", " Number", " Token",
+   * " Alias", " Address", or " Key".
    */
   display_name: string;
   /**
-   * The level of confidence that this identifier can be used to merge customer profiles together and is NOT shared
-   * between individuals (eg, a shared device token).
+   * The level of confidence that this identifier can be used to merge customer profiles together. If the identifier
+   * is likely to be shared between individuals (eg, a shared device token), this value should be set to "low". If it
+   * is very deterministic (eg, a personal account ID), this value should be set to "high".
    */
   merge_confidence: 'low' | 'high';
   /**

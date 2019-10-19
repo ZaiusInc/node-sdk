@@ -17,7 +17,7 @@ export async function createIdentifier(
   validateCreateIdentifier(identifier);
 
   try {
-    return await ApiV3.post(`/schema/identifiers`, identifier);
+    return await ApiV3.post('/schema/identifiers', identifier);
   } catch (e) {
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
