@@ -68,9 +68,9 @@ export interface GetReachabilityResponse {
   /**
    * The reason for the update that last changed the reachability of this identifier
    */
-  reachable_update_reason: string;
+  reachable_update_reason: string | null;
   /**
    * The time (unix epoch, seconds) of the last update that last changed the reachability of this identifier
    */
-  reachable_update_ts: number;
+  reachable_update_ts: number | null;
 }

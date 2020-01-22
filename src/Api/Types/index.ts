@@ -1,3 +1,4 @@
+export * from './Consent';
 export * from './CustomerPayload';
 export * from './EventPayload';
 export * from './FieldValue';
