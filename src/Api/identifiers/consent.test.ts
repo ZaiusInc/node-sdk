@@ -1,8 +1,8 @@
+import 'jest';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ConsentUpdate} from '../Types';
 import {getConsent, updateConsent} from './consent';
-import './node_modules/jest';
 
 const mockConfiguration: InternalConfig = {
   trackerId: 'vdl',

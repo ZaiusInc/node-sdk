@@ -1,7 +1,7 @@
+import 'jest';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ListUpdateRequest} from '../Types/Lists';
-import './node_modules/jest';
 import {subscribe, unsubscribe, updateSubscriptions} from './subscriptions';
 
 const mockConfiguration: InternalConfig = {
