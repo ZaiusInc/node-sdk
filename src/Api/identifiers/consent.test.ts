@@ -1,8 +1,8 @@
-import 'jest';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ConsentUpdate} from '../Types';
 import {getConsent, updateConsent} from './consent';
+import './node_modules/jest';
 
 const mockConfiguration: InternalConfig = {
   trackerId: 'vdl',
@@ -11,11 +11,11 @@ const mockConfiguration: InternalConfig = {
 };
 
 describe('consent', () => {
-  describe('updateConsent', () => {
-    beforeAll(() => {
-      ApiV3.configure(mockConfiguration);
-    });
+  beforeAll(() => {
+    ApiV3.configure(mockConfiguration);
+  });
 
+  describe('updateConsent', () => {
     it('sends a post to /consent', async () => {
       const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
       const update: ConsentUpdate = Object.freeze({
