@@ -1,6 +1,7 @@
 import {config, configure} from './config';
 import {customer} from './Customers/customer';
 import {event} from './Events/event';
+import * as identifier from './identifiers';
 import {object} from './Objects/object';
 import * as schema from './Schema';
 import * as Zaius from './Types';
@@ -33,7 +34,11 @@ export const z = {
   /**
    * Manage schema (Zaius domain objects and fields) using the v3 APIs
    */
-  schema
+  schema,
+  /**
+   * Manage customer identifiers using the v3 APIs
+   */
+  identifier
 };
 
 export {Zaius};

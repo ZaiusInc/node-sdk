@@ -22,15 +22,24 @@ export namespace ApiV3 {
   }
 
   /**
+   * Standard 200/202 response format for many Zaius v3 API calls
+   */
+  export interface V3SuccessResponse {
+    title: 'Accepted' | string;
+    status: 202 | 200 | number;
+    timestamp: string;
+  }
+
+  /**
    * The error response payload format of a Zaius v3 API call
    */
   export interface V3ErrorResponse {
     title: string;
-    status: number;
+    status: 400 | 500 | number;
     timestamp: string;
     message?: string;
     detail?: {
-      invalids?: V3InvalidEventDetail[] | V3InvalidSchemaDetail[]
+      invalids?: V3InvalidEventDetail[] | V3InvalidSchemaDetail[];
       [key: string]: any;
     };
   }
@@ -107,7 +116,7 @@ export namespace ApiV3 {
     return new HttpError(ERROR_CODE_MESSAGES[code], code);
   }
 
-  export function get<T extends V3Response>(path: string) {
+  export function get<T = V3Response>(path: string) {
     return request<T>('GET', path, undefined);
   }
 
@@ -160,11 +169,14 @@ export namespace ApiV3 {
           }
 
           if (retryable && options.retry) {
-            ApiV3.request<T>(method, path, payload, {retry: false}).then((result) => {
-              resolve(result);
-            }, (error) => {
-              reject(error);
-            });
+            ApiV3.request<T>(method, path, payload, {retry: false}).then(
+              (result) => {
+                resolve(result);
+              },
+              (error) => {
+                reject(error);
+              }
+            );
           } else {
             const httpResponse: HttpResponse<V3ErrorResponse> = {
               success: false,
