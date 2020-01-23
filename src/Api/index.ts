@@ -1,15 +1,25 @@
 import {config, configure} from './config';
 import {customer} from './Customers/customer';
 import {event} from './Events/event';
-import * as identifier from './Identifiers';
-import * as list from './List';
+import {identifier} from './Identifiers';
+import {list} from './List';
 import {object} from './Objects/object';
-import * as schema from './Schema';
+import {schema} from './Schema';
 import * as Zaius from './Types';
 
 /**
  * The preferred export for utilizing the Zaius Node SDK.
- * @usage `import {z} from '@zaius/node-sdk';`
+ * @usage
+ * ```
+ *
+ * import {z} from '@zaius/node-sdk';
+ *
+ * // Send an event to Zaius
+ * await z.event(...);
+ * // Subscribe a customer by an identifier to a list
+ * await z.list.subscribe(...);
+ * // etc
+ * ```
  */
 export const z = {
   /**
