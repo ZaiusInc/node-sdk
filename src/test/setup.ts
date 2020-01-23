@@ -4,7 +4,7 @@ process.env = Object.assign(process.env, {
   ZAIUS_SDK_API_KEY: 'private.api_key'
 });
 
-// silence expected console.error()
+// silence expected console.error() uncomment to debug tests with errors
 jest.spyOn(global.console, 'error').mockImplementation();
 jest.spyOn(global.console, 'debug').mockImplementation();
 

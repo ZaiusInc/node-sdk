@@ -16,3 +16,36 @@ export interface Identifiers {
    */
   [field: string]: string | undefined;
 }
+
+/**
+ * Custom metadata that can be added to any identifier.
+ * Do not include fields you do not want to update.
+ */
+export interface IdentifierMetadata {
+  /**
+   * The fields must already exist before updating.
+   * The value should be a string, number, or boolean value matching the metadata field type.
+   * An explicitly null value will remove the previous value.
+   */
+  [field: string]: string | number | boolean | null;
+}
+
+export interface IdentifierMetadataResponse {
+  /**
+   * The name of the identifier field, e.g., email
+   */
+  identifier_value: string;
+  /**
+   * The identifier value requested, such as a customer's email address
+   */
+  identifier_field_name: string;
+  /**
+   * An object representing the metadata associated with this identifier value
+   */
+  metadata: IdentifierMetadata;
+  /**
+   * The time the metadata was last updated. Time expressed as seconds since the unix epoch.
+   * Convert to a date with `new Date(metadata_update_ts * 1000)`.
+   */
+  metadata_update_ts: number | null;
+}
