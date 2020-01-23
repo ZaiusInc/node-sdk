@@ -16,7 +16,7 @@ export interface CustomerPayload {
    * A set of known customer attributes such as name, timezone, etc.
    */
   attributes: {
-    [field: string]: FieldValue
+    [field: string]: FieldValue;
   };
 }
 

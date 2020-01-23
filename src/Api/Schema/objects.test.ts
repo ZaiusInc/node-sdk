@@ -39,14 +39,16 @@ describe('objects', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const getFn = jest.spyOn(ApiV3, 'get')
+      const getFn = jest
+        .spyOn(ApiV3, 'get')
         .mockRejectedValueOnce(new ApiV3.HttpError('Gateway Timeout', undefined, {} as any));
       await expect(getObject('my_object')).rejects.toThrowError('Gateway Timeout');
       getFn.mockRestore();
     });
 
     it('throws a not found error if the object does not exist', async () => {
-      const getFn = jest.spyOn(ApiV3, 'get')
+      const getFn = jest
+        .spyOn(ApiV3, 'get')
         .mockRejectedValueOnce(new ApiV3.HttpError('Not Found', undefined, {status: 404} as any));
       await expect(getObject('my_object')).rejects.toThrowError(ApiObjectNotFoundError);
       getFn.mockRestore();
@@ -66,7 +68,8 @@ describe('objects', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const getFn = jest.spyOn(ApiV3, 'get')
+      const getFn = jest
+        .spyOn(ApiV3, 'get')
         .mockRejectedValueOnce(new ApiV3.HttpError('Access Denied', undefined, {} as any));
       await expect(getAllObjects()).rejects.toThrowError('Access Denied');
       getFn.mockRestore();
@@ -91,7 +94,8 @@ describe('objects', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post')
+      const postFn = jest
+        .spyOn(ApiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const object: ObjectDefinition = {
         name: 'my_object',
@@ -103,16 +107,20 @@ describe('objects', () => {
     });
 
     it('throws an exists error if the object already exists', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
-        data: {
-          detail: {
-            invalids: [{
-              field: 'name',
-              reason: 'already used by another object'
-            }]
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(
+        new ApiV3.HttpError('Bad Request', undefined, {
+          data: {
+            detail: {
+              invalids: [
+                {
+                  field: 'name',
+                  reason: 'already used by another object'
+                }
+              ]
+            }
           }
-        }
-      } as any));
+        } as any)
+      );
       const object: ObjectDefinition = {
         name: 'my_object',
         display_name: 'My Object',

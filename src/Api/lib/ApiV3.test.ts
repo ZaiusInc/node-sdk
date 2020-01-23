@@ -12,7 +12,9 @@ describe('post', () => {
 
   it('performs a POST request', async () => {
     const payload = Object.freeze({foo: 'bar'});
-    nock('https://api.zaius.com').post('/v3/foo/bar', {key: 'value'}).reply(200, payload);
+    nock('https://api.zaius.com')
+      .post('/v3/foo/bar', {key: 'value'})
+      .reply(200, payload);
 
     const result = await ApiV3.post('/foo/bar', {key: 'value'});
 
@@ -36,7 +38,9 @@ describe('request', () => {
   });
 
   it('normalizes successful responses', async () => {
-    nock('https://api.zaius.com').post('/v3/foo', {}).reply(200, '"bar"', {'request-id': '00000000'});
+    nock('https://api.zaius.com')
+      .post('/v3/foo', {})
+      .reply(200, '"bar"', {'request-id': '00000000'});
 
     const result = await ApiV3.request('POST', '/foo', {});
     expect(result).toEqual({
@@ -49,7 +53,9 @@ describe('request', () => {
   });
 
   it('normalizes error responses', async () => {
-    nock('https://api.zaius.com').post('/v3/foo', {}).reply(400, '"bar"', {'request-id': '00000001'});
+    nock('https://api.zaius.com')
+      .post('/v3/foo', {})
+      .reply(400, '"bar"', {'request-id': '00000001'});
 
     const result = await ApiV3.request('POST', '/foo', {}, {retry: false}).catch((e) => e.response);
     expect(result).toEqual({
@@ -63,8 +69,10 @@ describe('request', () => {
 
   describe('retries', () => {
     it('retries once when the response is a 502', async () => {
-      nock('https://api.zaius.com').post('/v3/bar', {})
-        .times(2).reply(502, '502');
+      nock('https://api.zaius.com')
+        .post('/v3/bar', {})
+        .times(2)
+        .reply(502, '502');
 
       const requestFn = jest.spyOn(ApiV3, 'request');
       await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
@@ -72,7 +80,9 @@ describe('request', () => {
     });
 
     it('does not retry when it receives a 4XX', async () => {
-      nock('https://api.zaius.com').post('/v3/bar', {}).reply(400, '400');
+      nock('https://api.zaius.com')
+        .post('/v3/bar', {})
+        .reply(400, '400');
 
       const requestFn = jest.spyOn(ApiV3, 'request');
       await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
@@ -81,8 +91,10 @@ describe('request', () => {
 
     it('can succeed after a retry', async () => {
       nock('https://api.zaius.com')
-        .post('/v3/bar', {}).reply(502, '"NO"')
-        .post('/v3/bar', {}).reply(200, '"OK"');
+        .post('/v3/bar', {})
+        .reply(502, '"NO"')
+        .post('/v3/bar', {})
+        .reply(200, '"OK"');
 
       const requestFn = jest.spyOn(ApiV3, 'request');
       const result = await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
@@ -98,7 +110,7 @@ describe('request', () => {
       headers: {'x-foo': 'foo'},
       body: '"foo"'
     });
-    configure({
+    configure(({
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -108,9 +120,11 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig> as InternalConfig);
+    } as Partial<InternalConfig>) as InternalConfig);
 
-    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}}).put('/v3/foo', '"foo"').reply(200, '"bar"', {});
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
+      .put('/v3/foo', '"foo"')
+      .reply(200, '"bar"', {});
 
     const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
     expect(result).toEqual({
@@ -129,7 +143,7 @@ describe('request', () => {
       headers: Object.freeze({'x-foo': 'foo'}),
       body: '"foo"'
     });
-    configure({
+    configure(({
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -139,9 +153,11 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig> as InternalConfig);
+    } as Partial<InternalConfig>) as InternalConfig);
 
-    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}}).put('/v3/foo', '"foo"').reply(200, '"bar"', {});
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
+      .put('/v3/foo', '"foo"')
+      .reply(200, '"bar"', {});
 
     const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
     expect(result).toEqual({
@@ -167,7 +183,7 @@ describe('request', () => {
       headers: Object.freeze({'x-foo': 'foo'}),
       body: '"foo"'
     });
-    configure({
+    configure(({
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -177,9 +193,10 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig> as InternalConfig);
+    } as Partial<InternalConfig>) as InternalConfig);
 
-    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}}).put('/v3/foo', '"foo"')
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
+      .put('/v3/foo', '"foo"')
       .reply(400, '{"errors": ["bar"]}', {});
 
     await ApiV3.request('POST', '/bar', {foo: 'bar'}).catch((e) => e.response);

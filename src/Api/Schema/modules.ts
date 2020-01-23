@@ -24,7 +24,7 @@ export async function enableModule(module: string): Promise<ApiV3.HttpResponse<M
   } catch (e) {
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
-        e.response.data && e.response.data.detail && e.response.data.detail.invalids as V3InvalidSchemaDetail[];
+        e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'module', (reason) => reason === 'already enabled')) {
         throw new ApiModuleAlreadyEnabledError(e);
       }

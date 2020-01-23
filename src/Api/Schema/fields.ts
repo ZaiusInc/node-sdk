@@ -23,7 +23,7 @@ export async function createField(
   } catch (e) {
     if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
-        e.response.data && e.response.data.detail && e.response.data.detail.invalids as V3InvalidSchemaDetail[];
+        e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'name', (reason) => /^already used/.test(reason))) {
         throw new ApiFieldExistsError(e);
       }
