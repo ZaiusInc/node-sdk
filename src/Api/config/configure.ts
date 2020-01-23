@@ -44,7 +44,7 @@ const DEFAULT_CONFIG: InternalConfig = Object.freeze({
   trackerId: process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
   apiBasePath: process.env['ZAIUS_SDK_API_BASE_PATH'] || 'https://api.zaius.com/v3/',
   requestId: process.env['ZAIUS_SDK_TEST_REQUEST_ID'],
-  apiKey: process.env['ZAIUS_SDK_API_KEY'] || process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
+  apiKey: process.env['ZAIUS_SDK_API_KEY'] || process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown'
 });
 
 /**

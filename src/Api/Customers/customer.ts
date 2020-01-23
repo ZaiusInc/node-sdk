@@ -7,7 +7,7 @@ import {PayloadSanitizer} from '../lib/PayloadSanitizer';
  */
 interface TransformedCustomerPayload {
   attributes: {
-    [field: string]: FieldValue | undefined
+    [field: string]: FieldValue | undefined;
   };
 }
 

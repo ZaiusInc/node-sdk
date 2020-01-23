@@ -44,7 +44,8 @@ describe('relations', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post')
+      const postFn = jest
+        .spyOn(ApiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const relation: RelationDefinition = {
         name: 'favorite_product',
@@ -57,16 +58,20 @@ describe('relations', () => {
     });
 
     it('throws an exists error if the relation already exists', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
-        data: {
-          detail: {
-            invalids: [{
-              field: 'name',
-              reason: 'already used by another relation'
-            }]
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(
+        new ApiV3.HttpError('Bad Request', undefined, {
+          data: {
+            detail: {
+              invalids: [
+                {
+                  field: 'name',
+                  reason: 'already used by another relation'
+                }
+              ]
+            }
           }
-        }
-      } as any));
+        } as any)
+      );
       const relation: RelationDefinition = {
         name: 'favorite_product',
         display_name: 'Favorite product',
@@ -126,8 +131,9 @@ describe('relations', () => {
         child_object: 'test_loyalty_tiers',
         join_fields: [{parent: 'test_loyalty_tier_id', child: 'test_loyalty_tiers'}]
       };
-      await expect(createRelation('customers', relation))
-        .rejects.toThrowError(/relation display name.*must be prefixed/);
+      await expect(createRelation('customers', relation)).rejects.toThrowError(
+        /relation display name.*must be prefixed/
+      );
     });
   });
 });

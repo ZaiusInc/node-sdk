@@ -39,7 +39,8 @@ describe('fields', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post')
+      const postFn = jest
+        .spyOn(ApiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const field: FieldDefinition = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError('Bad Request');
@@ -47,16 +48,20 @@ describe('fields', () => {
     });
 
     it('throws an exists error if the field already exists', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
-        data: {
-          detail: {
-            invalids: [{
-              field: 'name',
-              reason: 'already used by another object'
-            }]
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(
+        new ApiV3.HttpError('Bad Request', undefined, {
+          data: {
+            detail: {
+              invalids: [
+                {
+                  field: 'name',
+                  reason: 'already used by another object'
+                }
+              ]
+            }
           }
-        }
-      } as any));
+        } as any)
+      );
       const field: FieldDefinition = {name: 'my_field', display_name: 'My Field', type: 'string'};
       await expect(createField('my_object', field)).rejects.toThrowError(ApiFieldExistsError);
       postFn.mockRestore();

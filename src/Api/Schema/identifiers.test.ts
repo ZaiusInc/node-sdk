@@ -43,7 +43,8 @@ describe('identifiers', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post')
+      const postFn = jest
+        .spyOn(ApiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const identifier: IdentifierDefinition = {
         name: 'my_thing_id',
@@ -55,16 +56,20 @@ describe('identifiers', () => {
     });
 
     it('throws an exists error if the identifier already exists', async () => {
-      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {
-        data: {
-          detail: {
-            invalids: [{
-              field: 'customers.name',
-              reason: 'already used by another field'
-            }]
+      const postFn = jest.spyOn(ApiV3, 'post').mockRejectedValueOnce(
+        new ApiV3.HttpError('Bad Request', undefined, {
+          data: {
+            detail: {
+              invalids: [
+                {
+                  field: 'customers.name',
+                  reason: 'already used by another field'
+                }
+              ]
+            }
           }
-        }
-      } as any));
+        } as any)
+      );
       const identifier: IdentifierDefinition = {
         name: 'my_thing_id',
         display_name: 'My Thing ID',

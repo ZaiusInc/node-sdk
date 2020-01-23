@@ -7,7 +7,7 @@ describe('joinUri', () => {
     expect(joinUri('http://foo', 'bar', 'baz')).toEqual('http://foo/bar/baz');
   });
 
-  it('doesn\'t add a path separator when it\'s not necessary', () => {
+  it("doesn't add a path separator when it's not necessary", () => {
     expect(joinUri('http://foo/', 'bar')).toEqual('http://foo/bar');
     expect(joinUri('http://foo', '/bar')).toEqual('http://foo/bar');
     expect(joinUri('http://foo', '/bar/', 'baz')).toEqual('http://foo/bar/baz');

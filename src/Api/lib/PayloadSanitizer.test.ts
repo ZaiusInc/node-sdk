@@ -3,12 +3,15 @@ import {PayloadSanitizer} from './PayloadSanitizer';
 describe('PayloadSanitizer', () => {
   describe('sanitize', () => {
     let fixture = {};
-    beforeEach(() => fixture = {
-      empty: '',
-      blank: '   ',
-      nullified: null,
-      value: 'value'
-    });
+    beforeEach(
+      () =>
+        (fixture = {
+          empty: '',
+          blank: '   ',
+          nullified: null,
+          value: 'value'
+        })
+    );
 
     it('by default should trimToNull and excludeNulls', async () => {
       PayloadSanitizer.sanitize(fixture);

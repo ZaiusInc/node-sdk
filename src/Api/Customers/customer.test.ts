@@ -77,7 +77,7 @@ describe('customer', () => {
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);
   });
 
-  it ('applies PayloadOptions with several customers', async () => {
+  it('applies PayloadOptions with several customers', async () => {
     const payload: CustomerPayload[] = [
       {identifiers: {email: 'test1@zaius.com'}, attributes: {name: 'Jim Bob', blank: ' ', nullValue: null}},
       {identifiers: {email: 'test2@zaius.com'}, attributes: {name: 'Bob Joe', blank: ' ', nullValue: null}},
