@@ -92,7 +92,7 @@ describe('subscriptions', () => {
       ]);
       expect(postFn).toHaveBeenCalledWith('/lists/subscriptions', [
         {
-          list_id: 'foo',
+          list_id: 'foo_only',
           email: 'foo@zaius.com',
           subscribed: true
         },
@@ -112,7 +112,7 @@ describe('subscriptions', () => {
         email: 'foo@zaius.com',
         subscribed: false
       } as ListUpdateRequest);
-      await expect(updateSubscriptions('everybody', updates)).rejects.toThrowError(ApiV3.ErrorCode.BatchLimitExceeded);
+      await expect(updateSubscriptions('everybody', updates)).rejects.toThrowError('maximum batch size');
       postFn.mockRestore();
     });
 

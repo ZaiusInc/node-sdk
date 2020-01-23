@@ -6,7 +6,7 @@ import {IdentifierMetadata, IdentifierMetadataResponse} from '../Types';
  * @param identifierFieldName The name of the identifier field you want to update, e.g., email
  * @param identifierValue An existing identifier value, such as a known email address
  * @param update the update to perform
- * @throws {HttpError} if it receives any other non-2XX result
+ * @throws {HttpError} if it receives any non-2XX result
  */
 export async function updateMetadata(
   identifierFieldName: string,
@@ -26,7 +26,7 @@ export async function updateMetadata(
  * @param identifierFieldName The name of the identifier field you want to get metadata on, e.g., email
  * @param identifierValue An existing identifier value, such as a known email address
  * @param update the update to perform
- * @throws {HttpError} if it receives any other non-2XX result
+ * @throws {HttpError} if it receives any non-2XX result
  */
 export async function getMetadata(
   identifierFieldName: string,

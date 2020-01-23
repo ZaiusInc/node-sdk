@@ -6,8 +6,8 @@ type EventFieldValue = FieldValue | EventData | EventData[];
 /**
  * Datatype representing the data payload of an event
  */
-export interface EventData {
-  [field: string]: EventFieldValue;
+export interface EventData extends Partial<DataSource> {
+  [field: string]: EventFieldValue | undefined;
 }
 
 /**
@@ -41,4 +41,30 @@ export interface EventResponse {
   title: string;
   status: number;
   timestamp: string;
+}
+
+/**
+ * Information about the source of an event or update.
+ * All information is automatically filled in for Zaius Apps and APIs,
+ * but you can augment the data source by specifying your specific source.
+ */
+export interface DataSource {
+  /**
+   * The type of source, e.g., app, csv, api
+   */
+  data_source_type: string;
+  /**
+   * The actual source, e.g., name of your app, path of an API
+   */
+  data_source: string;
+  /**
+   * Details about the source of the event, for example, "Import Job:customer_load20200101"
+   * This field can be used to help identify exactly where data and changes to data originated.
+   */
+  data_source_details: string;
+  /**
+   * Version information that might be useful for debugging. This version should correlate to the data_source
+   * or primary processor of the data.
+   */
+  data_source_version: string;
 }

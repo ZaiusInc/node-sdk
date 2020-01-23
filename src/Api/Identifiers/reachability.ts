@@ -6,7 +6,7 @@ import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
  * @param identifierFieldName The name of the messaging identifier field you want to update, e.g., email
  * @param identifierValue A valid messaging identifier value, such as an email address for the email identifier
  * @param update the update to perform
- * @throws {HttpError} if it receives any other non-2XX result
+ * @throws {HttpError} if it receives any non-2XX result
  */
 export async function updateReachability(
   identifierFieldName: string,

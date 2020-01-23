@@ -7,7 +7,7 @@ import {ListUpdateRequest, ListUpdateResponse} from '../Types/Lists';
  * @param listId The list id you want to subscribe the customer to
  * @param identifiers An object containing one or more messaging identifiers that will allow Zaius to uniquely
  * identify this person. Provide an array of objects to subscribe multiple customers
- * @throws {HttpError} if it receives any other non-2XX result
+ * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
 export async function subscribe(
   listId: string,
@@ -27,6 +27,7 @@ export async function subscribe(
  * @param listId The list id you want to unsubscribe the customer from
  * @param identifiers An object containing one or more messaging identifiers that will allow Zaius to uniquely
  * identify this person. Provide an array of objects to unsubscribe multiple customers
+ * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
 export async function unsubscribe(
   listId: string,
@@ -47,8 +48,7 @@ export async function unsubscribe(
  * this list will be used.
  * @param updates An array of updates to perform. An update is an object containing the identifier, a boolean for
  * subscribed, and optionally the list. If the list is not provided in an update object, the listId param will be used.
- * @throws {HttpError} if it receives any other non-2XX result
- * @throws {BatchLimitExceeded} if you attempt more than 100 updates at a time
+ * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
 export async function updateSubscriptions(
   listId: string,

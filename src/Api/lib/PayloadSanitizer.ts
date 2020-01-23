@@ -30,7 +30,7 @@ export class PayloadSanitizer {
       if (typeof value === 'string') {
         if (opts.trimToNull) {
           value = value!.trim();
-          payload[key] = value!.length === 0 ? null : value;
+          (payload as Payload)[key] = value!.length === 0 ? null : value;
         }
       }
       if (opts.excludeNulls && payload[key] == null) {
