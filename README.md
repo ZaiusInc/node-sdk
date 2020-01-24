@@ -47,62 +47,62 @@ async function pageview(email: string, page: string) {
 
 ## Available APIs
 
-```
+```javascript
 import {z} from '@zaius/node-sdk';
 
-  /**
-   * Configure the Zaius SDK for use
-   */
-   z.configure(sdkConfig);
+/**
+ * Configure the Zaius SDK for use
+ */
+z.configure(sdkConfig);
 
-  /**
-   * Access public values of the current configuration
-   */
-   z.config;
+/**
+ * Access public values of the current configuration
+ */
+z.config;
 
-  /**
-   * Send an event to Zaius using the v3 event API
-   */
-   z.event(eventPayload);
-   z.event(eventPayload[]);
+/**
+ * Send an event to Zaius using the v3 event API
+ */
+z.event(eventPayload);
+z.event(eventPayload[]);
 
-  /**
-   * Create or Update a customer profile in Zaius using the v3 profiles API
-   */
-   z.customer(customerPayload, options);
-   z.customer(customerPayload[], options);
+/**
+ * Create or Update a customer profile in Zaius using the v3 profiles API
+ */
+z.customer(customerPayload, options);
+z.customer(customerPayload[], options);
 
-  /**
-   * Create or Update an object in Zaius using the v3 objects API
-   */
-   z.object(type, objectPayload, options);
+/**
+ * Create or Update an object in Zaius using the v3 objects API
+ */
+z.object(type, objectPayload, options);
 
-  /**
-   * Manage schema (Zaius domain objects and fields) using the v3 APIs
-   */
-   z.schema.createField(object, field);
-   z.schema.createIdentifier(identifier);
-   z.schema.getEnabledModules();
-   z.schema.enableModule(module);
-   z.schema.getObject(name);
-   z.schema.getAllObjects();
-   z.schema.createObject(objectDefinition);
-   z.schema.createRelation(object, relationDefinition);
+/**
+ * Manage schema (Zaius domain objects and fields) using the v3 APIs
+ */
+z.schema.createField(object, field);
+z.schema.createIdentifier(identifier);
+z.schema.getEnabledModules();
+z.schema.enableModule(moduleName);
+z.schema.getObject(name);
+z.schema.getAllObjects();
+z.schema.createObject(objectDefinition);
+z.schema.createRelation(object, relationDefinition);
 
-  /**
-   * Manage customer identifiers using the v3 APIs
-   */
-   z.identifier.updateMetadata(identifierFieldName, identifierValue, metadata);
-   z.identifier.getMetadata(identifierFieldName, identifierValue);
-   z.identifier.updateReachability(identifierFieldName, identifierValue, {reachable: true});
-   z.identifier.getReachability(identifierFieldName, identifierValue);
+/**
+ * Manage customer identifiers using the v3 APIs
+ */
+z.identifier.updateMetadata(identifierFieldName, identifierValue, metadata);
+z.identifier.getMetadata(identifierFieldName, identifierValue);
+z.identifier.updateReachability(identifierFieldName, identifierValue, {reachable: true});
+z.identifier.getReachability(identifierFieldName, identifierValue);
 
-  /**
-   * Manage list subscriptions using the v3 APIs
-   */
-  z.list.createList(listName);
-  z.list.getLists(listName);
-  z.list.subscribe(listId, identifiers);
-  z.list.unsubscribe(listId, identifiers);
-  z.list.updateSubscriptions(listId, arrayOfUpdates);
+/**
+ * Manage list subscriptions using the v3 APIs
+ */
+z.list.createList(listName);
+z.list.getLists(listName);
+z.list.subscribe(listId, identifiers);
+z.list.unsubscribe(listId, identifiers);
+z.list.updateSubscriptions(listId, arrayOfUpdates);
 ```

@@ -6,7 +6,7 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {createField} from './fields';
 import {createIdentifier} from './identifiers';
 import {enableModule, getEnabledModules} from './modules';
-import {createObject} from './objects';
+import {createObject, getAllObjects, getObject} from './objects';
 import {createRelation} from './relations';
 
 export const schema = {
@@ -19,6 +19,8 @@ export const schema = {
   createIdentifier,
   enableModule,
   getEnabledModules,
+  getObject,
+  getAllObjects,
   createObject,
   createRelation
 };
