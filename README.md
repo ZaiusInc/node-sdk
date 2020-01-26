@@ -96,6 +96,8 @@ z.identifier.updateMetadata(identifierFieldName, identifierValue, metadata);
 z.identifier.getMetadata(identifierFieldName, identifierValue);
 z.identifier.updateReachability(identifierFieldName, identifierValue, {reachable: true});
 z.identifier.getReachability(identifierFieldName, identifierValue);
+z.identifier.getConsent(identifierFieldName, identifierValue);
+z.identifier.updateConsent(identifierFieldName, identifierValue, update);
 
 /**
  * Manage list subscriptions using the v3 APIs
