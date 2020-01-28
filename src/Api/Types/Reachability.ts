@@ -20,6 +20,14 @@ export type ReachabilityUpdateType =
  */
 export interface ReachabilityUpdate {
   /**
+   * The name of the messaging identifier field you want to update, e.g., email
+   */
+  identifier_field_name: string;
+  /**
+   * A valid messaging identifier value, such as an email address for the email identifier
+   */
+  identifier_value: string;
+  /**
    * true indicates the identifier value is now reachable, false indicates it is no longer reachable
    */
   reachable: boolean;

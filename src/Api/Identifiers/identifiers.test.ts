@@ -17,15 +17,51 @@ describe('identifiers', () => {
   describe('updateMetadata', () => {
     it('sends a post to /identifiers', async () => {
       const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
-      await updateMetadata('email', 'foo@zaius.com', {foo: 'bar'});
-      expect(postFn).toHaveBeenCalledWith('/identifiers', {
+      await updateMetadata({identifier_field_name: 'email', identifier_value: 'foo@zaius.com', metadata: {foo: 'bar'}});
+      expect(postFn).toHaveBeenCalledWith('/identifiers', [
+        {
+          identifier_field_name: 'email',
+          identifier_value: 'foo@zaius.com',
+          metadata: {
+            foo: 'bar'
+          }
+        }
+      ]);
+      postFn.mockRestore();
+    });
+
+    it('sends a batch to /identifiers', async () => {
+      const postFn = jest.spyOn(ApiV3, 'post').mockResolvedValueOnce({} as any);
+      await updateMetadata([
+        {identifier_field_name: 'email', identifier_value: 'foo@zaius.com', metadata: {foo: 'foo'}},
+        {identifier_field_name: 'email', identifier_value: 'bar@zaius.com', metadata: {foo: 'bar'}}
+      ]);
+      expect(postFn).toHaveBeenCalledWith('/identifiers', [
+        {
+          identifier_field_name: 'email',
+          identifier_value: 'foo@zaius.com',
+          metadata: {
+            foo: 'foo'
+          }
+        },
+        {
+          identifier_field_name: 'email',
+          identifier_value: 'bar@zaius.com',
+          metadata: {
+            foo: 'bar'
+          }
+        }
+      ]);
+      postFn.mockRestore();
+    });
+
+    it('throws an error if the batch is too large', async () => {
+      const updates = Array(101).fill({
         identifier_field_name: 'email',
         identifier_value: 'foo@zaius.com',
-        metadata: {
-          foo: 'bar'
-        }
+        metadata: {foo: 'foo'}
       });
-      postFn.mockRestore();
+      await expect(updateMetadata(updates)).rejects.toThrowError('maximum batch size');
     });
   });
 

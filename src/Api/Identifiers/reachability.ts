@@ -3,25 +3,34 @@ import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
 
 /**
  * Update reachability of a messaging identifier
- * @param identifierFieldName The name of the messaging identifier field you want to update, e.g., email
- * @param identifierValue A valid messaging identifier value, such as an email address for the email identifier
- * @param update the update to perform
+ * @param updates one or more updates to reachability for specific identifier values
  * @throws {HttpError} if it receives any non-2XX result
  */
 export async function updateReachability(
-  identifierFieldName: string,
-  identifierValue: string,
-  update: ReachabilityUpdate
+  updates: ReachabilityUpdate | ReachabilityUpdate[]
 ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> {
-  const request = {
-    ...update,
-    identifier_field_name: identifierFieldName,
-    identifier_value: identifierValue
-  };
-  if (update.reachable_update_ts instanceof Date) {
-    request.reachable_update_ts = update.reachable_update_ts.toISOString();
+  if (!Array.isArray(updates)) {
+    updates = [updates];
   }
-  return await ApiV3.post('/reachability', request);
+
+  if (updates.length > ApiV3.BATCH_LIMIT) {
+    throw ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded);
+  }
+
+  // if we're going to make changes, clone the array first
+  if (updates.some((u) => u.reachable_update_ts instanceof Date)) {
+    updates = [...updates];
+  }
+
+  for (let i = 0; i < updates.length; i++) {
+    const update = updates[i];
+    if (update.reachable_update_ts instanceof Date) {
+      // create a new object to not modify the incoming object
+      updates[i] = {...update, reachable_update_ts: update.reachable_update_ts.toISOString()};
+    }
+  }
+
+  return await ApiV3.post('/reachability', updates);
 }
 
 /**

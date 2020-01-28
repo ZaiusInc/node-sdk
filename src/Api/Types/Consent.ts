@@ -6,6 +6,14 @@ import {EventData} from '.';
  */
 export interface ConsentUpdate {
   /**
+   * The name of the messaging identifier field you want to update, e.g., email
+   */
+  identifier_field_name: string;
+  /**
+   * A valid messaging identifier value, such as an email address for the email identifier
+   */
+  identifier_value: string;
+  /**
    * true indicates the customer consented to receive marketing communications on this identifier,
    * false indicates the customer has explicitly revoked consent to receive marketing communications, e.g.,
    * checked a box saying "I do not want to receive marketing communications."
