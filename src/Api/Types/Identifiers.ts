@@ -23,11 +23,24 @@ export interface Identifiers {
  */
 export interface IdentifierMetadata {
   /**
-   * The fields must already exist before updating.
-   * The value should be a string, number, or boolean value matching the metadata field type.
-   * An explicitly null value will remove the previous value.
+   * The name of the identifier field you want to update, e.g., email
    */
-  [field: string]: string | number | boolean | null;
+  identifier_field_name: string;
+  /**
+   * An existing identifier value, such as a known email address
+   */
+  identifier_value: string;
+  /**
+   * The metadata to update
+   */
+  metadata: {
+    /**
+     * The fields must already exist before updating.
+     * The value should be a string, number, or boolean value matching the metadata field type.
+     * An explicitly null value will remove the previous value.
+     */
+    [field: string]: string | number | boolean | null;
+  };
 }
 
 export interface IdentifierMetadataResponse {
