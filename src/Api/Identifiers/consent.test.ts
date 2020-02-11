@@ -76,8 +76,8 @@ describe('consent', () => {
       await expect(updateConsent(updates)).rejects.toThrowError('maximum batch size');
     });
 
-    it('formats date if provided as a Date object', async () => {
-      jest.spyOn(Date.prototype, 'toISOString').mockReturnValueOnce('2020-01-21T23:07:54.373Z');
+    it('converts date if provided as a Date object', async () => {
+      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ConsentUpdate = Object.freeze({
         identifier_field_name: 'email',
         identifier_value: 'foo@zaius.com',
@@ -87,7 +87,27 @@ describe('consent', () => {
       });
       const expectedUpdate: ConsentUpdate = {
         ...update,
+        consent_update_ts: 1579648074
+      };
+      nock('https://api.zaius.com')
+        .post('/v3/consent', [expectedUpdate] as any)
+        .reply(200, '{}');
+      await updateConsent(update);
+      expect(nock.isDone()).toBeTruthy();
+    });
+
+    it('converts date if provided as a Date object', async () => {
+      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
+      const update: ConsentUpdate = Object.freeze({
+        identifier_field_name: 'email',
+        identifier_value: 'foo@zaius.com',
+        consent: false,
+        consent_update_reason: 'preference center update',
         consent_update_ts: '2020-01-21T23:07:54.373Z'
+      });
+      const expectedUpdate: ConsentUpdate = {
+        ...update,
+        consent_update_ts: 1579648074
       };
       nock('https://api.zaius.com')
         .post('/v3/consent', [expectedUpdate] as any)

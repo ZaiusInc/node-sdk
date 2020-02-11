@@ -43,9 +43,9 @@ export interface ReachabilityUpdate {
   reachable_update_reason?: string;
   /**
    * The time of the event if this is a historical change (defaults to current time).
-   * Must be formated in ISO8601 or provided as a Date object.
+   * Must be formated in ISO8601, provided as a Date object, or as a unix epoch.
    */
-  reachable_update_ts?: Date | string;
+  reachable_update_ts?: Date | string | number;
   /**
    * Additional event fields/values that should be included if a Zaius event is generated as a result of this update
    */

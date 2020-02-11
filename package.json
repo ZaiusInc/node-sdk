@@ -1,6 +1,6 @@
 {
   "name": "@zaius/node-sdk",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Node SDK for Zaius Apps",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "UNLICENSED",

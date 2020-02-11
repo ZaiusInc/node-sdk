@@ -1,3 +1,4 @@
+import {isNumber} from 'util';
 import {ApiV3} from '../lib/ApiV3';
 import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
 
@@ -18,15 +19,19 @@ export async function updateReachability(
   }
 
   // if we're going to make changes, clone the array first
-  if (updates.some((u) => u.reachable_update_ts instanceof Date)) {
+  if (updates.some((u) => !isNumber(u.reachable_update_ts))) {
     updates = [...updates];
   }
 
   for (let i = 0; i < updates.length; i++) {
     const update = updates[i];
-    if (update.reachable_update_ts instanceof Date) {
+    let ts = update.reachable_update_ts;
+    if (typeof ts === 'string') {
+      ts = new Date(ts);
+    }
+    if (ts instanceof Date) {
       // create a new object to not modify the incoming object
-      updates[i] = {...update, reachable_update_ts: update.reachable_update_ts.toISOString()};
+      updates[i] = {...update, reachable_update_ts: Math.round(ts.getTime() / 1000)};
     }
   }
 
