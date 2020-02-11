@@ -76,8 +76,8 @@ describe('reachability', () => {
       await expect(updateReachability(updates)).rejects.toThrowError('maximum batch size');
     });
 
-    it('formats date if provided as a Date object', async () => {
-      jest.spyOn(Date.prototype, 'toISOString').mockReturnValueOnce('2020-01-21T23:07:54.373Z');
+    it('converts date if provided as a Date object', async () => {
+      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
         identifier_value: 'foo@zaius.com',
@@ -87,7 +87,27 @@ describe('reachability', () => {
       });
       const expectedUpdate: ReachabilityUpdate = {
         ...update,
+        reachable_update_ts: 1579648074
+      };
+      nock('https://api.zaius.com')
+        .post('/v3/reachability', [expectedUpdate] as any)
+        .reply(200, '{}');
+      await updateReachability(update);
+      expect(nock.isDone()).toBeTruthy();
+    });
+
+    it('converts date if provided as an string', async () => {
+      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
+      const update: ReachabilityUpdate = Object.freeze({
+        identifier_field_name: 'email',
+        identifier_value: 'foo@zaius.com',
+        reachable: false,
+        reachable_update_reason: 'preference center update',
         reachable_update_ts: '2020-01-21T23:07:54.373Z'
+      });
+      const expectedUpdate: ReachabilityUpdate = {
+        ...update,
+        reachable_update_ts: 1579648074
       };
       nock('https://api.zaius.com')
         .post('/v3/reachability', [expectedUpdate] as any)
