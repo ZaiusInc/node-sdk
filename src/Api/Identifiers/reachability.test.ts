@@ -7,7 +7,6 @@ import {getReachability, updateReachability} from './reachability';
 import deepFreeze = require('deep-freeze');
 
 const mockConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key'
 };

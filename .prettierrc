@@ -1,5 +1,4 @@
 {
-  "files": "*.ts",
   "singleQuote": true,
   "jsxSingleQuote": false,
   "bracketSpacing": false,

@@ -7,7 +7,6 @@ import {getConsent, updateConsent} from './consent';
 import deepFreeze = require('deep-freeze');
 
 const mockConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key'
 };

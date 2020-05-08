@@ -4,7 +4,6 @@ import {ApiV3} from '../lib/ApiV3';
 import {getMetadata, updateMetadata} from './identifiers';
 
 const mockConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key'
 };

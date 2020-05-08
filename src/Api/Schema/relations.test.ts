@@ -7,13 +7,11 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {createRelation} from './relations';
 
 const mockConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key'
 };
 
 const mockAppConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key',
   appContext: {

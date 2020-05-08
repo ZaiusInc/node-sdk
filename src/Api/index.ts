@@ -1,7 +1,8 @@
-import {config, configure} from './config';
+import {configure} from './config';
 import {customer} from './Customers/customer';
 import {event} from './Events/event';
 import {identifier} from './Identifiers';
+import {ApiV3} from './lib/ApiV3';
 import {list} from './List';
 import {object} from './Objects/object';
 import {schema} from './Schema';
@@ -12,7 +13,7 @@ import * as Zaius from './Types';
  * @usage
  * ```
  *
- * import {z} from '@zaius/node-sdk';
+ * import {z} from '@zaiusinc/node-sdk';
  *
  * // Send an event to Zaius
  * await z.event(...);
@@ -26,10 +27,6 @@ export const z = {
    * Configure the Zaius SDK for use
    */
   configure,
-  /**
-   * Access public values of the current configuration
-   */
-  config,
   /**
    * Send an event to Zaius using the v3 event API
    */
@@ -53,7 +50,11 @@ export const z = {
   /**
    * Manage list subscriptions using the v3 APIs
    */
-  list
+  list,
+  /**
+   * Direct access to query any API by path using the v3 API helper
+   */
+  v3Api: ApiV3
 };
 
 export {Zaius};
