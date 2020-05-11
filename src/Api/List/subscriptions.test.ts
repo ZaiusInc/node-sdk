@@ -5,7 +5,6 @@ import {ListUpdateRequest} from '../Types/Lists';
 import {subscribe, unsubscribe, updateSubscriptions} from './subscriptions';
 
 const mockConfiguration: InternalConfig = {
-  trackerId: 'vdl',
   apiBasePath: 'https://api.zaius.com/v3/',
   apiKey: 'api-key'
 };

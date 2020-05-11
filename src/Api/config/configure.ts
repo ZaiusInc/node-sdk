@@ -18,7 +18,6 @@ export interface Config {
  * @hidden
  */
 export interface InternalConfig extends Config {
-  trackerId: string;
   apiBasePath: string;
   apiKey: string;
   requestId?: string;
@@ -28,7 +27,7 @@ export interface InternalConfig extends Config {
 
 /**
  * @hidden
- * preferably to be removed when no longer needed
+ * preferably removed when no longer needed
  */
 export interface AppContext {
   app_id: string;
@@ -41,10 +40,9 @@ export interface AppContext {
  * @hidden
  */
 const DEFAULT_CONFIG: InternalConfig = Object.freeze({
-  trackerId: process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown',
   apiBasePath: process.env['ZAIUS_SDK_API_BASE_PATH'] || 'https://api.zaius.com/v3/',
   requestId: process.env['ZAIUS_SDK_TEST_REQUEST_ID'],
-  apiKey: process.env['ZAIUS_SDK_API_KEY'] || process.env['ZAIUS_SDK_TRACKER_ID'] || 'unknown'
+  apiKey: process.env['ZAIUS_SDK_API_KEY'] || ''
 });
 
 /**
@@ -54,7 +52,7 @@ let configuration: InternalConfig = DEFAULT_CONFIG;
 
 /**
  * Exposed method to set the configuration options
- * This handled automatically in a Zap
+ * This handled automatically in a Zaius Integration Platform App
  * usage z.configure({...})
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
@@ -67,20 +65,3 @@ export function configure(newConfig: Config | InternalConfig | null) {
 
   ApiV3.configure(configuration);
 }
-
-/**
- * A wrapper around the public SDK configuration values
- */
-export class PublicConfig {
-  /**
-   * @returns Tracker ID, your Zaius account identifier used for collecting data and accessing APIs
-   */
-  public get trackerId(): string {
-    return configuration.trackerId;
-  }
-}
-
-/**
- * Read access to the public values of the current configuration
- */
-export const config = new PublicConfig();

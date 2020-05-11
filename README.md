@@ -1,19 +1,39 @@
 # Zaius Node SDK
 
-Send events and data to Zaius from Node JS.
+A lightweight Node SDK for sending events and data to Zaius from a Node JS app.
+
+> <b>⚠️ WARNING: This is NOT a browser compatible SDK.</b><br />
+> To interface with Zaius from a web site, use our [Web SDK](https://docs.developers.zaius.com/web-sdk/)
+
+## Documentation
+
+See the generated [Technical Documentation](https://node-sdk.docs.developers.zaius.com/latest/) for details on every method.
+
+The Node SDK provides interfaces to the majority of [Zaius Rest APIs](https://docs.developers.zaius.com/api/). See the Rest API Documentation for details behind each API.
 
 ## Getting Started
 
 Install using [yarn](https://yarnpkg.com/en/):
 
 ```bash
-yarn add @zaius/node-sdk
+yarn add @zaiusinc/node-sdk
 ```
 
 Or [npm](https://www.npmjs.com/):
 
 ```bash
-npm install @zaius/node-sdk
+npm install @zaiusinc/node-sdk
+```
+
+## Configuration
+
+You'll need to configure the SDK with your API keys. If you are only sending data to Zaius, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the [APIs page](https://app.zaius.com/#/api_management) in the Zaius app.
+
+```typescript
+import {z} from '@zaiusinc/node-sdk';
+z.configure({
+  apiKey: 'your_public_or_private_api_key'
+});
 ```
 
 ## Usage
@@ -21,7 +41,7 @@ npm install @zaius/node-sdk
 Zaius APIs are exposed through the `z` export:
 
 ```javascript
-import {z} from '@zaius/node-sdk';
+import {z} from '@zaiusinc/node-sdk';
 
 async function pageview(email, page) {
   const event = {type: 'pageview', identifiers: {email}, data: {page}};
@@ -36,7 +56,7 @@ Our SDK is typescript first, so no need to install or create additional type def
 To access the exported types, import `Zaius` from the sdk.
 
 ```typescript
-import {z, Zaius} from '@zaius/node-sdk';
+import {z, Zaius} from '@zaiusinc/node-sdk';
 
 async function pageview(email: string, page: string) {
   const event: Zaius.Event = {type: 'pageview', identifiers: {email}, data: {page}};
@@ -48,7 +68,7 @@ async function pageview(email: string, page: string) {
 ## Available APIs
 
 ```javascript
-import {z} from '@zaius/node-sdk';
+import {z} from '@zaiusinc/node-sdk';
 
 /**
  * Configure the Zaius SDK for use
@@ -107,4 +127,23 @@ z.list.getLists(listName);
 z.list.subscribe(listId, identifiers);
 z.list.unsubscribe(listId, identifiers);
 z.list.updateSubscriptions(listId, arrayOfUpdates);
+```
+
+## Using new APIs or APIs not yet supported by the Node SDK
+
+Unfortunately not every API has a helper in the Node SDK. If you need to use other APIs, you can
+follow the [Zaius Rest API](https://docs.developers.zaius.com/api/) documentation
+and use the v3API helper to query the APIs directly. For example:
+
+```typescript
+await z.v3Api.post('objects/products', [
+  {
+    product_id: '123',
+    name: 'Red Shirt'
+  },
+  {
+    product_id: '456',
+    name: 'Blue Shirt'
+  }
+]);
 ```

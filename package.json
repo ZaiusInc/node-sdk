@@ -1,6 +1,6 @@
 {
-  "name": "@zaius/node-sdk",
-  "version": "0.6.2",
+  "name": "@zaiusinc/node-sdk",
+  "version": "0.7.0",
   "description": "Node SDK for Zaius Apps",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "UNLICENSED",
@@ -47,8 +47,5 @@
     "typedoc": "^0.14.2",
     "typescript": "^3.7.5"
   },
-  "peerDependencies": {},
-  "publishConfig": {
-    "registry": "http://npm-registry.prod.zaius"
-  }
+  "peerDependencies": {}
 }

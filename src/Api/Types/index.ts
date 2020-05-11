@@ -1,3 +1,5 @@
+export * from '../lib/ApiError';
+export * from '../lib/ApiV3';
 export * from './Consent';
 export * from './CustomerPayload';
 export * from './EventPayload';
