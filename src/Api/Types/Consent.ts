@@ -37,7 +37,7 @@ export interface ConsentUpdate {
 
 /**
  * The response payload for fetching the consent status of a messaging identifier.
- * See [V3 Consent API](https://docs.developers.zaius.com/api/rest-api/consent-legacy/consent)
+ * See [V3 Consent API](https://docs.developers.zaius.com/api/rest-api/consent)
  */
 export interface GetConsentResponse {
   /**
@@ -49,9 +49,10 @@ export interface GetConsentResponse {
    */
   identifier_value: string;
   /**
-   * true if a customer consented to receive marketing communications on this identifier, false otherwise
+   * true if a customer consented to receive marketing communications on this identifier, false if they have
+   * opted out of marketing communcation, null if there has been no explicit consent or opt out.
    */
-  consent: boolean;
+  consent: boolean | null;
   /**
    * The reason for the update that last changed the consent status of this identifier
    */
