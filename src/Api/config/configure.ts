@@ -60,7 +60,7 @@ export function configure(newConfig: Config | InternalConfig | null) {
   if (newConfig == null) {
     configuration = DEFAULT_CONFIG;
   } else {
-    configuration = Object.assign({}, DEFAULT_CONFIG, newConfig);
+    configuration = Object.assign({}, DEFAULT_CONFIG, configuration, newConfig);
   }
 
   ApiV3.configure(configuration);
