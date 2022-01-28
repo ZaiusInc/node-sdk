@@ -18,11 +18,15 @@ export interface Error {
   extensions?: Extensions;
 }
 
+export interface Data {
+  [key: string]: any;
+}
+
 /**
  * The response format for a GraphQL request.
  * `data` will be populated on success with given type T.
  */
-export interface Result<T> {
+export interface Result<T extends Data> {
   errors?: Error[];
   data?: T;
   extensions?: Extensions;
