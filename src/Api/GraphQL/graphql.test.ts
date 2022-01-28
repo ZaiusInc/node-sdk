@@ -12,4 +12,11 @@ describe('graphql', () => {
     await graphql(query);
     expect(requestMock).toHaveBeenCalledWith('POST', '/graphql', {query});
   });
+
+  it('sends a query with variables to /graphql', async () => {
+    const query = '{}';
+    const variables = {};
+    await graphql(query, variables);
+    expect(requestMock).toHaveBeenCalledWith('POST', '/graphql', {query, variables});
+  });
 });
