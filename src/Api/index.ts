@@ -3,6 +3,7 @@ import {customer} from './Customers/customer';
 import {event} from './Events/event';
 import {identifier} from './Identifiers';
 import {ApiV3} from './lib/ApiV3';
+import {graphql} from './GraphQL/graphql';
 import {list} from './List';
 import {object} from './Objects/object';
 import {schema} from './Schema';
@@ -47,6 +48,10 @@ export const z = {
    * Manage customer identifiers using the v3 APIs
    */
   identifier,
+  /**
+   * Query data using the v3 GraphQL API
+   */
+  graphql,
   /**
    * Manage list subscriptions using the v3 APIs
    */
