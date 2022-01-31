@@ -129,7 +129,7 @@ z.list.unsubscribe(listId, identifiers);
 z.list.updateSubscriptions(listId, arrayOfUpdates);
 
 /**
- * Query data using the v3 GraphQL API
+ * Query data using the GraphQL API
  */
 z.graphql<ResponseType>(query, variables);
 ```
