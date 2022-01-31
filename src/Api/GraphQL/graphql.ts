@@ -1,20 +1,24 @@
 import { ApiV3 } from '../Types';
-import { Result, Data } from '../Types/GraphQL';
+import { GqlError, GqlHttpResponse, GqlExtensions } from '../Types/GraphQL';
+
+interface QueryResult<T extends ApiV3.V3Response> {
+  errors?: GqlError[];
+  data?: T;
+  extensions?: GqlExtensions;
+}
 
 /**
  * Queries the GraphQL API.
  * @param query the GQL query
  * @param variables named variables to substitute into the query, if any
- * @returns the response from the API if successful
+ * @returns {GqlHttpResponse} if successful
  * @throws {HttpError} if it receives a non-2XX result
  */
-export function graphql<T extends Data>(
+export async function graphql<T extends ApiV3.V3Response>(
   query: string,
   variables?: { [key: string]: any }
-): Promise<ApiV3.HttpResponse<Result<T>>> {
-  return ApiV3.request(
-    'POST',
-    '/graphql',
-    { query, variables }
-  );
+): Promise<GqlHttpResponse<T>> {
+  const response = await ApiV3.post<QueryResult<T>>('/graphql', { query, variables });
+  const { data, extensions, errors } = response.data;
+  return { ...response, data, extensions, errors };
 }
