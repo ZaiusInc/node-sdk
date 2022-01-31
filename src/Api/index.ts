@@ -49,7 +49,7 @@ export const z = {
    */
   identifier,
   /**
-   * Query data using the v3 GraphQL API
+   * Query data using the GraphQL API
    */
   graphql,
   /**
