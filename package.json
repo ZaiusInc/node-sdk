@@ -1,6 +1,6 @@
 {
   "name": "@zaiusinc/node-sdk",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Node SDK for Zaius Apps",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "Apache-2.0",

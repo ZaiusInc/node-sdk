@@ -127,6 +127,11 @@ z.list.getLists(listName);
 z.list.subscribe(listId, identifiers);
 z.list.unsubscribe(listId, identifiers);
 z.list.updateSubscriptions(listId, arrayOfUpdates);
+
+/**
+ * Query data using the GraphQL API
+ */
+z.graphql<ResponseType>(query, variables);
 ```
 
 ## Using new APIs or APIs not yet supported by the Node SDK
