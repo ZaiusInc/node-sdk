@@ -30,7 +30,7 @@ export interface GqlError {
   /**
    * A list of path segments that lead to the erroneous field.
    */
-  path?: (string | number)[];
+  path?: Array<string | number>;
   /**
    * Additional information that may be returned by the GraphQL API.
    */
