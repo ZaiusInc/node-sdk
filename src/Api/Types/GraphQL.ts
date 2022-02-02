@@ -21,7 +21,7 @@ export interface GqlError {
   /**
    * A list of locations specifying where in the point in the document that caused the error.
    */
-  locations: [
+  locations?: [
     {
       line: number;
       column: number;
