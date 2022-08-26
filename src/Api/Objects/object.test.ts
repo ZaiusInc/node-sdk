@@ -5,7 +5,7 @@ import {object} from './object';
 import deepFreeze = require('deep-freeze');
 
 describe('object', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });

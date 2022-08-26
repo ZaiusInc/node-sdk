@@ -5,7 +5,7 @@ import {EventPayload} from '../Types';
 import {event} from './event';
 
 describe('event', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });

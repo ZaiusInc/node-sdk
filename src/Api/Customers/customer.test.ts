@@ -3,7 +3,7 @@ import {CustomerPayload} from '../Types';
 import {customer} from './customer';
 
 describe('customer', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
