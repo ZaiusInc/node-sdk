@@ -116,7 +116,7 @@ export namespace ApiV3 {
     return new HttpError(ERROR_CODE_MESSAGES[code], code);
   }
 
-  export function get<T = V3Response>(path: string) {
+  export function get<T extends V3Response>(path: string) {
     return request<T>('GET', path, undefined);
   }
 
@@ -195,7 +195,7 @@ export namespace ApiV3 {
             reject(httpError);
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         if (process.env['LOG_REQUESTS'] === 'true') {
           requestLog.push('Unexpected Error:', error.message, error.stack);
           console.debug(...requestLog);

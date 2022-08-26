@@ -48,7 +48,7 @@ describe('object', () => {
     expect.assertions(2);
     try {
       await object('products', payload);
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatch(/maximum batch size/);
       expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     }
