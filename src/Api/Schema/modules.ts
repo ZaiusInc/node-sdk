@@ -6,6 +6,7 @@ import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Gets the list of enabled schema modules.
+ *
  * @throws {HttpError} if it receives a non-2XX result
  */
 export async function getEnabledModules(): Promise<ApiV3.HttpResponse<ModulesResponse>> {
@@ -14,6 +15,7 @@ export async function getEnabledModules(): Promise<ApiV3.HttpResponse<ModulesRes
 
 /**
  * Enables a schema module.
+ *
  * @param module the module to enable
  * @throws {ApiModuleAlreadyEnabledError} if the module was already enabled
  * @throws {HttpError} if it receives any other non-2XX result

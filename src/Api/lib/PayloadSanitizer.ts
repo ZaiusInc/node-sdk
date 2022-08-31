@@ -21,6 +21,7 @@ const DEFAULT_PAYLOAD_OPTIONS = {
 export class PayloadSanitizer {
   /**
    * Inline update of the payload based on the provided/default options
+   *
    * @param payload to sanitize
    * @param opts for processing default {trimToNull & excludeNulls}
    */
@@ -29,8 +30,8 @@ export class PayloadSanitizer {
     Object.entries(payload).forEach(([key, value]) => {
       if (typeof value === 'string') {
         if (opts.trimToNull) {
-          value = value!.trim();
-          (payload as Payload)[key] = value!.length === 0 ? null : value;
+          value = value.trim();
+          (payload as Payload)[key] = value.length === 0 ? null : value;
         }
       }
       if (opts.excludeNulls && payload[key] == null) {

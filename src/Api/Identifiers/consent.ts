@@ -4,6 +4,7 @@ import {ConsentUpdate, GetConsentResponse} from '../Types';
 
 /**
  * Update consent of a messaging identifier
+ *
  * @param updates one or more updates to consent for specific identifier values
  * @throws {HttpError} if it receives any non-2XX result
  */
@@ -40,6 +41,7 @@ export async function updateConsent(
 
 /**
  * Get consent information about an identifier
+ *
  * @param identifierName The name of the messaging identifier field for which you want to check consent
  * @param identifierValue The identifier value to lookup, e.g., a specific email address when identifierName is `email`
  * @throws {HttpError} if it receives any non-2XX result

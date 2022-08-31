@@ -13,6 +13,7 @@ interface TransformedCustomerPayload {
 
 /**
  * Send a customer or a batch of customers to Zaius.
+ *
  * @param payload a Zaius customer payload or an array of customer payloads
  * @param opts a PayloadOptions instance defaults are trimToNull & excludeNulls
  * @returns the response from the API if successful

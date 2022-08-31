@@ -92,7 +92,7 @@ export namespace ApiV3 {
   };
 
   export class HttpError extends Error {
-    constructor(message: string, public code?: string, public response?: HttpResponse<V3ErrorResponse>) {
+    public constructor(message: string, public code?: string, public response?: HttpResponse<V3ErrorResponse>) {
       super(message);
     }
   }

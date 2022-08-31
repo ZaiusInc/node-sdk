@@ -3,6 +3,7 @@ import {EventPayload, EventResponse} from '../Types';
 
 /**
  * Send an event or a batch of events to Zaius
+ *
  * @param payload a Zaius event payload or an array of event payloads
  * @returns the response from the API if successful
  * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT

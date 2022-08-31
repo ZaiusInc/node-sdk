@@ -4,6 +4,7 @@ import {PayloadSanitizer} from '../lib/PayloadSanitizer';
 
 /**
  * Send an object or a batch of objects to Zaius
+ *
  * @param type the object type, eg. 'products'
  * @param payload a Zaius object payload or an array of object payloads
  * @param opts a PayloadOptions instance defaults are trimToNull & excludeNulls
