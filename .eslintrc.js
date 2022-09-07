@@ -1,5 +1,5 @@
 module.exports = {
-  extends: 'eslint-config-presets/node',
+  extends: '@zaiusinc/eslint-config-presets/node',
   rules: {
   }
 }
