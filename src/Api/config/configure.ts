@@ -54,7 +54,6 @@ let configuration: InternalConfig = DEFAULT_CONFIG;
  * Exposed method to set the configuration options
  * This handled automatically in a Zaius Integration Platform App
  * usage z.configure({...})
- *
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
 export function configure(newConfig: Config | InternalConfig | null) {

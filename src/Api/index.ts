@@ -11,7 +11,6 @@ import * as Zaius from './Types';
 
 /**
  * The preferred export for utilizing the Zaius Node SDK.
- *
  * @usage
  * ```
  *

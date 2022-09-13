@@ -4,7 +4,6 @@ import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
 
 /**
  * Update reachability of a messaging identifier
- *
  * @param updates one or more updates to reachability for specific identifier values
  * @throws {HttpError} if it receives any non-2XX result
  */
@@ -41,7 +40,6 @@ export async function updateReachability(
 
 /**
  * Get reachability information about an identifier
- *
  * @param identifierName The name of the messaging identifier field for which you want to check reachability
  * @param value The identifier value to lookup, e.g., a specific email address when identifierName is `email`
  */

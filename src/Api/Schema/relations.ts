@@ -7,7 +7,6 @@ import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Create a custom Zaius relation between two objects
- *
  * @param object the object to create the foreign key on
  * @param relation the relation to create
  * @throws {ApiRelationExistsError} if the relation name is already in use by another field or relation

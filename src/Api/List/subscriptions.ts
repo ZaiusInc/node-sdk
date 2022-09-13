@@ -4,7 +4,6 @@ import {ListUpdateRequest, ListUpdateResponse} from '../Types/Lists';
 
 /**
  * Subscribe a customer or array of customers to a list
- *
  * @param listId The list id you want to subscribe the customer to
  * @param identifiers An object containing one or more messaging identifiers that will allow Zaius to uniquely
  * identify this person. Provide an array of objects to subscribe multiple customers
@@ -25,7 +24,6 @@ export async function subscribe(
 
 /**
  * Unsubscribe a customer or array of customers from a list
- *
  * @param listId The list id you want to unsubscribe the customer from
  * @param identifiers An object containing one or more messaging identifiers that will allow Zaius to uniquely
  * identify this person. Provide an array of objects to unsubscribe multiple customers
@@ -46,7 +44,6 @@ export async function unsubscribe(
 
 /**
  * Bulk update subscriptions for multiple customers to a list (or multiple lists).
- *
  * @param listId The default list id you want to subscribe the customers to. if list_id is not provided in the update,
  * this list will be used.
  * @param updates An array of updates to perform. An update is an object containing the identifier, a boolean for

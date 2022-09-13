@@ -45,7 +45,7 @@
     "@typescript-eslint/parser": "^5.0.0",
     "deep-freeze": "0.0.1",
     "eslint": "^8.0.1",
-    "@zaiusinc/eslint-config-presets": "1.0.0-dev.1",
+    "@zaiusinc/eslint-config-presets": "1.0.0-dev.2",
     "eslint-config-standard-with-typescript": "^22.0.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-jsdoc": "^39.3.6",

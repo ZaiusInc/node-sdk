@@ -7,7 +7,6 @@ import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Create a customer identifier
- *
  * @param identifier the identifier to create
  * @throws {ApiIdentifierExistsError} if the identifier already exists
  * @throws {HttpError} if it receives any other non-2XX result

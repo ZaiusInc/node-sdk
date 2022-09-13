@@ -9,7 +9,6 @@ interface QueryResult<T extends ApiV3.V3Response> {
 
 /**
  * Queries the GraphQL API.
- *
  * @param query the GQL query
  * @param variables named variables to substitute into the query, if any
  * @returns {GqlHttpResponse} if successful

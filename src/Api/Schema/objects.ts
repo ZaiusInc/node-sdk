@@ -8,7 +8,6 @@ import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Gets the definition of a Zaius object.
- *
  * @param name the object name
  * @throws {ApiObjectNotFoundError} if there is no object with the given name
  * @throws {HttpError} if it receives any other non-2XX result
@@ -26,7 +25,6 @@ export async function getObject(name: string): Promise<ApiV3.HttpResponse<Object
 
 /**
  * Gets the definitions of all Zaius objects.
- *
  * @throws {HttpError} if it receives a non-2XX result
  */
 export async function getAllObjects(): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> {
@@ -35,7 +33,6 @@ export async function getAllObjects(): Promise<ApiV3.HttpResponse<ObjectDefiniti
 
 /**
  * Create a custom Zaius object
- *
  * @param object the object to create
  * @throws {ApiObjectExistsError} if the object name already exists
  * @throws {HttpError} if it receives any other non-2XX result

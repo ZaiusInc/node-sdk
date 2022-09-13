@@ -1,7 +1,6 @@
 /**
  * Join URI parts with / between each part
  * e.g. joinUrl('http://foo.bar', 'baz') => 'http://foo.bar/baz'
- *
  * @param parts to join
  */
 export function joinUri(...parts: string[]) {

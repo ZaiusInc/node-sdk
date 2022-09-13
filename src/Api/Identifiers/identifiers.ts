@@ -3,7 +3,6 @@ import {IdentifierMetadata, IdentifierMetadataResponse} from '../Types';
 
 /**
  * Update metadata for a customer's identifier
- *
  * @param updates one or more metadata updates for specific identifier values
  * @throws {HttpError} if it receives any non-2XX result
  */
@@ -23,7 +22,6 @@ export async function updateMetadata(
 
 /**
  * Get metadata for a customer's identifier
- *
  * @param identifierFieldName The name of the identifier field you want to get metadata on, e.g., email
  * @param identifierValue An existing identifier value, such as a known email address
  * @param update the update to perform

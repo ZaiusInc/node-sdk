@@ -7,7 +7,6 @@ import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 
 /**
  * Create a custom field on a Zaius object
- *
  * @param object the Zaius object to create the field on, e.g., `customers`
  * @param field the field to create
  * @throws {ApiFieldExistsError} if the field name already exists
