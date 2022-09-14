@@ -5,7 +5,7 @@ import {object} from './object';
 import deepFreeze = require('deep-freeze');
 
 describe('object', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
@@ -48,7 +48,7 @@ describe('object', () => {
     expect.assertions(2);
     try {
       await object('products', payload);
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatch(/maximum batch size/);
       expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     }

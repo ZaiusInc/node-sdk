@@ -3,7 +3,7 @@ import {CustomerPayload} from '../Types';
 import {customer} from './customer';
 
 describe('customer', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
@@ -101,7 +101,7 @@ describe('customer', () => {
     expect.assertions(2);
     try {
       await customer(payload);
-    } catch (error) {
+    } catch (error: any) {
       expect(error.message).toMatch(/maximum batch size/);
       expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     }

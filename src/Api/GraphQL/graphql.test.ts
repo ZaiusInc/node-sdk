@@ -2,7 +2,7 @@ import {ApiV3} from '../lib/ApiV3';
 import {graphql} from './graphql';
 
 describe('graphql', () => {
-  let postMock!: jest.Mock;
+  let postMock!: jest.SpyInstance;
   beforeEach(() => {
     postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
