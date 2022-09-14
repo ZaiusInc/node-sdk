@@ -30,7 +30,7 @@
     "generate-docs": "typedoc ./src/index.ts"
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=14.0"
   },
   "dependencies": {
     "node-fetch": "^2.6.7"
