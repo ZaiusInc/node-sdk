@@ -1,11 +1,11 @@
 {
   "out": "./docs/",
-  "name": "Zaius Node SDK",
-  "mode": "file",
-  "module": "commonjs",
-  "target": "ES6",
-  "theme": "./doc-theme",
-  "stripInternal": true,
-  "excludeNotExported": false,
-  "excludePrivate": true
+  "name": "ODP Node SDK",
+  "theme": "markdown",
+  "excludePrivate": true,
+  "enableFrontmatter": true,
+  "frontmatterGlobals": {
+    "category": "64394358ebb179005f0528d1",
+    "hidden": false
+  }
 }

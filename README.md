@@ -1,15 +1,15 @@
-# Zaius Node SDK
+# ODP Node SDK
 
-A lightweight Node SDK for sending events and data to Zaius from a Node JS app.
+A lightweight Node SDK for sending events and data to ODP from a Node JS app.
 
 > <b>⚠️ WARNING: This is NOT a browser compatible SDK.</b><br />
-> To interface with Zaius from a web site, use our [Web SDK](https://docs.developers.zaius.com/web-sdk/)
+> To interface with ODP from a web site, use our [Web SDK](https://docs.developers.zaius.com/web-sdk/)
 
 ## Documentation
 
-See the generated [Technical Documentation](https://node-sdk.docs.developers.zaius.com/latest/) for details on every method.
+See the generated [Technical Documentation](https://optimizely-parent.readme.io/optimizely-connect-platform/docs/node-sdk-api-reference-overview) for details on every method.
 
-The Node SDK provides interfaces to the majority of [Zaius Rest APIs](https://docs.developers.zaius.com/api/). See the Rest API Documentation for details behind each API.
+The Node SDK provides interfaces to the majority of [ODP Rest APIs](https://optimizely-parent.readme.io/optimizely-data-platform/reference/introduction). See the Rest API Documentation for details behind each API.
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ npm install @zaiusinc/node-sdk
 
 ## Configuration
 
-You'll need to configure the SDK with your API keys. If you are only sending data to Zaius, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the [APIs page](https://app.zaius.com/#/api_management) in the Zaius app.
+You'll need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the [APIs page](https://app.zaius.com/#/api_management) in the ODP app.
 
 ```typescript
 import {z} from '@zaiusinc/node-sdk';
@@ -38,7 +38,7 @@ z.configure({
 
 ## Usage
 
-Zaius APIs are exposed through the `z` export:
+ODP APIs are exposed through the `z` export:
 
 ```javascript
 import {z} from '@zaiusinc/node-sdk';
@@ -71,7 +71,7 @@ async function pageview(email: string, page: string) {
 import {z} from '@zaiusinc/node-sdk';
 
 /**
- * Configure the Zaius SDK for use
+ * Configure the ODP SDK for use
  */
 z.configure(sdkConfig);
 
@@ -81,24 +81,24 @@ z.configure(sdkConfig);
 z.config;
 
 /**
- * Send an event to Zaius using the v3 event API
+ * Send an event to ODP using the v3 event API
  */
 z.event(eventPayload);
 z.event(eventPayload[]);
 
 /**
- * Create or Update a customer profile in Zaius using the v3 profiles API
+ * Create or Update a customer profile in ODP using the v3 profiles API
  */
 z.customer(customerPayload, options);
 z.customer(customerPayload[], options);
 
 /**
- * Create or Update an object in Zaius using the v3 objects API
+ * Create or Update an object in ODP using the v3 objects API
  */
 z.object(type, objectPayload, options);
 
 /**
- * Manage schema (Zaius domain objects and fields) using the v3 APIs
+ * Manage schema (ODP domain objects and fields) using the v3 APIs
  */
 z.schema.createField(object, field);
 z.schema.createIdentifier(identifier);
@@ -137,7 +137,7 @@ z.graphql<ResponseType>(query, variables);
 ## Using new APIs or APIs not yet supported by the Node SDK
 
 Unfortunately not every API has a helper in the Node SDK. If you need to use other APIs, you can
-follow the [Zaius Rest API](https://docs.developers.zaius.com/api/) documentation
+follow the [ODP Rest API](https://optimizely-parent.readme.io/optimizely-data-platform/reference/introduction) documentation
 and use the v3API helper to query the APIs directly. For example:
 
 ```typescript
