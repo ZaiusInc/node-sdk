@@ -7,9 +7,9 @@ A lightweight Node SDK for sending events and data to ODP from a Node JS app.
 
 ## Documentation
 
-See the generated [Technical Documentation](https://optimizely-parent.readme.io/optimizely-connect-platform/docs/node-sdk-api-reference-overview) for details on every method.
+See the generated [Technical Documentation](https://docs.developers.optimizely.com/optimizely-connect-platform/docs/node-sdk-api-reference-overview) for details on every method.
 
-The Node SDK provides interfaces to the majority of [ODP Rest APIs](https://optimizely-parent.readme.io/optimizely-data-platform/reference/introduction). See the Rest API Documentation for details behind each API.
+The Node SDK provides interfaces to the majority of [ODP Rest APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction). See the Rest API Documentation for details behind each API.
 
 ## Getting Started
 
@@ -137,7 +137,7 @@ z.graphql<ResponseType>(query, variables);
 ## Using new APIs or APIs not yet supported by the Node SDK
 
 Unfortunately not every API has a helper in the Node SDK. If you need to use other APIs, you can
-follow the [ODP Rest API](https://optimizely-parent.readme.io/optimizely-data-platform/reference/introduction) documentation
+follow the [ODP Rest API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction) documentation
 and use the v3API helper to query the APIs directly. For example:
 
 ```typescript
