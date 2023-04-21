@@ -70,6 +70,7 @@ hidden: ${hidden}
     );
 
     // add slug parameter to frontmatter in every file in folder
+    let order = 100;
     files.filter(f => f.isFile()).forEach(f => {
         let file = baseDir+ '/' + folderName + "/" + f.name;
 
@@ -78,6 +79,7 @@ hidden: ${hidden}
 
         addFrontMatterProperty(file, `slug: "${slug}"`);
         addFrontMatterProperty(file, `parentDocSlug: "${parentDocSlug}"`);
+        addFrontMatterProperty(file, `order: "${order++}"`);
     });
 }
 
