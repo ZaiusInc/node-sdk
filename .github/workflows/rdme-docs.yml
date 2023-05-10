@@ -17,10 +17,16 @@ jobs:
       - name: Check out repo 📚
         uses: actions/checkout@v3
 
-      - name: Generates docs 🚀
-        uses: readmeio/rdme@v8
+      - uses: actions/setup-node@v3
         with:
-          rdme: yarn && yarn generate-docs --key=${{ secrets.README_API_KEY }}
+          node-version: 18.x
+          cache: 'yarn'
+
+      - name: Install
+        run: yarn
+
+      - name: Generates docs 🚀
+        run: yarn generate-docs
 
       - name: Run `docs` command 🚀
         uses: readmeio/rdme@v8
