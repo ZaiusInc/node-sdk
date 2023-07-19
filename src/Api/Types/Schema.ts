@@ -9,9 +9,9 @@ export interface FieldDefinition {
    */
   name: string;
   /**
-   * The type of the field: `string`, `number`, `timestamp`, or `boolean`.
+   * The type of the field: `string`, `number`, `timestamp`, `boolean` or `vector`.
    */
-  type: 'string' | 'number' | 'timestamp' | 'boolean';
+  type: 'string' | 'number' | 'timestamp' | 'boolean' | 'vector';
   /**
    * The user-friendly name used within Zaius. Must be unique across all display names within the object.
    */
