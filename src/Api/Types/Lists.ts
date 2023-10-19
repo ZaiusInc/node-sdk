@@ -16,10 +16,12 @@ export interface ListUpdate {
   [identifierFieldName: string]: string | boolean;
 }
 
+/* eslint-disable max-len */
 /**
  * Response from Zaius V3 list subscribe/unsubscribe APIs
  * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-subscription-status-1)
  */
+/* eslint-enable max-len */
 export interface ListUpdateResponse {
   /**
    * A list of updates that were made due to this request
