@@ -2,7 +2,7 @@ import {EventData} from '.';
 
 /**
  * The payload for a Zaius messaging identifier consent update via v3 APIs.
- * See [V3 Consent API](https://docs.developers.zaius.com/api/rest-api/consent-legacy/consent)
+ * See [V3 Consent API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/consent-legacy-2)
  */
 export interface ConsentUpdate {
   /**
@@ -37,7 +37,7 @@ export interface ConsentUpdate {
 
 /**
  * The response payload for fetching the consent status of a messaging identifier.
- * See [V3 Consent API](https://docs.developers.zaius.com/api/rest-api/consent)
+ * See [V3 Consent API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-consent-1)
  */
 export interface GetConsentResponse {
   /**

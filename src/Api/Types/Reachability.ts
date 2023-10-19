@@ -16,7 +16,7 @@ export type ReachabilityUpdateType =
 
 /**
  * The payload for a Zaius messaging identifier reachability update via v3 APIs.
- * See [V3 Reachability API](https://docs.developers.zaius.com/api/rest-api/advanced/identifiers/reachability)
+ * See [V3 Reachability API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/update-reachability-1)
  */
 export interface ReachabilityUpdate {
   /**
@@ -54,7 +54,7 @@ export interface ReachabilityUpdate {
 
 /**
  * The response payload for fetching the reachability details of a messaging identifier.
- * See [V3 Reachability API](https://docs.developers.zaius.com/api/rest-api/advanced/identifiers/reachability)
+ * See [V3 Reachability API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-reachability-1)
  */
 export interface GetReachabilityResponse {
   /**

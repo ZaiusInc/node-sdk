@@ -3,7 +3,7 @@
 A lightweight Node SDK for sending events and data to ODP from a Node JS app.
 
 > <b>⚠️ WARNING: This is NOT a browser compatible SDK.</b><br />
-> To interface with ODP from a web site, use our [Web SDK](https://docs.developers.zaius.com/web-sdk/)
+> To interface with ODP from a web site, use our [Web SDK](https://docs.developers.optimizely.com/optimizely-data-platform/docs/get-started-with-web-sdk)
 
 ## Documentation
 
@@ -27,7 +27,7 @@ npm install @zaiusinc/node-sdk
 
 ## Configuration
 
-You'll need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the [APIs page](https://app.zaius.com/#/api_management) in the ODP app.
+You'll need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the Settings -> APIs page in the ODP app.
 
 ```typescript
 import {z} from '@zaiusinc/node-sdk';

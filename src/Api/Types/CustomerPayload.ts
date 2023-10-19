@@ -3,7 +3,7 @@ import {Identifiers} from './Identifiers';
 
 /**
  * The Zaius Customer payload. See
- * [V3 Customers API](https://docs.developers.zaius.com/api/rest-api/customers)
+ * [V3 Customers API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-customer-information-1)
  * for details.
  */
 export interface CustomerPayload {

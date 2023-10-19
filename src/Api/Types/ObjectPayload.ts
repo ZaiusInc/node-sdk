@@ -2,7 +2,7 @@ import {FieldValue} from './FieldValue';
 
 /**
  * The Zaius Object payload.
- * See [V3 Objects API](https://docs.developers.zaius.com/api/rest-api/objects) for details.
+ * See [V3 Objects API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/update-object-1) for details.
  */
 export interface ObjectPayload {
   [field: string]: FieldValue;
