@@ -10,7 +10,7 @@ export interface ListUpdate {
    */
   subscribed: boolean;
   /**
-   * The identifier field & value you provided, e.g., email: "foo@mail.com" will be included in this object.
+   * The identifier field & value you provided, for example, email: "foo@mail.com" will be included in this object.
    * Note: boolean is only used for the subscribed property of this object.
    */
   [identifierFieldName: string]: string | boolean;
@@ -39,7 +39,7 @@ export interface ListUpdateRequest {
    */
   subscribed: boolean;
   /**
-   * The identifier field & value you wish to subscribe or unsubscribe, e.g., email: "foo@mail.com".
+   * The identifier field & value you wish to subscribe or unsubscribe, for example, email: "foo@mail.com".
    * Note: boolean/undefined are not valid identifier values, but required for this TS interface.
    */
   [identifierFieldName: string]: string | boolean | undefined;
