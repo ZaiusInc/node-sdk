@@ -10,16 +10,18 @@ export interface ListUpdate {
    */
   subscribed: boolean;
   /**
-   * The identifier field & value you provided, e.g., email: "foo@zaius.com" will be included in this object.
+   * The identifier field & value you provided, for example, email: "foo@mail.com" will be included in this object.
    * Note: boolean is only used for the subscribed property of this object.
    */
   [identifierFieldName: string]: string | boolean;
 }
 
+/* eslint-disable max-len */
 /**
  * Response from Zaius V3 list subscribe/unsubscribe APIs
- * See [V3 List APIs](https://docs.developers.zaius.com/api/rest-api/lists)
+ * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-subscription-status-1)
  */
+/* eslint-enable max-len */
 export interface ListUpdateResponse {
   /**
    * A list of updates that were made due to this request
@@ -37,7 +39,7 @@ export interface ListUpdateRequest {
    */
   subscribed: boolean;
   /**
-   * The identifier field & value you wish to subscribe or unsubscribe, e.g., email: "foo@zaius.com".
+   * The identifier field & value you wish to subscribe or unsubscribe, for example, email: "foo@mail.com".
    * Note: boolean/undefined are not valid identifier values, but required for this TS interface.
    */
   [identifierFieldName: string]: string | boolean | undefined;
@@ -45,7 +47,7 @@ export interface ListUpdateRequest {
 
 /**
  * Response from Zaius V3 list create API
- * See [V3 List APIs](https://docs.developers.zaius.com/api/rest-api/lists)
+ * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-list-1)
  */
 export interface CreateListResponse {
   created: {
@@ -77,7 +79,7 @@ export interface ListDefinition extends DataSource {
 
 /**
  * Response from the Zaius V3 get lists API
- * See [V3 List APIs](https://docs.developers.zaius.com/api/rest-api/lists)
+ * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-lists-1)
  */
 export interface GetListsResponse {
   /**

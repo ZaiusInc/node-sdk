@@ -12,7 +12,8 @@ export interface EventData extends Partial<DataSource> {
 
 /**
  * The Zaius Event payload.
- * See [V3 Event API](https://docs.developers.zaius.com/api/rest-api/events) for details.
+ * See [V3 Event API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/upload-events-1)
+ * for details.
  */
 export interface EventPayload {
   /**

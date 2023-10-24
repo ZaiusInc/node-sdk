@@ -14,10 +14,12 @@ export type ReachabilityUpdateType =
   | 'expired'
   | 'other';
 
+/* eslint-disable max-len */
 /**
  * The payload for a Zaius messaging identifier reachability update via v3 APIs.
- * See [V3 Reachability API](https://docs.developers.zaius.com/api/rest-api/advanced/identifiers/reachability)
+ * See [V3 Reachability API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/update-reachability-1)
  */
+/* eslint-enable max-len */
 export interface ReachabilityUpdate {
   /**
    * The name of the messaging identifier field you want to update, e.g., email
@@ -52,10 +54,12 @@ export interface ReachabilityUpdate {
   event_data?: EventData;
 }
 
+/* eslint-disable max-len */
 /**
  * The response payload for fetching the reachability details of a messaging identifier.
- * See [V3 Reachability API](https://docs.developers.zaius.com/api/rest-api/advanced/identifiers/reachability)
+ * See [V3 Reachability API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-reachability-1)
  */
+/* eslint-enable max-len */
 export interface GetReachabilityResponse {
   /**
    * The name of the messaging identifier field, e.g., email

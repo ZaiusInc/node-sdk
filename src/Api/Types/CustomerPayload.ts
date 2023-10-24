@@ -1,11 +1,13 @@
 import {FieldValue} from './FieldValue';
 import {Identifiers} from './Identifiers';
 
+/* eslint-disable max-len */
 /**
  * The Zaius Customer payload. See
- * [V3 Customers API](https://docs.developers.zaius.com/api/rest-api/customers)
+ * [V3 Customers API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-customer-information-1)
  * for details.
  */
+/* eslint-enable max-len */
 export interface CustomerPayload {
   /**
    * A set of identifiers that uniquely identify the customer.

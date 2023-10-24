@@ -1,17 +1,12 @@
-# ODP Node SDK
+A lightweight Node SDK for sending events and data to Optimizely Data Platform (ODP) from a Node JavaScript app in Optimizely Connect Platform (OCP).
 
-A lightweight Node SDK for sending events and data to ODP from a Node JS app.
+> 🚧 Warning
+> 
+> This is _not_ a browser compatible SDK. To interface with ODP from a web site, use the [ODP Web SDK](https://docs.developers.optimizely.com/optimizely-data-platform/docs/get-started-with-web-sdk).
 
-> <b>⚠️ WARNING: This is NOT a browser compatible SDK.</b><br />
-> To interface with ODP from a web site, use our [Web SDK](https://docs.developers.zaius.com/web-sdk/)
+The Node SDK provides interfaces to the majority of [ODP REST APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction).
 
-## Documentation
-
-See the generated [Technical Documentation](https://docs.developers.optimizely.com/optimizely-connect-platform/docs/node-sdk-api-reference-overview) for details on every method.
-
-The Node SDK provides interfaces to the majority of [ODP Rest APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction). See the Rest API Documentation for details behind each API.
-
-## Getting Started
+## Get started
 
 Install using [yarn](https://yarnpkg.com/en/):
 
@@ -27,7 +22,23 @@ npm install @zaiusinc/node-sdk
 
 ## Configuration
 
-You'll need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls will require your private API key. These can be obtained from the [APIs page](https://app.zaius.com/#/api_management) in the ODP app.
+You need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls require your private API key. You can obtain these from the **Account Settings > APIs** page in the ODP app.
+
+[block:image]
+{
+  "images": [
+    {
+      "image": [
+        "https://files.readme.io/43ca706-image.png",
+        null,
+        null
+      ],
+      "align": "center",
+      "border": true
+    }
+  ]
+}
+[/block]
 
 ```typescript
 import {z} from '@zaiusinc/node-sdk';
@@ -52,8 +63,7 @@ async function pageview(email, page) {
 
 ## Typescript
 
-Our SDK is typescript first, so no need to install or create additional type definitions.
-To access the exported types, import `Zaius` from the sdk.
+The OCP Node SDK is typescript first, so you do not need to install or create additional type definitions. To access the exported types, import `Zaius` from the SDK.
 
 ```typescript
 import {z, Zaius} from '@zaiusinc/node-sdk';
@@ -71,7 +81,7 @@ async function pageview(email: string, page: string) {
 import {z} from '@zaiusinc/node-sdk';
 
 /**
- * Configure the ODP SDK for use
+ * Configure the OCP Node SDK for use
  */
 z.configure(sdkConfig);
 
@@ -87,13 +97,13 @@ z.event(eventPayload);
 z.event(eventPayload[]);
 
 /**
- * Create or Update a customer profile in ODP using the v3 profiles API
+ * Create or update a customer profile in ODP using the v3 profiles API
  */
 z.customer(customerPayload, options);
 z.customer(customerPayload[], options);
 
 /**
- * Create or Update an object in ODP using the v3 objects API
+ * Create or update an object in ODP using the v3 objects API
  */
 z.object(type, objectPayload, options);
 
@@ -134,11 +144,9 @@ z.list.updateSubscriptions(listId, arrayOfUpdates);
 z.graphql<ResponseType>(query, variables);
 ```
 
-## Using new APIs or APIs not yet supported by the Node SDK
+## Use APIs that the OCP Node SDK does not support
 
-Unfortunately not every API has a helper in the Node SDK. If you need to use other APIs, you can
-follow the [ODP Rest API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction) documentation
-and use the v3API helper to query the APIs directly. For example:
+Unfortunately, not every API has a helper in the OCP Node SDK. If you need to use other APIs, follow the [ODP REST API documentation](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction) and use the v3API helper to query the APIs directly. For example:
 
 ```typescript
 await z.v3Api.post('objects/products', [
