@@ -1,10 +1,16 @@
 import {ApiV3} from '../lib/ApiV3';
 import {graphql} from './graphql';
+import {InternalConfig} from '../config/configure';
 
 describe('graphql', () => {
+  const mockConfiguration: InternalConfig = {
+    apiBasePath: 'https://api.zaius.com/v3/',
+    apiKey: 'api-key'
+  };
+  const apiV3: ApiV3.API = new ApiV3.API(mockConfiguration);
   let postMock!: jest.SpyInstance;
   beforeEach(() => {
-    postMock = jest.spyOn(ApiV3, 'post').mockReturnValue(Promise.resolve({} as any));
+    postMock = jest.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
 
   it('sends a query to /graphql', async () => {
@@ -15,7 +21,7 @@ describe('graphql', () => {
         data: 'result data'
       }
     });
-    const result = await graphql(query);
+    const result = await graphql(apiV3, query);
     expect(postMock).toHaveBeenCalledWith('/graphql', {query});
     expect(result).toEqual({
       success: true,
@@ -27,7 +33,7 @@ describe('graphql', () => {
     const query = '{}';
     const variables = {};
     postMock.mockReturnValue({ data: { data: 'result data' } });
-    await graphql(query, variables);
+    await graphql(apiV3, query, variables);
     expect(postMock).toHaveBeenCalledWith('/graphql', {query, variables});
   });
 });

@@ -12,20 +12,23 @@ interface TransformedCustomerPayload {
 }
 
 /**
- * Send a customer or a batch of customers to Zaius.
- * @param payload a Zaius customer payload or an array of customer payloads
+ * Send a customer or a batch of customers to ODP.
+ *
+ * @param apiV3 the v3 API instance to use
+ * @param payload an ODP customer payload or an array of customer payloads
  * @param opts a PayloadOptions instance defaults are trimToNull & excludeNulls
  * @returns the response from the API if successful
  * @throws {HttpError} if it receives a non-2XX result or if the batch size is > BATCH_LIMIT
  */
 export function customer(
+  apiV3: ApiV3.API,
   payload: CustomerPayload | CustomerPayload[],
   opts?: PayloadOptions
 ): Promise<ApiV3.HttpResponse<CustomerResponse>> {
   let transformedPayload;
   if (Array.isArray(payload)) {
     if (payload.length > ApiV3.BATCH_LIMIT) {
-      return Promise.reject(ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
+      return Promise.reject(apiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded));
     }
     transformedPayload = payload.map(transformPayload);
     transformedPayload.forEach((p) => PayloadSanitizer.sanitize(p.attributes, opts));
@@ -33,7 +36,7 @@ export function customer(
     transformedPayload = transformPayload(payload);
     PayloadSanitizer.sanitize(transformedPayload.attributes, opts);
   }
-  return ApiV3.post('/profiles', transformedPayload);
+  return apiV3.post('/profiles', transformedPayload);
 }
 
 function transformPayload(payload: CustomerPayload): TransformedCustomerPayload {

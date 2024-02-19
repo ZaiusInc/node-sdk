@@ -1,7 +1,7 @@
 {
   "name": "@zaiusinc/node-sdk",
   "version": "1.0.1",
-  "description": "Node SDK for Zaius Apps",
+  "description": "Node SDK for Optimizely Data Platform",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "Apache-2.0",
   "licenses": [
@@ -10,7 +10,7 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0"
     }
   ],
-  "author": "Zaius, Inc",
+  "author": "Optimizely, Inc",
   "files": [
     "dist/",
     "src/"

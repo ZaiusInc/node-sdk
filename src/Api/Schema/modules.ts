@@ -3,26 +3,29 @@ import {ModulesResponse} from '../Types';
 import {ApiModuleAlreadyEnabledError} from './ApiModuleAlreadyEnabledError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
+import {HttpError} from '../lib/HttpError';
 
 /**
  * Gets the list of enabled schema modules.
+ * @param apiV3 the v3 API instance to use
  * @throws {HttpError} if it receives a non-2XX result
  */
-export async function getEnabledModules(): Promise<ApiV3.HttpResponse<ModulesResponse>> {
-  return await ApiV3.get('/schema/modules');
+export async function getEnabledModules(apiV3: ApiV3.API): Promise<ApiV3.HttpResponse<ModulesResponse>> {
+  return await apiV3.get('/schema/modules');
 }
 
 /**
  * Enables a schema module.
+ * @param apiV3 the v3 API instance to use
  * @param module the module to enable
  * @throws {ApiModuleAlreadyEnabledError} if the module was already enabled
  * @throws {HttpError} if it receives any other non-2XX result
  */
-export async function enableModule(module: string): Promise<ApiV3.HttpResponse<ModulesResponse>> {
+export async function enableModule(apiV3: ApiV3.API, module: string): Promise<ApiV3.HttpResponse<ModulesResponse>> {
   try {
-    return await ApiV3.post('/schema/modules', {module});
+    return await apiV3.post('/schema/modules', {module});
   } catch (e) {
-    if (e instanceof ApiV3.HttpError && e.response) {
+    if (e instanceof HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'module', (reason) => reason === 'already enabled')) {

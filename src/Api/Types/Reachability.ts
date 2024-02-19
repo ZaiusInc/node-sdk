@@ -16,7 +16,7 @@ export type ReachabilityUpdateType =
 
 /* eslint-disable max-len */
 /**
- * The payload for a Zaius messaging identifier reachability update via v3 APIs.
+ * The payload for an ODP messaging identifier reachability update via v3 APIs.
  * See [V3 Reachability API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/update-reachability-1)
  */
 /* eslint-enable max-len */
@@ -49,7 +49,7 @@ export interface ReachabilityUpdate {
    */
   reachable_update_ts?: Date | string | number;
   /**
-   * Additional event fields/values that should be included if a Zaius event is generated as a result of this update
+   * Additional event fields/values that should be included if an ODP event is generated as a result of this update
    */
   event_data?: EventData;
 }
@@ -70,7 +70,7 @@ export interface GetReachabilityResponse {
    */
   identifier_value: string;
   /**
-   * true if this specific messaging identifier is considered reachable by Zaius, false otherwise
+   * true if this specific messaging identifier is considered reachable by ODP, false otherwise
    */
   reachable: boolean;
   /**

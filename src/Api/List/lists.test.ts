@@ -9,9 +9,11 @@ const mockConfiguration: InternalConfig = {
   apiKey: 'api-key'
 };
 
+let apiV3: ApiV3.API;
+
 describe('lists', () => {
   beforeAll(() => {
-    ApiV3.configure(mockConfiguration);
+    apiV3 = new ApiV3.API(mockConfiguration);
   });
 
   describe('createList', () => {
@@ -19,7 +21,7 @@ describe('lists', () => {
       nock('https://api.zaius.com')
         .post('/v3/lists', {name: 'Foo List'})
         .reply(200, '{}');
-      await createList('Foo List');
+      await createList(apiV3, 'Foo List');
       expect(nock.isDone()).toBeTruthy();
     });
   });
@@ -29,7 +31,7 @@ describe('lists', () => {
       nock('https://api.zaius.com')
         .get('/v3/lists')
         .reply(200, '{}');
-      await getLists();
+      await getLists(apiV3);
       expect(nock.isDone()).toBeTruthy();
     });
   });

@@ -11,23 +11,25 @@ const mockConfiguration: InternalConfig = {
   apiKey: 'api-key'
 };
 
+let apiV3: ApiV3.API;
+
 describe('reachability', () => {
   describe('updateReachability', () => {
     beforeAll(() => {
-      ApiV3.configure(mockConfiguration);
+      apiV3 = new ApiV3.API(mockConfiguration);
     });
 
     it('sends a post to /reachability', async () => {
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
-        identifier_value: 'foo@zaius.com',
+        identifier_value: 'foo@optimizely.com',
         reachable: false,
         reachable_update_reason: 'hard_bounce'
       });
       nock('https://api.zaius.com')
         .post('/v3/reachability', [update] as any)
         .reply(200, '{}');
-      await updateReachability(update);
+      await updateReachability(apiV3, update);
       expect(nock.isDone()).toBeTruthy();
     });
 
@@ -35,13 +37,13 @@ describe('reachability', () => {
       const update = deepFreeze([
         {
           identifier_field_name: 'email',
-          identifier_value: 'foo@zaius.com',
+          identifier_value: 'foo@optimizely.com',
           reachable: false,
           reachable_update_reason: 'hard_bounce'
         },
         {
           identifier_field_name: 'email',
-          identifier_value: 'bar@zaius.com',
+          identifier_value: 'bar@optimizely.com',
           reachable: true,
           reachable_update_reason: 'hard_bounce'
         }
@@ -49,37 +51,37 @@ describe('reachability', () => {
       nock('https://api.zaius.com')
         .post('/v3/reachability', update as any)
         .reply(200, '{}');
-      await updateReachability(update);
+      await updateReachability(apiV3, update);
       expect(nock.isDone()).toBeTruthy();
     });
 
     it('throws an error if the api returns an error', async () => {
       const update: ReachabilityUpdate = {
         identifier_field_name: 'email',
-        identifier_value: 'foo@zaius.com',
+        identifier_value: 'foo@optimizely.com',
         reachable: false
       };
       nock('https://api.zaius.com')
         .post('/v3/reachability', [update] as any)
         .reply(400, '{}');
-      await expect(updateReachability(update)).rejects.toThrowError('Bad Request');
+      await expect(updateReachability(apiV3, update)).rejects.toThrowError('Bad Request');
       expect(nock.isDone()).toBeTruthy();
     });
 
     it('throws an error if the batch is too large', async () => {
       const updates = Array(101).fill({
         identifier_field_name: 'email',
-        identifier_value: 'foo@zaius.com',
+        identifier_value: 'foo@optimizely.com',
         reachable: true
       });
-      await expect(updateReachability(updates)).rejects.toThrowError('maximum batch size');
+      await expect(updateReachability(apiV3, updates)).rejects.toThrowError('maximum batch size');
     });
 
     it('converts date if provided as a Date object', async () => {
       jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
-        identifier_value: 'foo@zaius.com',
+        identifier_value: 'foo@optimizely.com',
         reachable: false,
         reachable_update_reason: 'preference center update',
         reachable_update_ts: new Date()
@@ -91,7 +93,7 @@ describe('reachability', () => {
       nock('https://api.zaius.com')
         .post('/v3/reachability', [expectedUpdate] as any)
         .reply(200, '{}');
-      await updateReachability(update);
+      await updateReachability(apiV3, update);
       expect(nock.isDone()).toBeTruthy();
     });
 
@@ -99,7 +101,7 @@ describe('reachability', () => {
       jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
-        identifier_value: 'foo@zaius.com',
+        identifier_value: 'foo@optimizely.com',
         reachable: false,
         reachable_update_reason: 'preference center update',
         reachable_update_ts: '2020-01-21T23:07:54.373Z'
@@ -111,7 +113,7 @@ describe('reachability', () => {
       nock('https://api.zaius.com')
         .post('/v3/reachability', [expectedUpdate] as any)
         .reply(200, '{}');
-      await updateReachability(update);
+      await updateReachability(apiV3, update);
       expect(nock.isDone()).toBeTruthy();
     });
   });
@@ -119,17 +121,17 @@ describe('reachability', () => {
   describe('getReachability', () => {
     it('sends a get to /reachability/{identifier}', async () => {
       nock('https://api.zaius.com')
-        .get('/v3/reachability/email?id=foo%40zaius.com')
+        .get('/v3/reachability/email?id=foo%40optimizely.com')
         .reply(200, '{}');
-      await getReachability('email', 'foo@zaius.com');
+      await getReachability(apiV3, 'email', 'foo@optimizely.com');
       expect(nock.isDone()).toBeTruthy();
     });
 
     it('safely encodes url values', async () => {
       nock('https://api.zaius.com')
-        .get('/v3/reachability/em%20ail?id=%22foo%22%40zaius.com')
+        .get('/v3/reachability/em%20ail?id=%22foo%22%40optimizely.com')
         .reply(200, '{}');
-      await getReachability('em ail', '"foo"@zaius.com');
+      await getReachability(apiV3, 'em ail', '"foo"@optimizely.com');
       expect(nock.isDone()).toBeTruthy();
     });
   });

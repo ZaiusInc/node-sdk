@@ -20,136 +20,166 @@ Or [npm](https://www.npmjs.com/):
 npm install @zaiusinc/node-sdk
 ```
 
-## Configuration
+## Usage
 
-You need to configure the SDK with your API keys. If you are only sending data to ODP, you normally only need your public API key, however, some API calls require your private API key. You can obtain these from the **Account Settings > APIs** page in the ODP app.
+To communicate with ODP, you need to obtain and configure an instance of `ODPClient`. 
+There are two ways to do this:
+1. Use module scoped instance exported as `odp` from the SDK.
+2. Create your own instance of `ODPClient`.
+
+Using module scoped instance is easier, when you don't need to communicate with multiple ODP instances. 
+With module scoped instance you configure the SDK once and then use it throughout your application.
+
+Creating your own instance of `ODPClient` gives you more control.
+
+### Configuration and usage
+
+You need to configure the SDK with your API keys. 
+If you are only sending data to ODP, you normally only need your public API key, however, some API calls require your private API key. 
+You can obtain these from the **Account Settings > APIs** page in the ODP app.
 
 [block:image]
 {
-  "images": [
-    {
-      "image": [
-        "https://files.readme.io/43ca706-image.png",
-        null,
-        null
-      ],
-      "align": "center",
-      "border": true
-    }
-  ]
+"images": [
+{
+"image": [
+"https://files.readme.io/43ca706-image.png",
+null,
+null
+],
+"align": "center",
+"border": true
+}
+]
 }
 [/block]
 
+
+#### Using module scoped instance
 ```typescript
-import {z} from '@zaiusinc/node-sdk';
-z.configure({
+import {odp} from '@zaiusinc/node-sdk';
+odp.configure({
   apiKey: 'your_public_or_private_api_key'
 });
+
+const event = {type: 'pageview', identifiers: {email}, data: {page}};
+await odp.event(event);
 ```
 
-## Usage
+Alternatively, you can provide the `apiKey` as an environment variable `ODP_SDK_API_KEY` and omit `cofigure` method.
 
-ODP APIs are exposed through the `z` export:
+> **Note** 
+> For compatibility with previous versions of the SDK, module scoped instance is also exported as `z` from the SDK.
 
-```javascript
-import {z} from '@zaiusinc/node-sdk';
+#### Creating your own instance of `ODPClient`
+```typescript
+import {ODPClient} from '@zaiusinc/node-sdk';
+const odp = new ODPClient({
+  apiKey: 'your_public_or_private_api_key'
+});
 
-async function pageview(email, page) {
-  const event = {type: 'pageview', identifiers: {email}, data: {page}};
-  const result = await z.event(event);
-  return result.success;
-}
+const event = {type: 'pageview', identifiers: {email}, data: {page}};
+await odp.event(event);
 ```
+
+Alternatively, you can provide the `apiKey` as an environment variable `ODP_SDK_API_KEY` and use parameterless constructor.
+
 
 ## Typescript
 
-The OCP Node SDK is typescript first, so you do not need to install or create additional type definitions. To access the exported types, import `Zaius` from the SDK.
+The ODP Node SDK is TypeScript first, so no need to install or create additional type definitions.
+To access the exported types, import `ODP` from the SDK.
 
 ```typescript
-import {z, Zaius} from '@zaiusinc/node-sdk';
+import {odp, ODP} from '@zaiusinc/node-sdk';
 
 async function pageview(email: string, page: string) {
-  const event: Zaius.Event = {type: 'pageview', identifiers: {email}, data: {page}};
-  const result = await z.event(event);
+  const event: ODP.Event = {type: 'pageview', identifiers: {email}, data: {page}};
+  const result = await odp.event(event);
   return result.success;
 }
 ```
+
+> **Note**
+> For compatibility with previous versions of the SDK, types are also exported as `Zaius` from the SDK.
 
 ## Available APIs
 
 ```javascript
-import {z} from '@zaiusinc/node-sdk';
+import {odp} from '@zaiusinc/node-sdk';
 
 /**
  * Configure the OCP Node SDK for use
  */
-z.configure(sdkConfig);
+odp.configure(sdkConfig);
 
 /**
  * Access public values of the current configuration
  */
-z.config;
+odp.config;
 
 /**
  * Send an event to ODP using the v3 event API
  */
-z.event(eventPayload);
-z.event(eventPayload[]);
+odp.event(eventPayload);
+odp.event(eventPayload[]);
 
 /**
  * Create or update a customer profile in ODP using the v3 profiles API
  */
-z.customer(customerPayload, options);
-z.customer(customerPayload[], options);
+odp.customer(customerPayload, options);
+odp.customer(customerPayload[], options);
 
 /**
  * Create or update an object in ODP using the v3 objects API
  */
-z.object(type, objectPayload, options);
+odp.object(type, objectPayload, options);
 
 /**
  * Manage schema (ODP domain objects and fields) using the v3 APIs
  */
-z.schema.createField(object, field);
-z.schema.createIdentifier(identifier);
-z.schema.getEnabledModules();
-z.schema.enableModule(moduleName);
-z.schema.getObject(name);
-z.schema.getAllObjects();
-z.schema.createObject(objectDefinition);
-z.schema.createRelation(object, relationDefinition);
+odp.schema.createField(object, field);
+odp.schema.createIdentifier(identifier);
+odp.schema.getEnabledModules();
+odp.schema.enableModule(moduleName);
+odp.schema.getObject(name);
+odp.schema.getAllObjects();
+odp.schema.createObject(objectDefinition);
+odp.schema.createRelation(object, relationDefinition);
 
 /**
  * Manage customer identifiers using the v3 APIs
  */
-z.identifier.updateMetadata(identifierUpdates);
-z.identifier.getMetadata(identifierFieldName, identifierValue);
-z.identifier.updateReachability(reachabilityUpdates);
-z.identifier.getReachability(identifierFieldName, identifierValue);
-z.identifier.updateConsent(consentUpdates);
-z.identifier.getConsent(identifierFieldName, identifierValue);
+odp.identifier.updateMetadata(identifierUpdates);
+odp.identifier.getMetadata(identifierFieldName, identifierValue);
+odp.identifier.updateReachability(reachabilityUpdates);
+odp.identifier.getReachability(identifierFieldName, identifierValue);
+odp.identifier.updateConsent(consentUpdates);
+odp.identifier.getConsent(identifierFieldName, identifierValue);
 
 /**
  * Manage list subscriptions using the v3 APIs
  */
-z.list.createList(listName);
-z.list.getLists(listName);
-z.list.subscribe(listId, identifiers);
-z.list.unsubscribe(listId, identifiers);
-z.list.updateSubscriptions(listId, arrayOfUpdates);
+odp.list.createList(listName);
+odp.list.getLists(listName);
+odp.list.subscribe(listId, identifiers);
+odp.list.unsubscribe(listId, identifiers);
+odp.list.updateSubscriptions(listId, arrayOfUpdates);
 
 /**
  * Query data using the GraphQL API
  */
-z.graphql<ResponseType>(query, variables);
+odp.graphql<ResponseType>(query, variables);
 ```
 
 ## Use APIs that the OCP Node SDK does not support
 
-Unfortunately, not every API has a helper in the OCP Node SDK. If you need to use other APIs, follow the [ODP REST API documentation](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction) and use the v3API helper to query the APIs directly. For example:
+If you need to use an API that is not supported by the ODP Node SDK yet, you can
+follow the [ODP REST API documentation](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction)
+and use the v3API helper to query the APIs directly. For example:
 
 ```typescript
-await z.v3Api.post('objects/products', [
+await odp.v3Api.post('objects/products', [
   {
     product_id: '123',
     name: 'Red Shirt'

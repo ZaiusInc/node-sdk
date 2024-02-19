@@ -1,5 +1,5 @@
 /**
- * The Zaius Field definition payload for schema APIs.
+ * The ODP Field definition payload for schema APIs.
  * See [V3 Schema API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-field-1)
  * for details.
  */
@@ -14,11 +14,11 @@ export interface FieldDefinition {
    */
   type: 'string' | 'number' | 'timestamp' | 'boolean' | 'vector';
   /**
-   * The user-friendly name used within Zaius. Must be unique across all display names within the object.
+   * The user-friendly name used within ODP. Must be unique across all display names within the object.
    */
   display_name: string;
   /**
-   * Description of the field and how it will be referenced in the Zaius UI.
+   * Description of the field and how it will be referenced in the ODP UI.
    * While optional, it's use is strongly encouraged.
    */
   description?: string;
@@ -30,7 +30,7 @@ export interface FieldDefinition {
 }
 
 /**
- * The Zaius Object definition payload for schema APIs.
+ * The ODP Object definition payload for schema APIs.
  * See [V3 Schema API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-object-1)
  * for details.
  */
@@ -42,7 +42,7 @@ export interface ObjectDefinition {
   name: string;
 
   /**
-   * The user-friendly name used within Zaius. Must be unique across all object display names within the schema.
+   * The user-friendly name used within ODP. Must be unique across all object display names within the schema.
    */
   display_name: string;
 
@@ -65,7 +65,7 @@ export interface ObjectDefinition {
 }
 
 /**
- * The Zaius Relation definition payload for schema APIs.
+ * The ODP Relation definition payload for schema APIs.
  * See [V3 Schema API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-relationship-1)
  * for details.
  */
@@ -76,7 +76,7 @@ export interface RelationDefinition {
    */
   name: string;
   /**
-   * The user-friendly name used within Zaius.
+   * The user-friendly name used within ODP.
    * Must be unique across all relation and field display names within the object.
    */
   display_name: string;
@@ -113,7 +113,7 @@ export interface ModulesResponse {
 }
 
 /**
- * The Zaius Identifier definition payload for schema API.
+ * The ODP Identifier definition payload for schema API.
  * See [V3 Schema API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-identifier-1)
  * for details.
  */

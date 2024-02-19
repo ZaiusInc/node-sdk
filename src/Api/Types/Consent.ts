@@ -1,7 +1,7 @@
 import {EventData} from '.';
 
 /**
- * The payload for a Zaius messaging identifier consent update via v3 APIs.
+ * The payload for an ODP messaging identifier consent update via v3 APIs.
  * See [V3 Consent API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/consent-legacy-2)
  */
 export interface ConsentUpdate {
@@ -30,7 +30,7 @@ export interface ConsentUpdate {
    */
   consent_update_ts?: Date | string | number;
   /**
-   * Additional event fields/values that should be included if a Zaius event is generated as a result of this update
+   * Additional event fields/values that should be included if an ODP event is generated as a result of this update
    */
   event_data?: EventData;
 }

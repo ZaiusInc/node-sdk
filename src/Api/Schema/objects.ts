@@ -5,18 +5,21 @@ import {ApiObjectNotFoundError} from './ApiObjectNotFoundError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
+import {AppContext} from '../config/configure';
+import {HttpError} from '../lib/HttpError';
 
 /**
- * Gets the definition of a Zaius object.
+ * Gets the definition of an ODP object.
+ * @param apiV3 the v3 API instance to use
  * @param name the object name
  * @throws {ApiObjectNotFoundError} if there is no object with the given name
  * @throws {HttpError} if it receives any other non-2XX result
  */
-export async function getObject(name: string): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
+export async function getObject(apiV3: ApiV3.API, name: string): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
   try {
-    return await ApiV3.get(`/schema/objects/${name}`);
+    return await apiV3.get(`/schema/objects/${name}`);
   } catch (e) {
-    if (e instanceof ApiV3.HttpError && e.response && e.response.status === 404) {
+    if (e instanceof HttpError && e.response && e.response.status === 404) {
       throw new ApiObjectNotFoundError(e);
     }
     throw e;
@@ -24,26 +27,31 @@ export async function getObject(name: string): Promise<ApiV3.HttpResponse<Object
 }
 
 /**
- * Gets the definitions of all Zaius objects.
+ * Gets the definitions of all ODP objects.
+ * @param apiV3 the v3 API instance to use
  * @throws {HttpError} if it receives a non-2XX result
  */
-export async function getAllObjects(): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> {
-  return await ApiV3.get('/schema/objects');
+export async function getAllObjects(apiV3: ApiV3.API, ): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> {
+  return await apiV3.get('/schema/objects');
 }
 
 /**
- * Create a custom Zaius object
+ * Create a custom ODP object
+ * @param apiV3 the v3 API instance to use
  * @param object the object to create
  * @throws {ApiObjectExistsError} if the object name already exists
  * @throws {HttpError} if it receives any other non-2XX result
  */
-export async function createObject(object: ObjectDefinition): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
-  validateCreateObject(object);
+export async function createObject(
+  apiV3: ApiV3.API,
+  object: ObjectDefinition
+): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
+  validateCreateObject(object, apiV3.getContext());
 
   try {
-    return await ApiV3.post('/schema/objects', object);
+    return await apiV3.post('/schema/objects', object);
   } catch (e) {
-    if (e instanceof ApiV3.HttpError && e.response) {
+    if (e instanceof HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'name', (reason) => /^already used/.test(reason))) {
@@ -58,8 +66,7 @@ export async function createObject(object: ObjectDefinition): Promise<ApiV3.Http
  * @hidden
  * Temporary validation until we update milton
  */
-function validateCreateObject(object: ObjectDefinition) {
-  const context = ApiV3.getAppContext();
+function validateCreateObject(object: ObjectDefinition, context?: AppContext) {
   if (context && context.app_id) {
     const prefix = `${context.app_id}_`;
     if (!object.name.startsWith(prefix)) {
