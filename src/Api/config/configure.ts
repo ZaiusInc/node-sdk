@@ -7,6 +7,16 @@ export interface Config {
    * If you need to make calls to private APIs, this must be a private API key.
    */
   apiKey: string;
+
+  /* eslint-disable max-len */
+  /**
+   * The base path for the API.
+   * The value depends on the region of the ODP account.
+   * The current list of supported regions can be find in [the ODP documentation](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction#rest-api).
+   *
+   * The SDK tries to determine the base path from the API key, but you can override it by setting this value.
+   */
+  apiBasePath?: string;
 }
 
 /**
@@ -30,11 +40,37 @@ export interface AppContext {
   vendor: string;
 }
 
+function getApiBasePath(apiKey: string | null, apiBasePath?: string): string {
+  if (apiBasePath) {
+    return apiBasePath;
+  }
+  let path: string;
+  if (apiKey) {
+    let publicKey: string = apiKey;
+    if (publicKey.includes('.')) {
+      publicKey = publicKey.substring(0, publicKey.lastIndexOf('.'));
+    }
+
+    if (publicKey.endsWith('-eu1')) {
+      path = 'https://api.eu1.odp.optimizely.com/v3/';
+    } else if (publicKey.endsWith('-au1')) {
+      path = 'https://api.au1.odp.optimizely.com/v3/';
+    } else {
+      path = 'https://api.zaius.com/v3/';
+    }
+  } else {
+    path = 'https://api.zaius.com/v3/';
+  }
+
+  return path;
+}
+
 /**
  * @hidden
  */
-const DEFAULT_CONFIG = Object.freeze({
-  apiKey:  process.env['ODP_SDK_API_KEY'] || process.env['ZAIUS_SDK_API_KEY'] || ''
+const DEFAULT_CONFIG: Config = Object.freeze({
+  apiKey:  process.env['ODP_SDK_API_KEY'] || process.env['ZAIUS_SDK_API_KEY'] || '',
+  apiBasePath: getApiBasePath(process.env['ODP_SDK_API_KEY'] || process.env['ZAIUS_SDK_API_KEY'] || null)
 });
 
 /**
@@ -43,24 +79,7 @@ const DEFAULT_CONFIG = Object.freeze({
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
 export function configOrDefault(newConfig: Config | InternalConfig | null): InternalConfig {
-  let apiBasePath: string;
-  if (newConfig && !('apiBasePath' in newConfig) && newConfig.apiKey) {
-    let publicKey: string = newConfig.apiKey;
-    if (publicKey.includes('.')) {
-      publicKey = publicKey.substring(0, publicKey.lastIndexOf('.'));
-    }
-
-    if (publicKey.endsWith('-eu1')) {
-      apiBasePath = 'https://api.eu1.odp.optimizely.com/v3/';
-    } else if (publicKey.endsWith('-au1')) {
-      apiBasePath = 'https://api.au1.odp.optimizely.com/v3/';
-    } else {
-      apiBasePath = 'https://api.zaius.com/v3/';
-    }
-  } else {
-    apiBasePath = 'https://api.zaius.com/v3/';
-  }
-
+  const apiBasePath = getApiBasePath(newConfig?.apiKey || null, newConfig?.apiBasePath);
   let configuration: InternalConfig;
   if (newConfig == null) {
     configuration = Object.assign({}, DEFAULT_CONFIG, {apiBasePath});
