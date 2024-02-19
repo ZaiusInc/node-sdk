@@ -12,7 +12,6 @@ describe('configure', () => {
 
     // set by setup.ts
     const defaultConfig = {
-      requestId: '00000000-0000-0000-0000-000000000000',
       apiKey: 'private.api_key'
     };
     expect(configOrDefault(configuration)).toEqual(Object.assign(defaultConfig, configuration));

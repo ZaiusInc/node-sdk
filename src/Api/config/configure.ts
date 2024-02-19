@@ -7,10 +7,6 @@ export interface Config {
    * If you need to make calls to private APIs, this must be a private API key.
    */
   apiKey: string;
-  /**
-   * A request ID to be added to all logging.
-   */
-  requestId?: string;
 }
 
 /**
@@ -19,7 +15,6 @@ export interface Config {
 export interface InternalConfig extends Config {
   apiBasePath: string;
   apiKey: string;
-  requestId?: string;
   requestInterceptor?: RequestInterceptor;
   appContext?: AppContext;
 }
@@ -39,7 +34,6 @@ export interface AppContext {
  * @hidden
  */
 const DEFAULT_CONFIG = Object.freeze({
-  requestId: process.env['ODP_SDK_TEST_REQUEST_ID'] || process.env['ZAIUS_SDK_TEST_REQUEST_ID'],
   apiKey:  process.env['ODP_SDK_API_KEY'] || process.env['ZAIUS_SDK_API_KEY'] || ''
 });
 

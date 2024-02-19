@@ -204,11 +204,6 @@ export namespace ApiV3 {
         'x-api-key': this.getConfig().apiKey,
         'Content-Type': 'application/json'
       };
-      // TODO: Need a way to send an originating request id rather than have
-      // all v3 api calls use the same request id for a webhook
-      // if (config.requestId) {
-      //   headersObject['z-request-id'] = config.requestId;
-      // }
       return headersObject;
     }
 
