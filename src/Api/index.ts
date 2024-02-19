@@ -1,21 +1,20 @@
-import {ApiV3} from './lib/ApiV3';
 import * as Zaius from './Types';
 import * as ODP from './Types';
-import {Config, configOrDefault, InternalConfig} from './config/configure';
+import {Config, InternalConfig, setModuleScopedConfig} from './config/configure';
 import {ODPClient} from './ODPClient';
 
 /**
  * An extension of ODPClient that allows changing the configuration after the client has been created.
  * The purpose of this class is to allow managing module scoped instance of OCPClient.
  */
-export class ModuleScopedODPClient extends ODPClient {
+export class ReconfigurableODPClient extends ODPClient {
 
   /**
    * Configure the ODP SDK for use
    *
    */
-  public configure(newConfig: Config | InternalConfig | null): void {
-    this.v3Api = new ApiV3.API(configOrDefault(newConfig));
+  public configure(config: Config | InternalConfig | null): void {
+    setModuleScopedConfig(config);
   }
 }
 
@@ -35,7 +34,7 @@ export {ODPClient};
  * // etc
  * ```
  */
-export const odp = new ModuleScopedODPClient();
+export const odp = new ReconfigurableODPClient();
 export {ODP};
 
 /**

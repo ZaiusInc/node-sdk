@@ -2,7 +2,7 @@ import {Schema} from './Schema';
 import {Identifier} from './Identifiers';
 import {Lists} from './List';
 import {ApiV3} from './lib/ApiV3';
-import {Config, configOrDefault, InternalConfig} from './config/configure';
+import {Config, InternalConfig} from './config/configure';
 import {IdentifierApi} from './IdentifierApi';
 import {SchemaApi} from './SchemaApi';
 import {ListsApi} from './ListsApi';
@@ -43,7 +43,7 @@ export class ODPClient {
   public v3Api: ApiV3.API;
 
   public constructor(config: Config | InternalConfig | null = null) {
-    this.v3Api = new ApiV3.API(configOrDefault(config));
+    this.v3Api = new ApiV3.API(config);
     this.identifier = new IdentifierApi(this);
     this.schema = new SchemaApi(this);
     this.list = new ListsApi(this);

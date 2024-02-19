@@ -1,7 +1,7 @@
 import fetch, {Headers} from 'node-fetch';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {joinUri} from './joinUri';
-import {InternalConfig} from '../config/configure';
+import {Config, configOrDefault, getModuleOrGlobalConfig, InternalConfig} from '../config/configure';
 import {HttpError} from './HttpError';
 
 export namespace ApiV3 {
@@ -85,10 +85,12 @@ export namespace ApiV3 {
 
   export class API {
 
-    private config: InternalConfig;
+    private readonly config?: InternalConfig;
 
-    public constructor(config: InternalConfig) {
-      this.config = config;
+    public constructor(config: Config | InternalConfig | null) {
+      if (config) {
+        this.config = configOrDefault(config);
+      }
     }
 
     private static ERROR_CODE_MESSAGES: { [key in ErrorCode]: string } = {
@@ -119,7 +121,7 @@ export namespace ApiV3 {
       payload: Payload | undefined,
       options: RequestOptions = {...API.DEFAULT_REQUEST_OPTIONS}
     ): Promise<HttpResponse<T>> {
-      let url = joinUri(this.config.apiBasePath, path);
+      let url = joinUri(this.getConfig().apiBasePath, path);
       const body = payload === undefined ? undefined : JSON.stringify(payload);
 
       return new Promise(async (resolve, reject) => {
@@ -127,8 +129,9 @@ export namespace ApiV3 {
         try {
           // Allow requests to be monitored or manipulated
           let requestInfo: RequestDetail = {method, headers: this.buildHeaders(), body};
-          if (this.config.requestInterceptor) {
-            [url, requestInfo] = this.config.requestInterceptor(url, requestInfo);
+          const interceptor = this.getConfig().requestInterceptor;
+          if (interceptor) {
+            [url, requestInfo] = interceptor(url, requestInfo);
           }
 
           if (process.env['LOG_REQUESTS'] === 'true') {
@@ -198,7 +201,7 @@ export namespace ApiV3 {
 
     private buildHeaders() {
       const headersObject: { [key: string]: string } = {
-        'x-api-key': this.config.apiKey,
+        'x-api-key': this.getConfig().apiKey,
         'Content-Type': 'application/json'
       };
       // TODO: Need a way to send an originating request id rather than have
@@ -210,7 +213,15 @@ export namespace ApiV3 {
     }
 
     public getContext() {
-      return this.config.appContext;
+      return this.getConfig().appContext;
+    }
+
+    private getConfig(): InternalConfig {
+      if (this.config) {
+        return this.config;
+      } else {
+        return getModuleOrGlobalConfig();
+      }
     }
   }
 }

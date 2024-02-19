@@ -44,16 +44,13 @@ const DEFAULT_CONFIG = Object.freeze({
 });
 
 /**
- * Exposed method to set the configuration options
- * This handled automatically in an Optimizely Connect Platform App
- *
- * Usage odp.configure({...})
+ * @hidden
  *
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
 export function configOrDefault(newConfig: Config | InternalConfig | null): InternalConfig {
-  let apiBasePath = 'https://api.zaius.com/v3/';
-  if (newConfig && newConfig.apiKey) {
+  let apiBasePath: string;
+  if (newConfig && !('apiBasePath' in newConfig) && newConfig.apiKey) {
     let publicKey: string = newConfig.apiKey;
     if (publicKey.includes('.')) {
       publicKey = publicKey.substring(0, publicKey.lastIndexOf('.'));
@@ -63,7 +60,11 @@ export function configOrDefault(newConfig: Config | InternalConfig | null): Inte
       apiBasePath = 'https://api.eu1.odp.optimizely.com/v3/';
     } else if (publicKey.endsWith('-au1')) {
       apiBasePath = 'https://api.au1.odp.optimizely.com/v3/';
+    } else {
+      apiBasePath = 'https://api.zaius.com/v3/';
     }
+  } else {
+    apiBasePath = 'https://api.zaius.com/v3/';
   }
 
   let configuration: InternalConfig;
@@ -74,4 +75,33 @@ export function configOrDefault(newConfig: Config | InternalConfig | null): Inte
   }
 
   return configuration;
+}
+
+/**
+ * @hidden
+ */
+let moduleScopedConfig: InternalConfig | null;
+
+/**
+ * @hidden
+ *
+ */
+export function getModuleOrGlobalConfig(): InternalConfig {
+  const globalConfig = global.odpNodeSdkConfig as InternalConfig | Config | null;
+  if (moduleScopedConfig != null) {
+    return moduleScopedConfig;
+  } else if (globalConfig != null) {
+    return configOrDefault(globalConfig as InternalConfig);
+  } else {
+    return configOrDefault(null);
+  }
+}
+
+/**
+ * @hidden
+ *
+ * @param newConfig the configuration to use going forward or null to restore defaults
+ */
+export function setModuleScopedConfig(config: Config | InternalConfig | null): void {
+  moduleScopedConfig = configOrDefault(config);
 }
