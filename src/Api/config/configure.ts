@@ -79,7 +79,10 @@ const DEFAULT_CONFIG: Config = Object.freeze({
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
 export function configOrDefault(newConfig: Config | InternalConfig | null): InternalConfig {
-  const apiBasePath = getApiBasePath(newConfig?.apiKey || null, newConfig?.apiBasePath);
+  const apiBasePath = getApiBasePath(
+    (newConfig && newConfig.apiKey) || null,
+    (newConfig && newConfig.apiBasePath) || undefined
+  );
   let configuration: InternalConfig;
   if (newConfig == null) {
     configuration = Object.assign({}, DEFAULT_CONFIG, {apiBasePath});
@@ -117,4 +120,13 @@ export function getModuleOrGlobalConfig(): InternalConfig {
  */
 export function setModuleScopedConfig(config: Config | InternalConfig | null): void {
   moduleScopedConfig = configOrDefault(config);
+}
+
+/**
+ * @hidden
+ *
+ * Clears the module scoped configuration
+ */
+export function clearModuleScopedConfig(): void {
+  moduleScopedConfig = null;
 }

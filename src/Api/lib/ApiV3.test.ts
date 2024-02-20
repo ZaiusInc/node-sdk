@@ -219,6 +219,34 @@ describe('request', () => {
       '{"errors":["bar"]}'
     );
   });
+
+  it('throws HTTPExcetion for unknown error', async () => {
+    process.env.LOG_REQUESTS = 'true';
+    const updatedRequest: RequestDetail = Object.freeze({
+      method: 'PUT' as ApiV3.HttpMethod,
+      headers: Object.freeze({'x-foo': 'foo'}),
+      body: '"foo"'
+    });
+    apiV3 = new ApiV3.API(configOrDefault({
+      apiKey: 'private.api_key',
+      requestInterceptor: (url, info) => {
+        expect(url).toBe('https://api.zaius.com/v3/bar');
+        expect(info).toEqual({
+          method: 'POST',
+          body: JSON.stringify({foo: 'bar'}),
+          headers: {'Content-Type': 'application/json', 'x-api-key': 'private.api_key'}
+        });
+        return ['https://foo.bar/v3/foo', updatedRequest];
+      }
+    }));
+
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
+      .put('/v3/foo', '"foo"')
+      .replyWithError('unknown error');
+
+    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects
+      .toThrowError(new HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'));
+  });
 });
 
 describe('errorForCode', () => {
