@@ -1,8 +1,3 @@
-import {ApiFieldExistsError} from './ApiFieldExistsError';
-import {ApiIdentifierExistsError} from './ApiIdentifierExistsError';
-import {ApiObjectExistsError} from './ApiObjectExistsError';
-import {ApiRelationExistsError} from './ApiRelationExistsError';
-import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {
   ApiV3,
   CreateIdentifierResponse,
@@ -12,13 +7,13 @@ import {
   ObjectDefinition, RelationDefinition
 } from '../Types';
 
-export const schema = {
-  ApiFieldExistsError,
-  ApiIdentifierExistsError,
-  ApiObjectExistsError,
-  ApiRelationExistsError,
-  ApiSchemaValidationError
-};
+export * from './ApiFieldExistsError';
+export * from './ApiIdentifierExistsError';
+export * from './ApiObjectExistsError';
+export * from './ApiRelationExistsError';
+export * from './ApiSchemaValidationError';
+export * from './ApiModuleAlreadyEnabledError';
+export * from './ApiObjectNotFoundError';
 
 export interface Schema {
   createField: (object: string, field: FieldDefinition) => Promise<ApiV3.HttpResponse<FieldDefinition>>;
