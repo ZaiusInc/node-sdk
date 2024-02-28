@@ -5,7 +5,6 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 import {AppContext} from '../config/configure';
-import {HttpError} from '../lib/HttpError';
 
 /**
  * Create a customer identifier
@@ -23,7 +22,7 @@ export async function createIdentifier(
   try {
     return await apiV3.post('/schema/identifiers', identifier);
   } catch (e) {
-    if (e instanceof HttpError && e.response) {
+    if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'customers.name', (reason) => /^already used/.test(reason))) {

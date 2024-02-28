@@ -3,7 +3,6 @@ import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ApiModuleAlreadyEnabledError} from './ApiModuleAlreadyEnabledError';
 import {enableModule, getEnabledModules} from './modules';
-import {HttpError} from '../lib/HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -39,7 +38,7 @@ describe('modules', () => {
     it('throws an error if the api returns an error', async () => {
       const getFn = jest
         .spyOn(apiV3, 'get')
-        .mockRejectedValueOnce(new HttpError("I'm a teapot", undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError("I'm a teapot", undefined, {} as any));
       await expect(getEnabledModules(apiV3)).rejects.toThrowError("I'm a teapot");
       getFn.mockRestore();
     });
@@ -60,14 +59,14 @@ describe('modules', () => {
     it('throws an error if the api returns an error', async () => {
       const postFn = jest
         .spyOn(apiV3, 'post')
-        .mockRejectedValueOnce(new HttpError('Bad Request', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       await expect(enableModule(apiV3, 'foo')).rejects.toThrowError('Bad Request');
       postFn.mockRestore();
     });
 
     it('throws an already enabled error if the module is already enabled', async () => {
       const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
-        new HttpError('Bad Request', undefined, {
+        new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
               invalids: [

@@ -4,7 +4,6 @@ import {Headers} from 'node-fetch';
 import {configOrDefault, InternalConfig} from '../config/configure';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {ApiV3} from './ApiV3';
-import {HttpError} from './HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -245,7 +244,7 @@ describe('request', () => {
       .replyWithError('unknown error');
 
     await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects
-      .toThrowError(new HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'));
+      .toThrowError(new ApiV3.HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'));
   });
 });
 
@@ -253,7 +252,7 @@ describe('errorForCode', () => {
   it('returns an http error for a given error code', () => {
     apiV3 = new ApiV3.API(mockConfiguration);
     const error = apiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded);
-    expect(error).toBeInstanceOf(HttpError);
+    expect(error).toBeInstanceOf(ApiV3.HttpError);
     expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     expect(error.message).toMatch(/maximum batch size/);
   });

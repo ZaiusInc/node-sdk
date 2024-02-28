@@ -6,7 +6,6 @@ import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
 import {AppContext} from '../config/configure';
-import {HttpError} from '../lib/HttpError';
 
 /**
  * Gets the definition of an ODP object.
@@ -19,7 +18,7 @@ export async function getObject(apiV3: ApiV3.API, name: string): Promise<ApiV3.H
   try {
     return await apiV3.get(`/schema/objects/${name}`);
   } catch (e) {
-    if (e instanceof HttpError && e.response && e.response.status === 404) {
+    if (e instanceof ApiV3.HttpError && e.response && e.response.status === 404) {
       throw new ApiObjectNotFoundError(e);
     }
     throw e;
@@ -51,7 +50,7 @@ export async function createObject(
   try {
     return await apiV3.post('/schema/objects', object);
   } catch (e) {
-    if (e instanceof HttpError && e.response) {
+    if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'name', (reason) => /^already used/.test(reason))) {

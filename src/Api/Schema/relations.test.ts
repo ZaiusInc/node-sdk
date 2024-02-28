@@ -5,7 +5,6 @@ import {RelationDefinition} from '../Types';
 import {ApiRelationExistsError} from './ApiRelationExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {createRelation} from './relations';
-import {HttpError} from '../lib/HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -47,7 +46,7 @@ describe('relations', () => {
     it('throws an error if the api returns an error', async () => {
       const postFn = jest
         .spyOn(apiV3, 'post')
-        .mockRejectedValueOnce(new HttpError('Bad Request', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const relation: RelationDefinition = {
         name: 'favorite_product',
         display_name: 'Favorite product',
@@ -60,7 +59,7 @@ describe('relations', () => {
 
     it('throws an exists error if the relation already exists', async () => {
       const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
-        new HttpError('Bad Request', undefined, {
+        new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
               invalids: [

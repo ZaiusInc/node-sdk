@@ -3,7 +3,6 @@ import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ListUpdateRequest} from '../Types/Lists';
 import {subscribe, unsubscribe, updateSubscriptions} from './subscriptions';
-import {HttpError} from '../lib/HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -129,7 +128,7 @@ describe('subscriptions', () => {
     it('throws an error if the api returns an error', async () => {
       const postFn = jest
         .spyOn(apiV3, 'post')
-        .mockRejectedValueOnce(new HttpError('Bad Request', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       await expect(
         updateSubscriptions(apiV3, 'foo', [
           {

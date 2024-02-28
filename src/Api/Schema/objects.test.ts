@@ -6,7 +6,6 @@ import {ApiObjectExistsError} from './ApiObjectExistsError';
 import {ApiObjectNotFoundError} from './ApiObjectNotFoundError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {createObject, getAllObjects, getObject} from './objects';
-import {HttpError} from '../lib/HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -42,7 +41,7 @@ describe('objects', () => {
     it('throws an error if the api returns an error', async () => {
       const getFn = jest
         .spyOn(apiV3, 'get')
-        .mockRejectedValueOnce(new HttpError('Gateway Timeout', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Gateway Timeout', undefined, {} as any));
       await expect(getObject(apiV3, 'my_object')).rejects.toThrowError('Gateway Timeout');
       getFn.mockRestore();
     });
@@ -50,7 +49,7 @@ describe('objects', () => {
     it('throws a not found error if the object does not exist', async () => {
       const getFn = jest
         .spyOn(apiV3, 'get')
-        .mockRejectedValueOnce(new HttpError('Not Found', undefined, {status: 404} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Not Found', undefined, {status: 404} as any));
       await expect(getObject(apiV3, 'my_object')).rejects.toThrowError(ApiObjectNotFoundError);
       getFn.mockRestore();
     });
@@ -71,7 +70,7 @@ describe('objects', () => {
     it('throws an error if the api returns an error', async () => {
       const getFn = jest
         .spyOn(apiV3, 'get')
-        .mockRejectedValueOnce(new HttpError('Access Denied', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Access Denied', undefined, {} as any));
       await expect(getAllObjects(apiV3)).rejects.toThrowError('Access Denied');
       getFn.mockRestore();
     });
@@ -97,7 +96,7 @@ describe('objects', () => {
     it('throws an error if the api returns an error', async () => {
       const postFn = jest
         .spyOn(apiV3, 'post')
-        .mockRejectedValueOnce(new HttpError('Bad Request', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const object: ObjectDefinition = {
         name: 'my_object',
         display_name: 'My Object',
@@ -109,7 +108,7 @@ describe('objects', () => {
 
     it('throws an exists error if the object already exists', async () => {
       const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
-        new HttpError('Bad Request', undefined, {
+        new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
               invalids: [

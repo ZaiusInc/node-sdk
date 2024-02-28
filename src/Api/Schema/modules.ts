@@ -3,7 +3,6 @@ import {ModulesResponse} from '../Types';
 import {ApiModuleAlreadyEnabledError} from './ApiModuleAlreadyEnabledError';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;
-import {HttpError} from '../lib/HttpError';
 
 /**
  * Gets the list of enabled schema modules.
@@ -25,7 +24,7 @@ export async function enableModule(apiV3: ApiV3.API, module: string): Promise<Ap
   try {
     return await apiV3.post('/schema/modules', {module});
   } catch (e) {
-    if (e instanceof HttpError && e.response) {
+    if (e instanceof ApiV3.HttpError && e.response) {
       const invalids: V3InvalidSchemaDetail[] | undefined =
         e.response.data && e.response.data.detail && (e.response.data.detail.invalids as V3InvalidSchemaDetail[]);
       if (invalidsContain(invalids, 'module', (reason) => reason === 'already enabled')) {

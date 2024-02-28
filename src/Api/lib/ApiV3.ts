@@ -1,8 +1,8 @@
+/* eslint-disable max-classes-per-file */
 import fetch, {Headers} from 'node-fetch';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {joinUri} from './joinUri';
 import {Config, configOrDefault, getModuleOrGlobalConfig, InternalConfig} from '../config/configure';
-import {HttpError} from './HttpError';
 
 export namespace ApiV3 {
   export const BATCH_LIMIT = 100;
@@ -70,6 +70,16 @@ export namespace ApiV3 {
     BatchLimitExceeded = 'BatchLimitExceeded',
     Non2xx = 'Non2xx',
     Unexpected = 'Unexpected'
+  }
+
+  export class HttpError extends Error {
+    public constructor(
+      message: string,
+      public code?: string,
+      public response?: HttpResponse<V3ErrorResponse>
+    ) {
+      super(message);
+    }
   }
 
   export type Payload = object | object[];

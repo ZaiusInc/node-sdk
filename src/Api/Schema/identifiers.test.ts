@@ -5,7 +5,6 @@ import {IdentifierDefinition} from '../Types';
 import {ApiIdentifierExistsError} from './ApiIdentifierExistsError';
 import {ApiSchemaValidationError} from './ApiSchemaValidationError';
 import {createIdentifier} from './identifiers';
-import {HttpError} from '../lib/HttpError';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
@@ -46,7 +45,7 @@ describe('identifiers', () => {
     it('throws an error if the api returns an error', async () => {
       const postFn = jest
         .spyOn(apiV3, 'post')
-        .mockRejectedValueOnce(new HttpError('Bad Request', undefined, {} as any));
+        .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const identifier: IdentifierDefinition = {
         name: 'my_thing_id',
         display_name: 'My Thing ID',
@@ -58,7 +57,7 @@ describe('identifiers', () => {
 
     it('throws an exists error if the identifier already exists', async () => {
       const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
-        new HttpError('Bad Request', undefined, {
+        new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
               invalids: [
