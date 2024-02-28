@@ -103,11 +103,11 @@ let moduleScopedConfig: InternalConfig | null;
  *
  */
 export function getModuleOrGlobalConfig(): InternalConfig {
-  const globalConfig = global.odpNodeSdkConfig as InternalConfig | Config | null;
-  if (moduleScopedConfig != null) {
+  const asyncLocalStorage = global.ocpContextStorage && global.ocpContextStorage.getStore();
+  if (asyncLocalStorage) {
+    return asyncLocalStorage.odpNodeSdkConfig;
+  } else if (moduleScopedConfig != null) {
     return moduleScopedConfig;
-  } else if (globalConfig != null) {
-    return configOrDefault(globalConfig as InternalConfig);
   } else {
     return configOrDefault(null);
   }
@@ -119,6 +119,10 @@ export function getModuleOrGlobalConfig(): InternalConfig {
  * @param newConfig the configuration to use going forward or null to restore defaults
  */
 export function setModuleScopedConfig(config: Config | InternalConfig | null): void {
+  if (process.env['ODP_SDK_API_DISABLE_MODULE_SCOPE_CONFIG']) {
+    throw new Error('Module scoped configuration is disabled');
+  }
+
   moduleScopedConfig = configOrDefault(config);
 }
 

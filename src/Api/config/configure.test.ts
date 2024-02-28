@@ -1,9 +1,32 @@
 import 'jest';
-import {clearModuleScopedConfig, configOrDefault, getModuleOrGlobalConfig, setModuleScopedConfig} from './configure';
+import {
+  clearModuleScopedConfig,
+  configOrDefault,
+  getModuleOrGlobalConfig,
+  InternalConfig,
+  setModuleScopedConfig
+} from './configure';
+import {AsyncLocalStorage} from 'async_hooks';
+import {OCPContext} from '../../types';
 
 jest.mock('../lib/ApiV3');
 
 describe('configure', () => {
+
+  function runWithAsyncLocalStore(
+    code: () => void,
+    internalConfig: InternalConfig
+  ) {
+    const store = new AsyncLocalStorage<OCPContext>();
+    global.ocpContextStorage = store;
+
+    const context = {
+      odpNodeSdkConfig: internalConfig
+    } as OCPContext;
+
+    store.run(context, code);
+  }
+
   it('merges default config with provided config', () => {
     const configuration = {
       apiBasePath: 'https://api.zaius.com/v3/',
@@ -40,21 +63,22 @@ describe('configure', () => {
   describe('getModuleOrGlobalConfig', () => {
     beforeEach(() => {
       clearModuleScopedConfig();
-      global.odpNodeSdkConfig = null;
+      global.ocpContextStorage = null;
     });
 
-    it('returns module scoped config if defined', () => {
+    it('returns async local storage config defined', () => {
+      runWithAsyncLocalStore(() => {
+        expect(getModuleOrGlobalConfig().apiKey).toEqual('async-store-scoped-api-key');
+      }, {
+        apiKey: 'async-store-scoped-api-key'
+      } as InternalConfig);
+    });
+
+    it('returns module scoped config if defined and async local storage not defined', () => {
       setModuleScopedConfig({
         apiKey: 'module-scoped-api-key'
       });
       expect(getModuleOrGlobalConfig().apiKey).toEqual('module-scoped-api-key');
-    });
-
-    it('returns global scoped config if defined and module scoped not defined', () => {
-      global.odpNodeSdkConfig = {
-        apiKey: 'global-scoped-api-key'
-      };
-      expect(getModuleOrGlobalConfig().apiKey).toEqual('global-scoped-api-key');
     });
 
     it('falls back to the default config if no other defined', () => {
