@@ -32,15 +32,6 @@ jobs:
         run: yarn test -- --coverage
       - name: build
         run: yarn run build
-      - name: build-docs
-        run: | 
-          rm -rf ./docs
-          yarn generate-docs
-      - name: publish-docs
-        run: |
-          aws s3 sync ./docs/ s3://zaius-node-sdk-docs/$NODE_SDK_PACKAGE_VERSION/ --acl public-read
-          aws s3 rm --recursive s3://zaius-node-sdk-docs/latest/ --acl public-read
-          aws s3 sync ./docs/ s3://zaius-node-sdk-docs/latest/ --acl public-read
       - name: release-and-publish-to-npm
         run: yarn publish --verbose --access public
         env:
