@@ -35,13 +35,11 @@ jobs:
       - name: release-and-publish-to-npm
         run: |
           version=$(cat package.json | jq -r .version)
-          ACCESS=public
           if [[ $version == *-* ]]; then
-            echo "$version is tagged... Publishing as restricted."
-            ACCESS=restricted
+            echo "$version is tagged... Skipping publishing to npmjs"
+          else 
+            yarn publish --verbose --access public
           fi
-
-          yarn publish --verbose --access $ACCESS
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
       - uses: actions/setup-node@v3
