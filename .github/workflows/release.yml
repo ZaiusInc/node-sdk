@@ -39,7 +39,7 @@ jobs:
           if [[ $version == *-* ]]; then
             echo "$version is tagged... Publishing as restricted."
             ACCESS=restricted
-          else
+          fi
           yarn publish --verbose --access $ACCESS
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
