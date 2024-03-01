@@ -1,0 +1,57 @@
+name: Release and publish
+
+on:
+  # workflow_dispatch:
+  pull_request
+
+jobs:
+  build:
+    name: Release a package in GitHub & publish to NPM registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+          registry-url: https://registry.npmjs.org
+          always-auth: true
+          scope: '@zaiusinc'
+      - name: Output Inputs
+        run: |
+          echo "Inputs: ${{ toJSON(github.event.inputs) }}"
+      - name: git config
+        run: |
+          git config user.name "Release Bot"
+          git config user.email "no-replay@optimizely.com"
+      - name: yarn
+        run: yarn
+      - name: lint
+        run: yarn run lint
+      - name: test
+        run: yarn test -- --coverage
+      - name: build
+        run: yarn run build
+      - name: build-docs
+        run: | 
+          rm -rf ./docs
+          yarn generate-docs
+      - name: publish-docs
+        run: |
+          aws s3 sync ./docs/ s3://zaius-node-sdk-docs/$NODE_SDK_PACKAGE_VERSION/ --acl public-read
+          aws s3 rm --recursive s3://zaius-node-sdk-docs/latest/ --acl public-read
+          aws s3 sync ./docs/ s3://zaius-node-sdk-docs/latest/ --acl public-read
+      - name: release-and-publish-to-npm
+        run: yarn publish --verbose --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+          registry-url: https://npm.pkg.github.com
+          always-auth: true
+          scope: '@zaiusinc'
+      - name: release-and-publish-to-github-packages
+        run: |
+          yarn publish --verbose --access public --registry https://npm.pkg.github.com
