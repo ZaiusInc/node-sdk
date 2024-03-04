@@ -28,7 +28,7 @@ jobs:
       - name: git config
         run: |
           git config user.name "Release Bot"
-          git config user.email "no-replay@optimizely.com"
+          git config user.email "no-reply@optimizely.com"
       - name: yarn
         run: yarn
       - name: lint
@@ -48,10 +48,6 @@ jobs:
           fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
-      - name: git config
-        run: |
-          git config user.name "Release Bot"
-          git config user.email "no-reply@optimizely.com"
       - name: tag-release
         if: ${{ inputs.release_to_npm }}
         run: |
