@@ -1,0 +1,77 @@
+name: Release and publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_to_npm:
+        description: 'True to release to public npmjs.org registry'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build:
+    name: Release a package in GitHub & publish to NPM registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+          registry-url: https://registry.npmjs.org
+          always-auth: true
+          scope: '@zaiusinc'
+      - name: Output Inputs
+        run: |
+          echo "Inputs: ${{ toJSON(github.event.inputs) }}"
+      - name: git config
+        run: |
+          git config user.name "Release Bot"
+          git config user.email "no-reply@optimizely.com"
+      - name: yarn
+        run: yarn
+      - name: lint
+        run: yarn run lint
+      - name: test
+        run: yarn test -- --coverage
+      - name: build
+        run: yarn run build
+      - name: release-and-publish-to-npm
+        if:  ${{ inputs.release_to_npm }}
+        run: |
+          version=$(cat package.json | jq -r .version)
+          if [[ $version == *-* ]]; then
+            echo "$version is tagged... Skipping publishing to npmjs"
+          else 
+            yarn publish --verbose --access public
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPMJS_TOKEN }}
+      - name: tag-release
+        if: ${{ inputs.release_to_npm }}
+        run: |
+          version=$(cat package.json | jq -r .version)
+          if [[ $version == *-* ]]; then
+            echo "$version is tagged... Skipping tagging"
+          else 
+            git tag "v$version"
+            git push origin "v$version"
+          fi
+        env:
+          # this is required to allow release-it to push tags to git repo and by-pass branch protection rules
+          # default secrets.GITHUB_TOKEN does not have permission to bypass branch protection rules
+          GITHUB_TOKEN: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: 'yarn'
+          registry-url: https://npm.pkg.github.com
+          always-auth: true
+          scope: '@zaiusinc'
+      - name: release-and-publish-to-github-packages
+        run: |
+          yarn publish --verbose --access restricted --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GHA_PAT }}
+
