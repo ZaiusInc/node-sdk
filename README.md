@@ -27,8 +27,9 @@ There are two ways to do this:
 1. Use module scoped instance exported as `odp` from the SDK.
 2. Create your own instance of `ODPClient`.
 
-Using module scoped instance is easier, when you don't need to communicate with multiple ODP instances. 
-With module scoped instance you configure the SDK once and then use it throughout your application.
+Using module scoped instance is easier, when you don't need to communicate with multiple ODP accounts. 
+With module scoped instance, you configure the SDK once and then use it throughout your application.
+If you're using the Node SDK in an OCP app, module scope comes pre-configured with the private API key. 
 
 Creating your own instance of `ODPClient` gives you more control.
 
@@ -70,6 +71,10 @@ Alternatively, you can provide the `apiKey` as an environment variable `ODP_SDK_
 
 > **Note** 
 > For compatibility with previous versions of the SDK, module scoped instance is also exported as `z` from the SDK.
+
+> **Note**
+> Calling `configure` method is not needed when using the ODP Node SDK in an OCP app. 
+> The SDK is pre-configured with the private API key.
 
 #### Creating your own instance of `ODPClient`
 ```typescript
@@ -176,7 +181,7 @@ odp.graphql<ResponseType>(query, variables);
 
 If you need to use an API that is not supported by the ODP Node SDK yet, you can
 follow the [ODP REST API documentation](https://docs.developers.optimizely.com/optimizely-data-platform/reference/introduction)
-and use the v3API helper to query the APIs directly. For example:
+and use the v3Api helper to query the APIs directly. For example:
 
 ```typescript
 await odp.v3Api.post('objects/products', [
