@@ -2,7 +2,7 @@ import {DataSource} from './EventPayload';
 
 export interface ListUpdate {
   /**
-   * The id of the Zaius list
+   * The id of the ODP list
    */
   list_id: string;
   /**
@@ -18,7 +18,7 @@ export interface ListUpdate {
 
 /* eslint-disable max-len */
 /**
- * Response from Zaius V3 list subscribe/unsubscribe APIs
+ * Response from ODP V3 list subscribe/unsubscribe APIs
  * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-subscription-status-1)
  */
 /* eslint-enable max-len */
@@ -31,7 +31,7 @@ export interface ListUpdateResponse {
 
 export interface ListUpdateRequest {
   /**
-   * The id of the Zaius list
+   * The id of the ODP list
    */
   list_id?: string;
   /**
@@ -46,7 +46,7 @@ export interface ListUpdateRequest {
 }
 
 /**
- * Response from Zaius V3 list create API
+ * Response from ODP V3 list create API
  * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/create-list-1)
  */
 export interface CreateListResponse {
@@ -78,12 +78,12 @@ export interface ListDefinition extends DataSource {
 }
 
 /**
- * Response from the Zaius V3 get lists API
+ * Response from the ODP V3 get lists API
  * See [V3 List APIs](https://docs.developers.optimizely.com/optimizely-data-platform/reference/get-lists-1)
  */
 export interface GetListsResponse {
   /**
-   * An array of marketing lists known to Zaius
+   * An array of marketing lists known to ODP
    */
   lists: ListDefinition[];
 }

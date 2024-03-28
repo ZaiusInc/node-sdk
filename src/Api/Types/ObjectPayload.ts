@@ -1,7 +1,7 @@
 import {FieldValue} from './FieldValue';
 
 /**
- * The Zaius Object payload.
+ * The ODP Object payload.
  * See [V3 Objects API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/update-object-1)
  * for details.
  */

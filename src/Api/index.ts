@@ -1,65 +1,44 @@
-import {configure} from './config';
-import {customer} from './Customers/customer';
-import {event} from './Events/event';
-import {identifier} from './Identifiers';
-import {ApiV3} from './lib/ApiV3';
-import {graphql} from './GraphQL/graphql';
-import {list} from './List';
-import {object} from './Objects/object';
-import {schema} from './Schema';
 import * as Zaius from './Types';
+import * as ODP from './Types';
+import {Config, InternalConfig, setModuleScopedConfig} from './config/configure';
+import {ODPClient} from './ODPClient';
 
 /**
- * The preferred export for utilizing the Zaius Node SDK.
+ * An extension of ODPClient that allows changing the configuration after the client has been created.
+ * The purpose of this class is to allow managing module scoped instance of OCPClient.
+ */
+export class ReconfigurableODPClient extends ODPClient {
+
+  /**
+   * Configure the ODP SDK for use
+   *
+   */
+  public configure(config: Config | InternalConfig | null): void {
+    setModuleScopedConfig(config);
+  }
+}
+
+export {ODPClient};
+
+/**
+ * Module scoped way of utilizing the ODP Node SDK.
  * @usage
  * ```
  *
- * import {z} from '@zaiusinc/node-sdk';
+ * import {odp} from '@zaiusinc/node-sdk';
  *
- * // Send an event to Zaius
- * await z.event(...);
+ * // Send an event to ODP
+ * await odp.event(...);
  * // Subscribe a customer by an identifier to a list
- * await z.list.subscribe(...);
+ * await odp.list.subscribe(...);
  * // etc
  * ```
  */
-export const z = {
-  /**
-   * Configure the Zaius SDK for use
-   */
-  configure,
-  /**
-   * Send an event to Zaius using the v3 event API
-   */
-  event,
-  /**
-   * Create or Update a customer profile in Zaius using the v3 profiles API
-   */
-  customer,
-  /**
-   * Create or Update an object in Zaius using the v3 objects API
-   */
-  object,
-  /**
-   * Manage schema (Zaius domain objects and fields) using the v3 APIs
-   */
-  schema,
-  /**
-   * Manage customer identifiers using the v3 APIs
-   */
-  identifier,
-  /**
-   * Query data using the GraphQL API
-   */
-  graphql,
-  /**
-   * Manage list subscriptions using the v3 APIs
-   */
-  list,
-  /**
-   * Direct access to query any API by path using the v3 API helper
-   */
-  v3Api: ApiV3
-};
+export const odp = new ReconfigurableODPClient();
+export {ODP};
 
+/**
+ * For backward compatibility
+ */
+export const z = odp;
 export {Zaius};

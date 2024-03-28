@@ -1,13 +1,20 @@
 import 'jest';
 import * as nock from 'nock';
 import {Headers} from 'node-fetch';
-import {configure, InternalConfig} from '../config/configure';
+import {configOrDefault, InternalConfig} from '../config/configure';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {ApiV3} from './ApiV3';
 
+const mockConfiguration: InternalConfig = {
+  apiBasePath: 'https://api.zaius.com/v3/',
+  apiKey: 'api-key'
+};
+
+let apiV3: ApiV3.API;
+
 describe('post', () => {
   beforeAll(() => {
-    configure(null);
+    apiV3 = new ApiV3.API(mockConfiguration);
   });
 
   it('performs a POST request', async () => {
@@ -16,7 +23,7 @@ describe('post', () => {
       .post('/v3/foo/bar', {key: 'value'})
       .reply(200, payload);
 
-    const result = await ApiV3.post('/foo/bar', {key: 'value'});
+    const result = await apiV3.post('/foo/bar', {key: 'value'});
 
     expect(result).toEqual({
       success: true,
@@ -30,7 +37,7 @@ describe('post', () => {
 
 describe('request', () => {
   beforeEach(() => {
-    configure(null);
+    apiV3 = new ApiV3.API(mockConfiguration);
   });
 
   beforeEach(() => {
@@ -42,7 +49,7 @@ describe('request', () => {
       .post('/v3/foo', {})
       .reply(200, '"bar"', {'request-id': '00000000'});
 
-    const result = await ApiV3.request('POST', '/foo', {});
+    const result = await apiV3.request('POST', '/foo', {});
     expect(result).toEqual({
       success: true,
       status: 200,
@@ -57,7 +64,7 @@ describe('request', () => {
       .post('/v3/foo', {})
       .reply(400, '"bar"', {'request-id': '00000001'});
 
-    const result = await ApiV3.request('POST', '/foo', {}, {retry: false}).catch((e) => e.response);
+    const result = await apiV3.request('POST', '/foo', {}, {retry: false}).catch((e) => e.response);
     expect(result).toEqual({
       success: false,
       data: 'bar',
@@ -74,8 +81,8 @@ describe('request', () => {
         .times(2)
         .reply(502, '502');
 
-      const requestFn = jest.spyOn(ApiV3, 'request');
-      await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      const requestFn = jest.spyOn(apiV3, 'request');
+      await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(requestFn).toHaveBeenCalledTimes(2);
     });
 
@@ -84,8 +91,8 @@ describe('request', () => {
         .post('/v3/bar', {})
         .reply(400, '400');
 
-      const requestFn = jest.spyOn(ApiV3, 'request');
-      await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      const requestFn = jest.spyOn(apiV3, 'request');
+      await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(requestFn).toHaveBeenCalledTimes(1);
     });
 
@@ -96,8 +103,8 @@ describe('request', () => {
         .post('/v3/bar', {})
         .reply(200, '"OK"');
 
-      const requestFn = jest.spyOn(ApiV3, 'request');
-      const result = await ApiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      const requestFn = jest.spyOn(apiV3, 'request');
+      const result = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(requestFn).toHaveBeenCalledTimes(2);
       expect(result.status).toEqual(200);
       expect(result.data).toEqual('OK');
@@ -110,7 +117,8 @@ describe('request', () => {
       headers: {'x-foo': 'foo'},
       body: '"foo"'
     });
-    configure(({
+    apiV3 = new ApiV3.API(configOrDefault({
+      apiKey: 'private.api_key',
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -120,13 +128,13 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig>) as InternalConfig);
+    }));
 
     nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
       .put('/v3/foo', '"foo"')
       .reply(200, '"bar"', {});
 
-    const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
+    const result = await apiV3.request('POST', '/bar', {foo: 'bar'});
     expect(result).toEqual({
       success: true,
       status: 200,
@@ -143,7 +151,8 @@ describe('request', () => {
       headers: Object.freeze({'x-foo': 'foo'}),
       body: '"foo"'
     });
-    configure(({
+    apiV3 = new ApiV3.API(configOrDefault({
+      apiKey: 'private.api_key',
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -153,13 +162,13 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig>) as InternalConfig);
+    }));
 
     nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
       .put('/v3/foo', '"foo"')
       .reply(200, '"bar"', {});
 
-    const result = await ApiV3.request('POST', '/bar', {foo: 'bar'});
+    const result = await apiV3.request('POST', '/bar', {foo: 'bar'});
     expect(result).toEqual({
       success: true,
       status: 200,
@@ -183,7 +192,8 @@ describe('request', () => {
       headers: Object.freeze({'x-foo': 'foo'}),
       body: '"foo"'
     });
-    configure(({
+    apiV3 = new ApiV3.API(configOrDefault({
+      apiKey: 'private.api_key',
       requestInterceptor: (url, info) => {
         expect(url).toBe('https://api.zaius.com/v3/bar');
         expect(info).toEqual({
@@ -193,13 +203,13 @@ describe('request', () => {
         });
         return ['https://foo.bar/v3/foo', updatedRequest];
       }
-    } as Partial<InternalConfig>) as InternalConfig);
+    }));
 
     nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
       .put('/v3/foo', '"foo"')
       .reply(400, '{"errors": ["bar"]}', {});
 
-    await ApiV3.request('POST', '/bar', {foo: 'bar'}).catch((e) => e.response);
+    await apiV3.request('POST', '/bar', {foo: 'bar'}).catch((e) => e.response);
 
     expect(console.debug).toHaveBeenCalledWith(
       'API V3 Request: https://foo.bar/v3/foo',
@@ -208,11 +218,40 @@ describe('request', () => {
       '{"errors":["bar"]}'
     );
   });
+
+  it('throws HTTPExcetion for unknown error', async () => {
+    process.env.LOG_REQUESTS = 'true';
+    const updatedRequest: RequestDetail = Object.freeze({
+      method: 'PUT' as ApiV3.HttpMethod,
+      headers: Object.freeze({'x-foo': 'foo'}),
+      body: '"foo"'
+    });
+    apiV3 = new ApiV3.API(configOrDefault({
+      apiKey: 'private.api_key',
+      requestInterceptor: (url, info) => {
+        expect(url).toBe('https://api.zaius.com/v3/bar');
+        expect(info).toEqual({
+          method: 'POST',
+          body: JSON.stringify({foo: 'bar'}),
+          headers: {'Content-Type': 'application/json', 'x-api-key': 'private.api_key'}
+        });
+        return ['https://foo.bar/v3/foo', updatedRequest];
+      }
+    }));
+
+    nock('https://foo.bar', {reqheaders: {'x-foo': 'foo'}})
+      .put('/v3/foo', '"foo"')
+      .replyWithError('unknown error');
+
+    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects
+      .toThrowError(new ApiV3.HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'));
+  });
 });
 
 describe('errorForCode', () => {
   it('returns an http error for a given error code', () => {
-    const error = ApiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded);
+    apiV3 = new ApiV3.API(mockConfiguration);
+    const error = apiV3.errorForCode(ApiV3.ErrorCode.BatchLimitExceeded);
     expect(error).toBeInstanceOf(ApiV3.HttpError);
     expect(error.code).toEqual(ApiV3.ErrorCode.BatchLimitExceeded);
     expect(error.message).toMatch(/maximum batch size/);

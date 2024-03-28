@@ -11,7 +11,7 @@ export interface EventData extends Partial<DataSource> {
 }
 
 /**
- * The Zaius Event payload.
+ * The ODP Event payload.
  * See [V3 Event API](https://docs.developers.optimizely.com/optimizely-data-platform/reference/upload-events-1)
  * for details.
  */
@@ -46,7 +46,7 @@ export interface EventResponse {
 
 /**
  * Information about the source of an event or update.
- * All information is automatically filled in for Zaius Apps and APIs,
+ * All information is automatically filled in for ODP Apps and APIs,
  * but you can augment the data source by specifying your specific source.
  */
 export interface DataSource {
