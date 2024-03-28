@@ -101,6 +101,7 @@ let overviewSlug = slugify(`node-sdk API reference overview`, {lower: true, stri
 addFrontMatterProperty('./docs/README.md', `slug: "${overviewSlug}"`);
 
 createFolderAndMoveDocs('docs', 'variables', 'global', 'Variables');
+createFolderAndMoveDocs('docs', 'classes', 'global', 'Classes');
 
 function flattenNamespace(folder, namespace, fullNamespaceName) {
     const formFile = `./docs/${folder}/${namespace}.md`;
@@ -111,33 +112,31 @@ function flattenNamespace(folder, namespace, fullNamespaceName) {
     addFrontMatterProperty(formFile, `slug: "${formDocSlug}"`);
 }
 
-flattenNamespace('Zaius', 'Zaius', 'Zaius');
-createFolderAndMoveDocs('docs/Zaius', 'classes', 'Zaius', 'Zaius - Classes');
-createFolderAndMoveDocs('docs/Zaius', 'interfaces', 'Zaius', 'Zaius - Interfaces');
-createFolderAndMoveDocs('docs/Zaius', 'types', 'Zaius', 'Zaius - Types');
+flattenNamespace('ODP', 'ODP', 'ODP');
+createFolderAndMoveDocs('docs/ODP', 'classes', 'ODP', 'ODP - Classes');
+createFolderAndMoveDocs('docs/ODP', 'interfaces', 'ODP', 'ODP - Interfaces');
+createFolderAndMoveDocs('docs/ODP', 'types', 'ODP', 'ODP - Types');
 
-flattenNamespace('Zaius/ApiV3', 'ApiV3', 'Zaius.ApiV3');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'classes', 'Zaius.ApiV3', 'Zaius.ApiV3 - Classes');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'enums', 'Zaius.ApiV3', 'Zaius.ApiV3 - Enums');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'functions', 'Zaius.ApiV3', 'Zaius.ApiV3 - Functions');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'interfaces', 'Zaius.ApiV3', 'Zaius.ApiV3 - Interfaces');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'types', 'Zaius.ApiV3', 'Zaius.ApiV3 - Types');
-createFolderAndMoveDocs('docs/Zaius/ApiV3', 'variables', 'Zaius.ApiV3', 'Zaius.ApiV3 - Variables');
+flattenNamespace('ODP/ApiV3', 'ApiV3', 'ODP.ApiV3');
+createFolderAndMoveDocs('docs/ODP/ApiV3', 'classes', 'ODP.ApiV3', 'ODP.ApiV3 - Classes');
+createFolderAndMoveDocs('docs/ODP/ApiV3', 'enums', 'ODP.ApiV3', 'ODP.ApiV3 - Enums');
+createFolderAndMoveDocs('docs/ODP/ApiV3', 'interfaces', 'ODP.ApiV3', 'ODP.ApiV3 - Interfaces');
+createFolderAndMoveDocs('docs/ODP/ApiV3', 'types', 'ODP.ApiV3', 'ODP.ApiV3 - Types');
+createFolderAndMoveDocs('docs/ODP/ApiV3', 'variables', 'ODP.ApiV3', 'ODP.ApiV3 - Variables');
 
 addFrontMatterProperty('./docs/variables.md', `order: 20`);
 
-addFrontMatterProperty('./docs/Zaius/Zaius.md', `order: 30`);
-addFrontMatterProperty('./docs/Zaius/classes.md', `order: 40`);
-addFrontMatterProperty('./docs/Zaius/interfaces.md', `order: 50`);
-addFrontMatterProperty('./docs/Zaius/types.md', `order: 60`);
+addFrontMatterProperty('./docs/ODP/ODP.md', `order: 30`);
+addFrontMatterProperty('./docs/ODP/classes.md', `order: 40`);
+addFrontMatterProperty('./docs/ODP/interfaces.md', `order: 50`);
+addFrontMatterProperty('./docs/ODP/types.md', `order: 60`);
 
-addFrontMatterProperty('./docs/Zaius/ApiV3/ApiV3.md', `order: 70`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/classes.md', `order: 80`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/enums.md', `order: 90`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/functions.md', `order: 100`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/interfaces.md', `order: 110`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/types.md', `order: 120`);
-addFrontMatterProperty('./docs/Zaius/ApiV3/variables.md', `order: 130`);
+addFrontMatterProperty('./docs/ODP/ApiV3/ApiV3.md', `order: 70`);
+addFrontMatterProperty('./docs/ODP/ApiV3/classes.md', `order: 80`);
+addFrontMatterProperty('./docs/ODP/ApiV3/enums.md', `order: 90`);
+addFrontMatterProperty('./docs/ODP/ApiV3/interfaces.md', `order: 110`);
+addFrontMatterProperty('./docs/ODP/ApiV3/types.md', `order: 120`);
+addFrontMatterProperty('./docs/ODP/ApiV3/variables.md', `order: 130`);
 
 function fixLinks(folder) {
     fs.readdirSync(folder, { withFileTypes: true })
@@ -156,6 +155,7 @@ function fixLinks(folder) {
                     m = linkRe.exec(content);
                     if (m) {
                         let link = m[1];
+                        console.log(`link ${link}`);
                         let targetSlug = getFrontMatterProperty(folder + "/" + link, "slug");
                         console.log(`Replacing ${link} with ${targetSlug}`);
                         content = content.replaceAll(m[1], targetSlug);
