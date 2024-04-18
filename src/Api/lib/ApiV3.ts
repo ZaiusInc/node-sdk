@@ -97,6 +97,11 @@ export namespace ApiV3 {
 
     private readonly config?: InternalConfig;
 
+    /**
+     * @hidden backward compatibility
+     */
+    public readonly BATCH_LIMIT = ApiV3.BATCH_LIMIT;
+
     public constructor(config: Config | InternalConfig | null) {
       if (config) {
         this.config = configOrDefault(config);
