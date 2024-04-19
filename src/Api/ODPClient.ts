@@ -52,38 +52,32 @@ export class ODPClient {
   /**
    * Send an event to ODP using the v3 event API
    */
-  public event(payload: EventPayload | EventPayload[]): Promise<ApiV3.HttpResponse<EventResponse>> {
-    return event(this.v3Api, payload);
-  }
+  public event = (
+    payload: EventPayload | EventPayload[]
+  ): Promise<ApiV3.HttpResponse<EventResponse>> => event(this.v3Api, payload);
 
   /**
    * Create or Update a customer profile in ODP using the v3 profiles API
    */
-  public customer(
+  public customer = (
     payload: CustomerPayload | CustomerPayload[],
     opts?: PayloadOptions
-  ): Promise<ApiV3.HttpResponse<CustomerResponse>> {
-    return customer(this.v3Api, payload, opts);
-  }
+  ): Promise<ApiV3.HttpResponse<CustomerResponse>> => customer(this.v3Api, payload, opts);
 
   /**
    * Create or Update an object in ODP using the v3 objects API
    */
-  public object(
+  public object = (
     type: string,
     payload: ObjectPayload | ObjectPayload[],
     opts?: PayloadOptions
-  ): Promise<ApiV3.HttpResponse<ObjectResponse>> {
-    return object(this.v3Api, type, payload, opts);
-  }
+  ): Promise<ApiV3.HttpResponse<ObjectResponse>> =>  object(this.v3Api, type, payload, opts);
 
   /**
    * Query data using the GraphQL API
    */
-  public graphql<T extends ApiV3.V3Response>(
+  public graphql = <T extends ApiV3.V3Response> (
     query: string,
     variables?: { [key: string]: any }
-  ): Promise<GqlHttpResponse<T>> {
-    return graphql(this.v3Api, query, variables);
-  }
+  ): Promise<GqlHttpResponse<T>> => graphql(this.v3Api, query, variables);
 }

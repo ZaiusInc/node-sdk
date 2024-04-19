@@ -97,6 +97,11 @@ export namespace ApiV3 {
 
     private readonly config?: InternalConfig;
 
+    /**
+     * @hidden backward compatibility
+     */
+    public readonly BATCH_LIMIT = ApiV3.BATCH_LIMIT;
+
     public constructor(config: Config | InternalConfig | null) {
       if (config) {
         this.config = configOrDefault(config);
@@ -228,5 +233,26 @@ export namespace ApiV3 {
         return getModuleOrGlobalConfig();
       }
     }
+  }
+
+  /**
+   * @hidden for backward compatibility
+   */
+  const moduleScopeApi: API = new API(null);
+
+  /**
+   * @hidden
+   * @deprecated for backward compatibility; use odp.v3Api.get instead
+   */
+  export function get<T extends V3Response>(path: string) {
+    return moduleScopeApi.get<T>(path);
+  }
+
+  /**
+   * @hidden
+   * @deprecated for backward compatibility; use odp.v3Api.post instead
+   */
+  export function post<T extends V3Response>(path: string, payload: Payload) {
+    return moduleScopeApi.post<T>(path, payload);
   }
 }
