@@ -118,24 +118,18 @@ export namespace ApiV3 {
       retry: true
     };
 
-    public errorForCode(code: ErrorCode): HttpError {
-      return new HttpError(API.ERROR_CODE_MESSAGES[code], code);
-    }
+    public errorForCode = (code: ErrorCode): HttpError => new HttpError(API.ERROR_CODE_MESSAGES[code], code);
 
-    public get<T extends V3Response>(path: string) {
-      return this.request<T>('GET', path, undefined);
-    }
+    public get = <T extends V3Response>(path: string) => this.request<T>('GET', path, undefined);
 
-    public post<T extends V3Response>(path: string, payload: Payload) {
-      return this.request<T>('POST', path, payload);
-    }
+    public post =  <T extends V3Response>(path: string, payload: Payload) => this.request<T>('POST', path, payload);
 
-    public request<T extends V3Response>(
+    public request = <T extends V3Response>(
       method: HttpMethod,
       path: string,
       payload: Payload | undefined,
       options: RequestOptions = {...API.DEFAULT_REQUEST_OPTIONS}
-    ): Promise<HttpResponse<T>> {
+    ): Promise<HttpResponse<T>> => {
       let url = joinUri(this.getConfig().apiBasePath, path);
       const body = payload === undefined ? undefined : JSON.stringify(payload);
 
@@ -212,27 +206,25 @@ export namespace ApiV3 {
           reject(httpError);
         }
       });
-    }
+    };
 
-    private buildHeaders() {
+    private buildHeaders = () => {
       const headersObject: { [key: string]: string } = {
         'x-api-key': this.getConfig().apiKey,
         'Content-Type': 'application/json'
       };
       return headersObject;
-    }
+    };
 
-    public getContext() {
-      return this.getConfig().appContext;
-    }
+    public getContext = () => this.getConfig().appContext;
 
-    private getConfig(): InternalConfig {
+    private getConfig = (): InternalConfig => {
       if (this.config) {
         return this.config;
       } else {
         return getModuleOrGlobalConfig();
       }
-    }
+    };
   }
 
   /**
