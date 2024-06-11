@@ -19,38 +19,33 @@ export class SchemaApi implements Schema {
   public constructor(private client: ODPClient) {
   }
 
-  public createField(schemaObject: string, field: FieldDefinition): Promise<ApiV3.HttpResponse<FieldDefinition>> {
-    return createField(this.client.v3Api, schemaObject, field);
-  }
+  public createField = (
+    schemaObject: string,
+    field: FieldDefinition
+  ): Promise<ApiV3.HttpResponse<FieldDefinition>> => createField(this.client.v3Api, schemaObject, field);
 
-  public createIdentifier(identifier: IdentifierDefinition): Promise<ApiV3.HttpResponse<CreateIdentifierResponse>> {
-    return createIdentifier(this.client.v3Api, identifier);
-  }
+  public createIdentifier = (
+    identifier: IdentifierDefinition
+  ): Promise<ApiV3.HttpResponse<CreateIdentifierResponse>> => createIdentifier(this.client.v3Api, identifier);
 
-  public createObject(schemaObject: ObjectDefinition): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
-    return createObject(this.client.v3Api, schemaObject);
-  }
+  public createObject = (
+    schemaObject: ObjectDefinition
+  ): Promise<ApiV3.HttpResponse<ObjectDefinition>> => createObject(this.client.v3Api, schemaObject);
 
-  public createRelation(
+  public createRelation = (
     schemaObject: string,
     relation: RelationDefinition
-  ): Promise<ApiV3.HttpResponse<RelationDefinition>> {
-    return createRelation(this.client.v3Api, schemaObject, relation);
-  }
+  ): Promise<ApiV3.HttpResponse<RelationDefinition>> => createRelation(this.client.v3Api, schemaObject, relation);
 
-  public enableModule(module: string): Promise<ApiV3.HttpResponse<ModulesResponse>> {
-    return enableModule(this.client.v3Api, module);
-  }
+  public enableModule = (
+    module: string
+  ): Promise<ApiV3.HttpResponse<ModulesResponse>> => enableModule(this.client.v3Api, module);
 
-  public getAllObjects(): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> {
-    return getAllObjects(this.client.v3Api);
-  }
+  public getAllObjects = (): Promise<ApiV3.HttpResponse<ObjectDefinition[]>> => getAllObjects(this.client.v3Api);
 
-  public getEnabledModules(): Promise<ApiV3.HttpResponse<ModulesResponse>> {
-    return getEnabledModules(this.client.v3Api);
-  }
+  public getEnabledModules = (): Promise<ApiV3.HttpResponse<ModulesResponse>> => getEnabledModules(this.client.v3Api);
 
-  public getObject(name: string): Promise<ApiV3.HttpResponse<ObjectDefinition>> {
-    return getObject(this.client.v3Api, name);
-  }
+  public getObject = (
+    name: string
+  ): Promise<ApiV3.HttpResponse<ObjectDefinition>> => getObject(this.client.v3Api, name);
 }

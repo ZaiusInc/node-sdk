@@ -5,12 +5,13 @@ import {
   GetConsentResponse,
   GetReachabilityResponse,
   IdentifierMetadata,
-  IdentifierMetadataResponse, ReachabilityUpdate
+  IdentifierMetadataResponse,
+  ReachabilityUpdate
 } from './Types';
 import {ODPClient} from './index';
-import { getConsent, updateConsent } from './Identifiers/consent';
-import { getMetadata, updateMetadata } from './Identifiers/identifiers';
-import { getReachability, updateReachability } from './Identifiers/reachability';
+import {getConsent, updateConsent} from './Identifiers/consent';
+import {getMetadata, updateMetadata} from './Identifiers/identifiers';
+import {getReachability, updateReachability} from './Identifiers/reachability';
 
 export class IdentifierApi implements Identifier {
 
@@ -21,30 +22,32 @@ export class IdentifierApi implements Identifier {
     return getConsent(this.client.v3Api, identifierName, identifierValue);
   }
 
-  public getMetadata(
+  public getMetadata = (
     identifierFieldName: string,
     identifierValue: string
-  ): Promise<ApiV3.HttpResponse<IdentifierMetadataResponse>> {
-    return getMetadata(this.client.v3Api, identifierFieldName, identifierValue);
-  }
+  ): Promise<ApiV3.HttpResponse<IdentifierMetadataResponse>> => getMetadata(
+    this.client.v3Api,
+    identifierFieldName,
+    identifierValue
+  );
 
-  public getReachability(identifierName: string, value: string): Promise<ApiV3.HttpResponse<GetReachabilityResponse>> {
-    return getReachability(this.client.v3Api, identifierName, value);
-  }
 
-  public updateConsent(updates: ConsentUpdate | ConsentUpdate[]): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> {
-    return updateConsent(this.client.v3Api, updates);
-  }
+  public getReachability = (
+    identifierName: string,
+    value: string
+  ): Promise<ApiV3.HttpResponse<GetReachabilityResponse>> => getReachability(this.client.v3Api, identifierName, value);
 
-  public updateMetadata(
+
+  public updateConsent = (
+    updates: ConsentUpdate | ConsentUpdate[]
+  ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>>  => updateConsent(this.client.v3Api, updates);
+
+  public updateMetadata = (
     updates: IdentifierMetadata | IdentifierMetadata[]
-  ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> {
-    return updateMetadata(this.client.v3Api, updates);
-  }
+  ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> => updateMetadata(this.client.v3Api, updates);
 
-  public updateReachability(
+  public updateReachability = (
     updates: ReachabilityUpdate | ReachabilityUpdate[]
-  ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> {
-    return updateReachability(this.client.v3Api, updates);
-  }
+  ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> => updateReachability(this.client.v3Api, updates);
+
 }
