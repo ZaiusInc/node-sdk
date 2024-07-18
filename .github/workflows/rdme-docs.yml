@@ -10,6 +10,6 @@ on:
 
 jobs:
   release:
-    uses: ZaiusInc/ocp-github-actions/.github/workflows/rdme-docs.yaml@main
+    uses: ./.github/workflows/reusable/rdme-docs.yaml@main
     secrets:
       npmNodeAuthToken: ${{ secrets.README_API_KEY }}

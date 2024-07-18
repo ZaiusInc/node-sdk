@@ -5,6 +5,6 @@ on:
 
 jobs:
   build:
-    uses: ZaiusInc/ocp-github-actions/.github/workflows/build-node.yaml@main
+    uses: ./.github/workflows/reusable/build-node.yaml@main
     secrets:
       nodeAuthToken: ${{ secrets.GITHUB_TOKEN }}

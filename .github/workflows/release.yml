@@ -11,7 +11,7 @@ on:
 
 jobs:
   release:
-    uses: ZaiusInc/ocp-github-actions/.github/workflows/release-node.yaml@main
+    uses: ./.github/workflows/reusable/release-node.yaml@main
     secrets:
       npmNodeAuthToken: ${{ secrets.NPMJS_TOKEN }}
       githubNodeAuthToken: ${{ secrets.GITHUB_TOKEN }}
