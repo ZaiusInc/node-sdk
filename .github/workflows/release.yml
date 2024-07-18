@@ -14,7 +14,7 @@ jobs:
     uses: ZaiusInc/ocp-github-actions/.github/workflows/release-node.yaml@main
     secrets:
       npmNodeAuthToken: ${{ secrets.NPMJS_TOKEN }}
-      githubNodeAuthToken: ${{ secrets.GHA_PAT }}
+      githubNodeAuthToken: ${{ secrets.GITHUB_TOKEN }}
       releaseAuthToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
     with:
       release_to_npm: ${{ inputs.release_to_npm }}
