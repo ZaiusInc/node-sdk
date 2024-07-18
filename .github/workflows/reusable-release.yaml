@@ -1,0 +1,81 @@
+name: Release and publish
+
+on:
+  workflow_call:
+    inputs:
+      release_to_npm:
+        description: 'True to release to public npmjs.org registry'
+        required: true
+        type: boolean
+        default: true
+    secrets:
+      npmNodeAuthToken:
+        required: false
+      githubNodeAuthToken:
+        required: true
+      releaseAuthToken:
+        required: true
+
+jobs:
+  release:
+    name: Release a package in GitHub & publish to NPM registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          always-auth: true
+          node-version: '18.x'
+          registry-url: https://npm.pkg.github.com
+          scope: '@zaiusinc'
+
+      - name: yarn
+        run: yarn
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.githubNodeAuthToken }}
+
+      - name: lint
+        run: yarn run lint
+
+      - name: build
+        run: yarn run build
+
+      - name: test
+        run: yarn test
+
+      - name: git config
+        run: |
+          git config user.name "Release Bot"
+          git config user.email "no-reply@optimizely.com"
+      - name: tag-release
+        run: |
+          version=$(cat package.json | jq -r .version)
+          if [[ $version == *-* ]]; then
+            echo "$version is tagged... Skipping tagging"
+          else 
+            git tag "v$version"
+            git push origin "v$version"
+          fi
+        env:
+          # this is required to allow release-it to push tags to git repo and by-pass branch protection rules
+          # default secrets.GITHUB_TOKEN does not have permission to bypass branch protection rules
+          GITHUB_TOKEN: ${{ secrets.releaseAuthToken }}
+
+      - name: release-and-publish-to-github-packages
+        run: |
+          yarn publish --verbose --access restricted --registry https://npm.pkg.github.com
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.githubNodeAuthToken }}
+
+      - name: release-and-publish-to-npm
+        if: ${{ inputs.release_to_npm }}
+        run: |
+          version=$(cat package.json | jq -r .version)
+          if [[ $version == *-* ]]; then
+            echo "$version is tagged... Skipping publishing to npmjs"
+          else 
+            yarn publish --verbose --access public  --registry https://registry.npmjs.org
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.npmNodeAuthToken }}
