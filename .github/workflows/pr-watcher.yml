@@ -5,6 +5,6 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/reusable/build-node.yaml
+    uses: ./.github/workflows/reusable-build.yaml
     secrets:
       nodeAuthToken: ${{ secrets.GITHUB_TOKEN }}

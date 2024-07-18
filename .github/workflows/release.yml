@@ -11,7 +11,7 @@ on:
 
 jobs:
   release:
-    uses: ./.github/workflows/reusable/release-node.yaml
+    uses: ./.github/workflows/reusable-release.yaml
     secrets:
       npmNodeAuthToken: ${{ secrets.NPMJS_TOKEN }}
       githubNodeAuthToken: ${{ secrets.GITHUB_TOKEN }}
