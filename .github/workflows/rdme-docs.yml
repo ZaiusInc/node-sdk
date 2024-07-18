@@ -12,4 +12,4 @@ jobs:
   release:
     uses: ./.github/workflows/reusable-rdme-docs.yaml
     secrets:
-      npmNodeAuthToken: ${{ secrets.README_API_KEY }}
+      readmeApiKey: ${{ secrets.README_API_KEY }}
