@@ -15,5 +15,6 @@ jobs:
     secrets:
       npmNodeAuthToken: ${{ secrets.NPMJS_TOKEN }}
       githubNodeAuthToken: ${{ secrets.GHA_PAT }}
+      releaseAuthToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
     with:
       release_to_npm: ${{ inputs.release_to_npm }}
