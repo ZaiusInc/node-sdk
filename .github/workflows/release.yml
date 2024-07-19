@@ -13,8 +13,8 @@ jobs:
   release:
     uses: ./.github/workflows/reusable-release.yaml
     secrets:
-      npmNodeAuthToken: ${{ secrets.NPMJS_TOKEN }}
-      githubNodeAuthToken: ${{ secrets.GITHUB_TOKEN }}
-      releaseAuthToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
+      npmJSToken: ${{ secrets.NPMJS_TOKEN }}
+      githubPackagesToken: ${{ secrets.GHA_PAT }}
+      gitReleasesToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
     with:
       release_to_npm: ${{ inputs.release_to_npm }}

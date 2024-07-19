@@ -1,6 +1,7 @@
 name: ReadMe GitHub Action 🦉
 
 on:
+  pull_request:
   push:
     branches:
       # This workflow will run every time you push code to the following branch: `master`
@@ -12,4 +13,4 @@ jobs:
   release:
     uses: ./.github/workflows/reusable-rdme-docs.yaml
     secrets:
-      npmNodeAuthToken: ${{ secrets.README_API_KEY }}
+      readmeApiKey: ${{ secrets.README_API_KEY }}
