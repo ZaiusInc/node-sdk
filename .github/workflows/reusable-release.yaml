@@ -55,7 +55,7 @@ jobs:
             echo "$version is tagged... Skipping tagging"
           else 
             git tag "v$version"
-            #git push origin "v$version"
+            git push origin "v$version"
           fi
         env:
           # this is required to allow release-it to push tags to git repo and by-pass branch protection rules
