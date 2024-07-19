@@ -9,11 +9,11 @@ on:
         type: boolean
         default: true
     secrets:
-      npmNodeAuthToken:
+      npmJSToken:
         required: false
-      githubNodeAuthToken:
+      githubPackagesToken:
         required: true
-      releaseAuthToken:
+      gitReleasesToken:
         required: true
 
 jobs:
@@ -33,7 +33,7 @@ jobs:
       - name: yarn
         run: yarn
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.githubNodeAuthToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.githubPackagesToken }}
 
       - name: lint
         run: yarn run lint
@@ -60,13 +60,13 @@ jobs:
         env:
           # this is required to allow release-it to push tags to git repo and by-pass branch protection rules
           # default secrets.GITHUB_TOKEN does not have permission to bypass branch protection rules
-          GITHUB_TOKEN: ${{ secrets.releaseAuthToken }}
+          GITHUB_TOKEN: ${{ secrets.gitReleasesToken }}
 
       - name: release-and-publish-to-github-packages
         run: |
           yarn publish --verbose --access restricted --registry https://npm.pkg.github.com
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.releaseAuthToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.githubPackagesToken }}
 
       - name: release-and-publish-to-npm
         if: ${{ inputs.release_to_npm }}
@@ -78,4 +78,4 @@ jobs:
             yarn publish --verbose --access public  --registry https://registry.npmjs.org
           fi
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.npmNodeAuthToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.npmJSToken }}
