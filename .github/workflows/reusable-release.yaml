@@ -8,6 +8,11 @@ on:
         required: true
         type: boolean
         default: true
+      release_to_github:
+        description: 'True to release to internal GitHub packages registry'
+        required: true
+        type: boolean
+        default: true
     secrets:
       npmJSToken:
         required: false
@@ -63,6 +68,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.gitReleasesToken }}
 
       - name: release-and-publish-to-github-packages
+        if: ${{ inputs.release_to_github }}
         run: |
           yarn publish --verbose --access restricted --registry https://npm.pkg.github.com
         env:
