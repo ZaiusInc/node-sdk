@@ -74,6 +74,15 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.githubPackagesToken }}
 
+      # this step is required as 'yarn publish' ignores --registry flag if registry is defined in .npmrc
+      - name: Reconfigure NPM registry
+        uses: actions/setup-node@v4
+        with:
+          always-auth: true
+          node-version: '18.x'
+          registry-url: https://registry.npmjs.org
+          scope: '@zaiusinc'
+
       - name: release-and-publish-to-npm
         if: ${{ inputs.release_to_npm }}
         run: |
