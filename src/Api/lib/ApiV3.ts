@@ -183,10 +183,10 @@ export namespace ApiV3 {
               console.log(text);
               let data = null;
               try {
-                const json = JSON.parse(text)
-                data = json
+                const json = JSON.parse(text);
+                data = json;
               } catch (e) {
-                data = {error: text}
+                data = {error: text};
               }
               const httpResponse: HttpResponse<V3ErrorResponse> = {
                 success: false,
