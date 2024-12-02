@@ -55,34 +55,47 @@ describe('request', () => {
       status: 200,
       data: 'bar',
       statusText: 'OK',
-      headers: new Headers({'request-id': '00000000'})
+      headers: new Headers({ 'request-id': '00000000' })
     });
   });
 
   it('normalizes error responses', async () => {
     nock('https://api.zaius.com')
       .post('/v3/foo', {})
-      .reply(400, '"bar"', {'request-id': '00000001'});
+      .reply(400, '"bar"', { 'request-id': '00000001' });
 
-    const result = await apiV3.request('POST', '/foo', {}, {retry: false}).catch((e) => e.response);
+    const result = await apiV3.request('POST', '/foo', {}, { retry: false }).catch((e) => e.response);
     expect(result).toEqual({
       success: false,
       data: 'bar',
       status: 400,
       statusText: 'Bad Request',
-      headers: new Headers({'request-id': '00000001'})
+      headers: new Headers({ 'request-id': '00000001' })
     });
   });
 
   describe('retries', () => {
-    it('retries once when the response is a 502', async () => {
+    it('retries once when the response is a 502 and handle a JSON response', async () => {
       nock('https://api.zaius.com')
         .post('/v3/bar', {})
         .times(2)
-        .reply(502, '502');
+        .reply(502, '{"error": "JSON failure"}');
 
       const requestFn = jest.spyOn(apiV3, 'request');
-      await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      const response = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      expect(response.data).toEqual({error: 'JSON failure'})
+      expect(requestFn).toHaveBeenCalledTimes(2);
+    });
+
+    it('retries once when the response is a 502 and handle a non-JSON response', async () => {
+      nock('https://api.zaius.com')
+        .post('/v3/bar', {})
+        .times(2)
+        .reply(502, 'non JSON failure');
+
+      const requestFn = jest.spyOn(apiV3, 'request');
+      const response = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
+      expect(response.data).toEqual({error: 'non JSON failure'})
       expect(requestFn).toHaveBeenCalledTimes(2);
     });
 

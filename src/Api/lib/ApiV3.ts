@@ -179,9 +179,18 @@ export namespace ApiV3 {
                 }
               );
             } else {
+              const text = await response.text();
+              console.log(text);
+              let data = null;
+              try {
+                const json = JSON.parse(text)
+                data = json
+              } catch (e) {
+                data = {error: text}
+              }
               const httpResponse: HttpResponse<V3ErrorResponse> = {
                 success: false,
-                data: await response.json(),
+                data,
                 status,
                 statusText,
                 headers
