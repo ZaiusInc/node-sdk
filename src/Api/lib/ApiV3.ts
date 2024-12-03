@@ -179,15 +179,22 @@ export namespace ApiV3 {
                 }
               );
             } else {
+              const contentType = response?.headers?.get('content-type');
               const text = await response.text();
-              console.log(text);
               let data = null;
-              try {
-                const json = JSON.parse(text);
-                data = json;
-              } catch (e) {
+              if (contentType?.includes('application/json')) {
+                try {
+                  const json = JSON.parse(text);
+                  data = json;
+                } catch (e) {
+                  // nothing
+                }
+              }
+
+              if (data == null) {
                 data = {error: text};
               }
+
               const httpResponse: HttpResponse<V3ErrorResponse> = {
                 success: false,
                 data,
