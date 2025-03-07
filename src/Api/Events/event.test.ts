@@ -1,4 +1,4 @@
-import * as deepFreeze from 'deep-freeze';
+import deepFreeze from 'deep-freeze';
 import 'jest';
 import {ApiV3} from '../lib/ApiV3';
 import {EventPayload} from '../Types';
@@ -8,7 +8,7 @@ import {InternalConfig} from '../config/configure';
 describe('event', () => {
   const mockConfiguration: InternalConfig = {
     apiBasePath: 'https://api.zaius.com/v3/',
-    apiKey: 'api-key'
+    apiKey: 'api-key',
   };
   const apiV3: ApiV3.API = new ApiV3.API(mockConfiguration);
   let postMock!: jest.SpyInstance;
