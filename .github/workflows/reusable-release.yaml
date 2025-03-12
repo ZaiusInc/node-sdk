@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: https://npm.pkg.github.com
           scope: '@zaiusinc'
 
@@ -79,7 +79,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: '18.x'
+          node-version: '22.x'
           registry-url: https://registry.npmjs.org
           scope: '@zaiusinc'
 
