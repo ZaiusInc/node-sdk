@@ -15,9 +15,12 @@ jobs:
       - name: Check out repo 📚
         uses: actions/checkout@v3
 
+      - name: Determine Node.js version
+        run: .github/scripts/determine-node-version.sh
+
       - uses: actions/setup-node@v3
         with:
-          node-version: 22.x
+          node-version: ${{ env.node_version }}
           cache: 'yarn'
 
       - name: Install
