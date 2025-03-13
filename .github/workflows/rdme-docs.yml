@@ -11,16 +11,10 @@ on:
 jobs:
   release:
     - name: Determinate node version based on major version from package.json
-      id: extract_node_version
-      run: |
-        VERSION=$(jq -r '.version' package.json)
-        MAJOR_VERSION=$(echo "VERSION" | cut -d '.' -f 1')
-        NODE_VERSION=$(echo "MAJOR_VERSION" == '0' && '12.x' || '18.x')
-        echo "node_version=$NODE_VERSION" >> $GITHUB_OUTPUT
+      run: .github/scripts/determine-node-version.sh
 
     - uses: ./.github/workflows/reusable-rdme-docs.yaml
-      needs: extract_node_version
       secrets:
         readmeApiKey: ${{ secrets.README_API_KEY }}
       with:
-        nodeVersion: ${{ needs.extract_node_version.outputs.node_version }}
+        nodeVersion: ${{ env.node_version }}
