@@ -4,12 +4,6 @@ name: reusable-readme-docs
 
 on:
   workflow_call:
-    inputs:
-      nodeVersion:
-        description: 'Node JS version to use'
-        type: string
-        default: '18.x'
-        required: true
     secrets:
       readmeApiKey:
         required: true
@@ -20,6 +14,9 @@ jobs:
     steps:
       - name: Check out repo 📚
         uses: actions/checkout@v3
+
+      - name: Determine Node.js version
+        run: .github/scripts/determine-node-version.sh
 
       - uses: actions/setup-node@v3
         with:

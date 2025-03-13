@@ -9,12 +9,6 @@ on:
       - master
 
 jobs:
-  release:
-    - name: Determinate node version based on major version from package.json
-      run: .github/scripts/determine-node-version.sh
-
-    - uses: ./.github/workflows/reusable-rdme-docs.yaml
-      secrets:
-        readmeApiKey: ${{ secrets.README_API_KEY }}
-      with:
-        nodeVersion: ${{ env.node_version }}
+  uses: ./.github/workflows/reusable-rdme-docs.yaml
+  secrets:
+    readmeApiKey: ${{ secrets.README_API_KEY }}
