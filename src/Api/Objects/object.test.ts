@@ -2,7 +2,7 @@ import 'jest';
 import {ApiV3} from '../lib/ApiV3';
 import {ObjectPayload} from '../Types';
 import {object} from './object';
-import deepFreeze = require('deep-freeze');
+import deepFreeze from 'deep-freeze';
 import {InternalConfig} from '../config/configure';
 
 const mockAppConfiguration: InternalConfig = {
@@ -12,8 +12,8 @@ const mockAppConfiguration: InternalConfig = {
     app_id: 'test',
     display_name: 'Test App',
     version: '1.0.0',
-    vendor: 'optimizely'
-  }
+    vendor: 'optimizely',
+  },
 };
 
 describe('object', () => {
@@ -32,7 +32,7 @@ describe('object', () => {
   it('supports multiple updates', async () => {
     const payload = deepFreeze<ObjectPayload[]>([
       {product_id: 'P1234', name: 'Something Cool'},
-      {product_id: 'P0000', name: 'Something not Cool'}
+      {product_id: 'P0000', name: 'Something not Cool'},
     ]);
     await object(apiV3, 'products', [{...payload[0]}, {...payload[1]}]);
     expect(postMock).toHaveBeenCalledWith('/objects/products', payload);

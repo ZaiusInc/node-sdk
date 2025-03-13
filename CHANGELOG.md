@@ -1,3 +1,7 @@
+# 2.0.0
+Node.js 22 support
+Modernizing dependencies
+
 # 1.1.1
 Allowing using ODPClient methods as unbound methods
 
@@ -12,4 +16,3 @@ Adding vector type to ODP schema
 # 1.0.0
 Node.js 18 support
 Modernizing dependencies
-

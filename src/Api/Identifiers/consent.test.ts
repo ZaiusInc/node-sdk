@@ -1,14 +1,14 @@
 import 'jest';
-import * as nock from 'nock';
+import nock from 'nock';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ConsentUpdate} from '../Types';
 import {getConsent, updateConsent} from './consent';
-import deepFreeze = require('deep-freeze');
+import deepFreeze from 'deep-freeze';
 
 const mockConfiguration: InternalConfig = {
   apiBasePath: 'https://api.zaius.com/v3/',
-  apiKey: 'api-key'
+  apiKey: 'api-key',
 };
 
 let apiV3: ApiV3.API;
@@ -24,10 +24,10 @@ describe('consent', () => {
         identifier_field_name: 'email',
         identifier_value: 'foo@optimizely.com',
         consent: false,
-        consent_update_reason: 'preference center update'
+        consent_update_reason: 'preference center update',
       });
       nock('https://api.zaius.com')
-        .post('/v3/consent', [update] as any)
+        .post('/v3/consent', [update] as any[])
         .reply(200, '{}');
       await updateConsent(apiV3, update);
       expect(nock.isDone()).toBeTruthy();
@@ -39,14 +39,14 @@ describe('consent', () => {
           identifier_field_name: 'email',
           identifier_value: 'foo@optimizely.com',
           consent: false,
-          consent_update_reason: 'preference center update'
+          consent_update_reason: 'preference center update',
         },
         {
           identifier_field_name: 'email',
           identifier_value: 'bar@optimizely.com',
           consent: false,
-          consent_update_reason: 'other'
-        }
+          consent_update_reason: 'other',
+        },
       ]) as ConsentUpdate[];
       nock('https://api.zaius.com')
         .post('/v3/consent', update as any)
@@ -59,7 +59,7 @@ describe('consent', () => {
       const update: ConsentUpdate = {
         identifier_field_name: 'email',
         identifier_value: 'foo@optimizely.com',
-        consent: false
+        consent: false,
       };
       nock('https://api.zaius.com')
         .post('/v3/consent', [update] as any)
@@ -72,7 +72,7 @@ describe('consent', () => {
       const updates = Array(101).fill({
         identifier_field_name: 'email',
         identifier_value: 'foo@optimizely.com',
-        consent: true
+        consent: true,
       });
       await expect(updateConsent(apiV3, updates)).rejects.toThrowError('maximum batch size');
     });
@@ -84,11 +84,11 @@ describe('consent', () => {
         identifier_value: 'foo@optimizely.com',
         consent: false,
         consent_update_reason: 'preference center update',
-        consent_update_ts: new Date()
+        consent_update_ts: new Date(),
       });
       const expectedUpdate: ConsentUpdate = {
         ...update,
-        consent_update_ts: 1579648074
+        consent_update_ts: 1579648074,
       };
       nock('https://api.zaius.com')
         .post('/v3/consent', [expectedUpdate] as any)
@@ -104,11 +104,11 @@ describe('consent', () => {
         identifier_value: 'foo@optimizely.com',
         consent: false,
         consent_update_reason: 'preference center update',
-        consent_update_ts: '2020-01-21T23:07:54.373Z'
+        consent_update_ts: '2020-01-21T23:07:54.373Z',
       });
       const expectedUpdate: ConsentUpdate = {
         ...update,
-        consent_update_ts: 1579648074
+        consent_update_ts: 1579648074,
       };
       nock('https://api.zaius.com')
         .post('/v3/consent', [expectedUpdate] as any)
@@ -120,17 +120,13 @@ describe('consent', () => {
 
   describe('getConsent', () => {
     it('sends a get to /reachability/{identifier}', async () => {
-      nock('https://api.zaius.com')
-        .get('/v3/consent/email?id=foo%40optimizely.com')
-        .reply(200, '{}');
+      nock('https://api.zaius.com').get('/v3/consent/email?id=foo%40optimizely.com').reply(200, '{}');
       await getConsent(apiV3, 'email', 'foo@optimizely.com');
       expect(nock.isDone()).toBeTruthy();
     });
 
     it('safely encodes url values', async () => {
-      nock('https://api.zaius.com')
-        .get('/v3/consent/em%20ail?id=%22foo%22%40optimizely.com')
-        .reply(200, '{}');
+      nock('https://api.zaius.com').get('/v3/consent/em%20ail?id=%22foo%22%40optimizely.com').reply(200, '{}');
       await getConsent(apiV3, 'em ail', '"foo"@optimizely.com');
       expect(nock.isDone()).toBeTruthy();
     });

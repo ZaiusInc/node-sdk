@@ -32,8 +32,8 @@ export namespace ApiV3 {
     timestamp: string;
     message?: string;
     detail?: {
-      invalids?: V3InvalidEventDetail[] | V3InvalidSchemaDetail[];
       [key: string]: any;
+      invalids?: V3InvalidEventDetail[] | V3InvalidSchemaDetail[];
     };
   }
 
@@ -41,10 +41,9 @@ export namespace ApiV3 {
    * Embedded error response detail format for invalid event
    */
   export interface V3InvalidEventDetail {
+    [key: string]: any;
     event: number;
     message: string;
-
-    [key: string]: any;
   }
 
   /**
@@ -69,14 +68,14 @@ export namespace ApiV3 {
   export enum ErrorCode {
     BatchLimitExceeded = 'BatchLimitExceeded',
     Non2xx = 'Non2xx',
-    Unexpected = 'Unexpected'
+    Unexpected = 'Unexpected',
   }
 
   export class HttpError extends Error {
     public constructor(
       message: string,
       public code?: string,
-      public response?: HttpResponse<V3ErrorResponse>
+      public response?: HttpResponse<V3ErrorResponse>,
     ) {
       super(message);
     }
@@ -94,13 +93,22 @@ export namespace ApiV3 {
   }
 
   export class API {
+    private static ERROR_CODE_MESSAGES: {[key in ErrorCode]: string} = {
+      [ErrorCode.BatchLimitExceeded]: `A maximum batch size of ${BATCH_LIMIT} is allowed in a single request`,
+      [ErrorCode.Non2xx]: 'Http response was outside 2xx',
+      [ErrorCode.Unexpected]: 'An unexpected error occurred making the request',
+    };
 
-    private readonly config?: InternalConfig;
+    private static DEFAULT_REQUEST_OPTIONS = {
+      retry: true,
+    };
 
     /**
      * @hidden backward compatibility
      */
     public readonly BATCH_LIMIT = ApiV3.BATCH_LIMIT;
+
+    private readonly config?: InternalConfig;
 
     public constructor(config: Config | InternalConfig | null) {
       if (config) {
@@ -108,27 +116,17 @@ export namespace ApiV3 {
       }
     }
 
-    private static ERROR_CODE_MESSAGES: { [key in ErrorCode]: string } = {
-      [ErrorCode.BatchLimitExceeded]: `A maximum batch size of ${BATCH_LIMIT} is allowed in a single request`,
-      [ErrorCode.Non2xx]: 'Http response was outside 2xx',
-      [ErrorCode.Unexpected]: 'An unexpected error occurred making the request'
-    };
-
-    private static DEFAULT_REQUEST_OPTIONS = {
-      retry: true
-    };
-
     public errorForCode = (code: ErrorCode): HttpError => new HttpError(API.ERROR_CODE_MESSAGES[code], code);
 
     public get = <T extends V3Response>(path: string) => this.request<T>('GET', path, undefined);
 
-    public post =  <T extends V3Response>(path: string, payload: Payload) => this.request<T>('POST', path, payload);
+    public post = <T extends V3Response>(path: string, payload: Payload) => this.request<T>('POST', path, payload);
 
     public request = <T extends V3Response>(
       method: HttpMethod,
       path: string,
       payload: Payload | undefined,
-      options: RequestOptions = {...API.DEFAULT_REQUEST_OPTIONS}
+      options: RequestOptions = {...API.DEFAULT_REQUEST_OPTIONS},
     ): Promise<HttpResponse<T>> => {
       let url = joinUri(this.getConfig().apiBasePath, path);
       const body = payload === undefined ? undefined : JSON.stringify(payload);
@@ -160,7 +158,7 @@ export namespace ApiV3 {
               data,
               status,
               statusText,
-              headers
+              headers,
             };
             resolve(httpResponse);
           } else {
@@ -174,9 +172,9 @@ export namespace ApiV3 {
                 (result) => {
                   resolve(result);
                 },
-                (error) => {
+                (error: Error) => {
                   reject(error);
-                }
+                },
               );
             } else {
               const contentType = response?.headers?.get('content-type');
@@ -186,7 +184,7 @@ export namespace ApiV3 {
                 try {
                   const json = JSON.parse(text);
                   data = json;
-                } catch (e) {
+                } catch {
                   // nothing
                 }
               }
@@ -200,7 +198,7 @@ export namespace ApiV3 {
                 data,
                 status,
                 statusText,
-                headers
+                headers,
               };
               const httpError = new HttpError(response.statusText, ErrorCode.Non2xx, httpResponse);
               if (process.env['LOG_REQUESTS'] === 'true') {
@@ -224,15 +222,15 @@ export namespace ApiV3 {
       });
     };
 
+    public getContext = () => this.getConfig().appContext;
+
     private buildHeaders = () => {
-      const headersObject: { [key: string]: string } = {
+      const headersObject: {[key: string]: string} = {
         'x-api-key': this.getConfig().apiKey,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       };
       return headersObject;
     };
-
-    public getContext = () => this.getConfig().appContext;
 
     private getConfig = (): InternalConfig => {
       if (this.config) {

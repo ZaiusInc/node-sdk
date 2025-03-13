@@ -1,4 +1,3 @@
-import {isNumber} from 'util';
 import {ApiV3} from '../lib/ApiV3';
 import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
 
@@ -10,7 +9,7 @@ import {GetReachabilityResponse, ReachabilityUpdate} from '../Types';
  */
 export async function updateReachability(
   apiV3: ApiV3.API,
-  updates: ReachabilityUpdate | ReachabilityUpdate[]
+  updates: ReachabilityUpdate | ReachabilityUpdate[],
 ): Promise<ApiV3.HttpResponse<ApiV3.V3SuccessResponse>> {
   if (!Array.isArray(updates)) {
     updates = [updates];
@@ -21,7 +20,7 @@ export async function updateReachability(
   }
 
   // if we're going to make changes, clone the array first
-  if (updates.some((u) => !isNumber(u.reachable_update_ts))) {
+  if (updates.some((u) => typeof u.reachable_update_ts !== 'number')) {
     updates = [...updates];
   }
 
@@ -49,7 +48,7 @@ export async function updateReachability(
 export async function getReachability(
   apiV3: ApiV3.API,
   identifierName: string,
-  value: string
+  value: string,
 ): Promise<ApiV3.HttpResponse<GetReachabilityResponse>> {
   return await apiV3.get(`/reachability/${encodeURIComponent(identifierName)}?id=${encodeURIComponent(value)}`);
 }
