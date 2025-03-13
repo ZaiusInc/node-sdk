@@ -2,6 +2,12 @@ name: reusable-build
 
 on:
   workflow_call:
+    inputs:
+      nodeVersion:
+        description: 'Node JS version to use'
+        type: string
+        default: '18.x'
+        required: true
     secrets:
       nodeAuthToken:
         required: true
@@ -16,7 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: '22.x'
+          node-version: ${{ inputs.nodeVersion }}
           registry-url: https://npm.pkg.github.com
           scope: '@zaiusinc'
 

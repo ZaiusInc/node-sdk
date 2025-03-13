@@ -8,3 +8,7 @@ jobs:
     uses: ./.github/workflows/reusable-build.yaml
     secrets:
       nodeAuthToken: ${{ secrets.GITHUB_TOKEN }}
+    with:
+      nodeVersion: ${{
+        github.event.pull_request.base.ref == '0.x' && '12.x' || '18.x'
+      }}

@@ -22,5 +22,8 @@ jobs:
       githubPackagesToken: ${{ secrets.GHA_PAT }}
       gitReleasesToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
     with:
+      nodeVersion: ${{
+        github.ref_name == '0.x' && '12.x' || '18.x'
+      }}
       release_to_npm: ${{ inputs.release_to_npm }}
       release_to_github: ${{ inputs.release_to_github }}

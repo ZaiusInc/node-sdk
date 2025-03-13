@@ -4,6 +4,12 @@ name: reusable-readme-docs
 
 on:
   workflow_call:
+    inputs:
+      nodeVersion:
+        description: 'Node JS version to use'
+        type: string
+        default: '18.x'
+        required: true
     secrets:
       readmeApiKey:
         required: true
@@ -17,7 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 22.x
+          node-version: ${{ inputs.nodeVersion }}
           cache: 'yarn'
 
       - name: Install

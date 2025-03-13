@@ -3,6 +3,11 @@ name: reusable-release
 on:
   workflow_call:
     inputs:
+      nodeVersion:
+        description: 'Node JS version to use'
+        type: string
+        default: '18.x'
+        required: true
       release_to_npm:
         description: 'True to release to public npmjs.org registry'
         required: true
@@ -31,7 +36,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: '22.x'
+          node-version: ${{ inputs.nodeVersion }}
           registry-url: https://npm.pkg.github.com
           scope: '@zaiusinc'
 
@@ -79,7 +84,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           always-auth: true
-          node-version: '22.x'
+          node-version: ${{ inputs.nodeVersion }}
           registry-url: https://registry.npmjs.org
           scope: '@zaiusinc'
 
