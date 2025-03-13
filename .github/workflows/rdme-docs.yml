@@ -9,6 +9,7 @@ on:
       - master
 
 jobs:
-  uses: ./.github/workflows/reusable-rdme-docs.yaml
-  secrets:
-    readmeApiKey: ${{ secrets.README_API_KEY }}
+  release:
+    uses: ./.github/workflows/reusable-rdme-docs.yaml
+    secrets:
+      readmeApiKey: ${{ secrets.README_API_KEY }}
