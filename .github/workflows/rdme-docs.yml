@@ -1,7 +1,6 @@
 name: ReadMe GitHub Action 🦉
 
 on:
-  pull_request:
   push:
     branches:
       # This workflow will run every time you push code to the following branch: `master`
