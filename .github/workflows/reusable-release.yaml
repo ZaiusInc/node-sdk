@@ -30,7 +30,7 @@ jobs:
 
       - name: Determine Node.js version
         id: node
-        uses: ZaiusInc/node-sdk/.github/actions/determine-node-version@main
+        uses: ZaiusInc/node-sdk/.github/actions/determine-node-version@master
 
       - name: Use Node.js
         uses: actions/setup-node@v4
