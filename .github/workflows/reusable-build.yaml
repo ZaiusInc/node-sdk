@@ -14,7 +14,8 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Determine Node.js version
-        run: .github/scripts/determine-node-version.sh
+        id: node
+        uses: ZaiusInc/node-sdk/.github/actions/determine-node-version@master
 
       - name: Use Node.js
         uses: actions/setup-node@v4
