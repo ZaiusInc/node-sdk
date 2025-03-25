@@ -1,0 +1,14 @@
+name: "Determine Node.js version"
+description: "Determines the Node.js version to use"
+outputs:
+  version:
+    description: "The Node.js version to use"
+    value: ${{ steps.set-node-version.outputs.node_version }}
+runs:
+  using: "composite"
+  steps:
+    - id: set-node-version
+      run: |
+        echo "Determining Node.js version..."
+        bash $GITHUB_ACTION_PATH/script.sh
+      shell: bash
