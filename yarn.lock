@@ -1298,10 +1298,10 @@
     "@typescript-eslint/types" "8.26.1"
     eslint-visitor-keys "^4.2.0"
 
-"@zaiusinc/eslint-config-presets@2.0.0-beta.5":
-  version "2.0.0-beta.5"
-  resolved "https://npm.pkg.github.com/download/@zaiusinc/eslint-config-presets/2.0.0-beta.5/6799b2eecf7569ffca794165a2af7bbfb017cf4d#6799b2eecf7569ffca794165a2af7bbfb017cf4d"
-  integrity sha512-ScXb9gyXCFP/UD3RSOs0RZveyDsyZv44S4Ih1X2vmIuYV7XUsptGg9vvwMOCLV5UlZF0gN3LudiF0Dpm9hawHA==
+"@zaiusinc/eslint-config-presets@2.0.0":
+  version "2.0.0"
+  resolved "https://npm.pkg.github.com/download/@zaiusinc/eslint-config-presets/2.0.0/1092df83717adf35804c55d820f6649512b70fdb#1092df83717adf35804c55d820f6649512b70fdb"
+  integrity sha512-KhvEHNOLGfIhPpobSX1+pwNN04valP20DGea1xFhXk7fkvja7iBD6z0EQiWj3mya52RCCOscg17+ukAFgfnt+g==
   dependencies:
     "@typescript-eslint/parser" "^8.26.0"
 
