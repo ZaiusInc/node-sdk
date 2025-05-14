@@ -1,6 +1,6 @@
 {
   "name": "@zaiusinc/node-sdk",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0",
   "description": "Node SDK for Optimizely Data Platform",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "Apache-2.0",
@@ -44,7 +44,7 @@
     "@types/nock": "^11.1.0",
     "@types/node": "^22.13.9",
     "@types/node-fetch": "^2.6.12",
-    "@zaiusinc/eslint-config-presets": "2.0.0-beta.5",
+    "@zaiusinc/eslint-config-presets": "2.0.0",
     "deep-freeze": "0.0.1",
     "eslint": "^9.21.0",
     "eslint-config-love": "^119.0.0",
