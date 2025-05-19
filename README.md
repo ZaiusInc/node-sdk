@@ -39,22 +39,7 @@ You need to configure the SDK with your API keys.
 If you are only sending data to ODP, you normally only need your public API key, however, some API calls require your private API key. 
 You can obtain these from the **Account Settings > APIs** page in the ODP app.
 
-[block:image]
-{
-"images": [
-{
-"image": [
-"https://files.readme.io/43ca706-image.png",
-null,
-null
-],
-"align": "center",
-"border": true
-}
-]
-}
-[/block]
-
+[<img src="https://files.readme.io/43ca706-image.png" style="border-width:1px; border-style:solid">](https://files.readme.io/43ca706-image.png)
 
 #### Using module scoped instance
 ```typescript
