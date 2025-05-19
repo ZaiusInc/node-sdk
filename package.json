@@ -28,7 +28,7 @@
     "prettier": "prettier --write 'src/**/*.ts'",
     "test": "jest --coverage",
     "prepare-readme-export": "node scripts/prepare_readme_export.js",
-    "generate-docs": "typedoc --plugin typedoc-plugin-markdown ./src/Api/index.ts && yarn prepare-readme-export"
+    "generate-docs": "typedoc && yarn prepare-readme-export"
   },
   "engines": {
     "node": ">=18.0"
@@ -58,8 +58,9 @@
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typedoc": "^0.27.9",
-    "typedoc-plugin-markdown": "^4.4.2",
+    "typedoc": "^0.28.4",
+    "typedoc-plugin-frontmatter": "^1.3.0",
+    "typedoc-plugin-markdown": "^4.6.3",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.26.1"
   }

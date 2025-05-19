@@ -1,11 +1,12 @@
 {
   "out": "./docs/",
+  "entryPoints": ["./src/Api/index.ts"],
   "name": "ODP Node SDK",
   "theme": "markdown",
   "excludePrivate": true,
-  "enableFrontmatter": true,
   "frontmatterGlobals": {
     "category": "64394358ebb179005f0528d1",
     "hidden": false
-  }
+  },
+  "plugin": ["typedoc-plugin-markdown", "typedoc-plugin-frontmatter", "./scripts/add_title_frontmatter_plugin.js"]
 }

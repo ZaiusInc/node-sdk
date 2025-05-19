@@ -14,7 +14,8 @@
  */
 
 const slugify = require("slugify");
-fs = require('fs');
+const fs = require('fs');
+const path = require('path');
 
 function getFrontMatterProperty(file, property) {
     let content = fs.readFileSync(file, 'utf8')
@@ -58,7 +59,7 @@ hidden: ${hidden}
     let toc = files
     .filter(f => f.isFile())
     .map(f => {
-        const titleRe = /title: "(.+)".*/g;
+        const titleRe = /title: (.+).*/g;
         let title = titleRe.exec(fs.readFileSync(baseDir + '/' + folderName + "/" + f.name, 'utf8'))[1];
         return "- [" + title + "](" + folderName + "/" + f.name + ")"
     })
@@ -83,9 +84,9 @@ hidden: ${hidden}
     });
 }
 
-function mergeReadmeAndModules() {
-    let toc = fs.readFileSync('./docs/modules.md', 'utf8')
-    fs.rmSync('./docs/modules.md');
+function mergeReadmeAndGlobals() {
+    let toc = fs.readFileSync('./docs/globals.md', 'utf8')
+    fs.rmSync('./docs/globals.md');
 
     toc = toc.replace(/.*## Index/s, '');
 
@@ -93,7 +94,78 @@ function mergeReadmeAndModules() {
     fs.writeFileSync('./docs/README.md', readme);
 }
 
-mergeReadmeAndModules();
+function flattenNamespace(folder, namespace, fullNamespaceName) {
+    const formFile = `./docs/${folder}/README.md`;
+    removeFrontMatterProperty(formFile, 'title');
+    addFrontMatterProperty(formFile, `title: "namespace: ${fullNamespaceName}"`);
+
+    let formDocSlug = slugify(`node-sdk API reference namespace ${fullNamespaceName}`, {lower: true, strict: true});
+    addFrontMatterProperty(formFile, `slug: "${formDocSlug}"`);
+}
+
+function moveFolder(source, destination) {
+    // Ensure the destination directory exists
+    const destinationDir = path.dirname(destination);
+    if (!fs.existsSync(destinationDir)) {
+        fs.mkdirSync(destinationDir, { recursive: true });
+    }
+
+    // Move the folder
+    fs.renameSync(source, destination);
+    console.log(`Folder moved from ${source} to ${destination}`);
+}
+
+function fixLinks(folder) {
+    fs.readdirSync(folder, { withFileTypes: true })
+      .forEach(f => {
+          if (f.isDirectory()) {
+              fixLinks(folder + '/' + f.name);
+          } else {
+              console.log(`file: ${folder}/${f.name}`);
+              //[success](LiquidExtensionResult.md#success)
+              let content = fs.readFileSync(`${folder}/${f.name}`, 'utf8')
+              content = content.replaceAll("globals.md", "README.md");
+
+              let linkRe = /\]\(([^\)]*\.md)/g;
+              let m;
+              do {
+                  m = linkRe.exec(content);
+                  if (m) {
+                      let link = m[1];
+                      console.log(`link ${link}`);
+                      let targetSlug = getFrontMatterProperty(folder + "/" + link, "slug");
+                      console.log(`Replacing ${link} with ${targetSlug}`);
+                      content = content.replaceAll(m[1], targetSlug);
+                  }
+              } while (m);
+
+              fs.writeFileSync(`${folder}/${f.name}`, content);
+          }
+      });
+}
+
+function removeEmptyFolders(folder) {
+    if (!fs.existsSync(folder)) return;
+
+    // Read the contents of the folder
+    const files = fs.readdirSync(folder);
+
+    // Recursively remove empty subfolders
+    files.forEach(file => {
+        const fullPath = path.join(folder, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            removeEmptyFolders(fullPath);
+        }
+    });
+
+    // Check if the folder is empty after processing subfolders
+    if (fs.readdirSync(folder).length === 0) {
+        fs.rmdirSync(folder);
+        console.log(`Removed empty folder: ${folder}`);
+    }
+}
+
+mergeReadmeAndGlobals();
 addFrontMatterProperty('./docs/README.md', `order: 10`);
 removeFrontMatterProperty('./docs/README.md', 'title');
 addFrontMatterProperty('./docs/README.md', 'title: "Overview"');
@@ -103,68 +175,38 @@ addFrontMatterProperty('./docs/README.md', `slug: "${overviewSlug}"`);
 createFolderAndMoveDocs('docs', 'variables', 'global', 'Variables');
 createFolderAndMoveDocs('docs', 'classes', 'global', 'Classes');
 
-function flattenNamespace(folder, namespace, fullNamespaceName) {
-    const formFile = `./docs/${folder}/${namespace}.md`;
-    removeFrontMatterProperty(formFile, 'title');
-    addFrontMatterProperty(formFile, `title: "namespace: ${fullNamespaceName}"`);
+const odpDir = 'ODP-Node-SDK/namespaces/ODP';
 
-    let formDocSlug = slugify(`node-sdk API reference namespace ${fullNamespaceName}`, {lower: true, strict: true});
-    addFrontMatterProperty(formFile, `slug: "${formDocSlug}"`);
-}
+flattenNamespace(odpDir, 'ODP', 'ODP');
 
-flattenNamespace('ODP', 'ODP', 'ODP');
-createFolderAndMoveDocs('docs/ODP', 'classes', 'ODP', 'ODP - Classes');
-createFolderAndMoveDocs('docs/ODP', 'interfaces', 'ODP', 'ODP - Interfaces');
-createFolderAndMoveDocs('docs/ODP', 'types', 'ODP', 'ODP - Types');
+createFolderAndMoveDocs(`./docs/${odpDir}`, 'classes', 'ODP', 'ODP - Classes');
+createFolderAndMoveDocs(`./docs/${odpDir}`, 'interfaces', 'ODP', 'ODP - Interfaces');
+createFolderAndMoveDocs(`./docs/${odpDir}`, 'type-aliases', 'ODP', 'ODP - Types');
 
-flattenNamespace('ODP/ApiV3', 'ApiV3', 'ODP.ApiV3');
-createFolderAndMoveDocs('docs/ODP/ApiV3', 'classes', 'ODP.ApiV3', 'ODP.ApiV3 - Classes');
-createFolderAndMoveDocs('docs/ODP/ApiV3', 'enums', 'ODP.ApiV3', 'ODP.ApiV3 - Enums');
-createFolderAndMoveDocs('docs/ODP/ApiV3', 'interfaces', 'ODP.ApiV3', 'ODP.ApiV3 - Interfaces');
-createFolderAndMoveDocs('docs/ODP/ApiV3', 'types', 'ODP.ApiV3', 'ODP.ApiV3 - Types');
-createFolderAndMoveDocs('docs/ODP/ApiV3', 'variables', 'ODP.ApiV3', 'ODP.ApiV3 - Variables');
+const apiV3Dir = `${odpDir}/namespaces/ApiV3`;
+flattenNamespace(apiV3Dir, 'ApiV3', 'ODP.ApiV3');
+createFolderAndMoveDocs(`./docs/${apiV3Dir}`, 'classes', 'ODP.ApiV3', 'ODP.ApiV3 - Classes');
+createFolderAndMoveDocs(`./docs/${apiV3Dir}`, 'enumerations', 'ODP.ApiV3', 'ODP.ApiV3 - Enums');
+createFolderAndMoveDocs(`./docs/${apiV3Dir}`, 'interfaces', 'ODP.ApiV3', 'ODP.ApiV3 - Interfaces');
+createFolderAndMoveDocs(`./docs/${apiV3Dir}`, 'type-aliases', 'ODP.ApiV3', 'ODP.ApiV3 - Types');
+createFolderAndMoveDocs(`./docs/${apiV3Dir}`, 'variables', 'ODP.ApiV3', 'ODP.ApiV3 - Variables');
 
 addFrontMatterProperty('./docs/variables.md', `order: 20`);
 
-addFrontMatterProperty('./docs/ODP/ODP.md', `order: 30`);
-addFrontMatterProperty('./docs/ODP/classes.md', `order: 40`);
-addFrontMatterProperty('./docs/ODP/interfaces.md', `order: 50`);
-addFrontMatterProperty('./docs/ODP/types.md', `order: 60`);
+addFrontMatterProperty(`./docs/${odpDir}/README.md`, `order: 30`);
+addFrontMatterProperty(`./docs/${odpDir}/classes.md`, `order: 40`);
+addFrontMatterProperty(`./docs/${odpDir}/interfaces.md`, `order: 50`);
+addFrontMatterProperty(`./docs/${odpDir}/type-aliases.md`, `order: 60`);
 
-addFrontMatterProperty('./docs/ODP/ApiV3/ApiV3.md', `order: 70`);
-addFrontMatterProperty('./docs/ODP/ApiV3/classes.md', `order: 80`);
-addFrontMatterProperty('./docs/ODP/ApiV3/enums.md', `order: 90`);
-addFrontMatterProperty('./docs/ODP/ApiV3/interfaces.md', `order: 110`);
-addFrontMatterProperty('./docs/ODP/ApiV3/types.md', `order: 120`);
-addFrontMatterProperty('./docs/ODP/ApiV3/variables.md', `order: 130`);
-
-function fixLinks(folder) {
-    fs.readdirSync(folder, { withFileTypes: true })
-        .forEach(f => {
-            if (f.isDirectory()) {
-                fixLinks(folder + '/' + f.name);
-            } else {
-                console.log(`file: ${folder}/${f.name}`);
-                //[success](LiquidExtensionResult.md#success)
-                let content = fs.readFileSync(`${folder}/${f.name}`, 'utf8')
-                content = content.replaceAll("modules.md", "README.md");
-
-                let linkRe = /\]\(([^\)]*\.md)/g;
-                let m;
-                do {
-                    m = linkRe.exec(content);
-                    if (m) {
-                        let link = m[1];
-                        console.log(`link ${link}`);
-                        let targetSlug = getFrontMatterProperty(folder + "/" + link, "slug");
-                        console.log(`Replacing ${link} with ${targetSlug}`);
-                        content = content.replaceAll(m[1], targetSlug);
-                    }
-                } while (m);
-
-                fs.writeFileSync(`${folder}/${f.name}`, content);
-            }
-        });
-}
+addFrontMatterProperty(`./docs/${apiV3Dir}/README.md`, `order: 70`);
+addFrontMatterProperty(`./docs/${apiV3Dir}/classes.md`, `order: 80`);
+addFrontMatterProperty(`./docs/${apiV3Dir}/enumerations.md`, `order: 90`);
+addFrontMatterProperty(`./docs/${apiV3Dir}/interfaces.md`, `order: 110`);
+addFrontMatterProperty(`./docs/${apiV3Dir}/type-aliases.md`, `order: 120`);
+addFrontMatterProperty(`./docs/${apiV3Dir}/variables.md`, `order: 130`);
 
 fixLinks('docs');
+
+moveFolder(`./docs/${odpDir}`, './docs/ODP');
+moveFolder(`./docs/ODP/namespaces/ApiV3`, './docs/ODP/ApiV3');
+removeEmptyFolders('docs');
