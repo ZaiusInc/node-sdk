@@ -33,4 +33,4 @@ jobs:
       - name: Run `docs` command 🚀
         uses: readmeio/rdme@v10
         with:
-          rdme: docs docs --key=${{ secrets.readmeApiKey }} --version=1.0
+          rdme: docs upload --key=${{ secrets.readmeApiKey }} --version=1.0
