@@ -30,7 +30,7 @@ jobs:
       - name: Generates docs 🚀
         run: yarn generate-docs
 
-      - name: Run `docs` command 🚀
+      - name: Run `docs upload` command 🚀
         uses: readmeio/rdme@v10
         with:
-          rdme: docs upload --key=${{ secrets.readmeApiKey }} --version=1.0
+          rdme: docs upload ./docs --key=${{ secrets.readmeApiKey }} --branch=1.0
