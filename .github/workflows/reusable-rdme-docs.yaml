@@ -31,6 +31,6 @@ jobs:
         run: yarn generate-docs
 
       - name: Run `docs` command 🚀
-        uses: readmeio/rdme@v8
+        uses: readmeio/rdme@v10
         with:
           rdme: docs docs --key=${{ secrets.readmeApiKey }} --version=1.0
