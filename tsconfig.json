@@ -15,6 +15,7 @@
     "sourceMap": true,
     "declarationMap": true,
     "experimentalDecorators": true,
+    "isolatedModules": true,
     "noImplicitAny": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
