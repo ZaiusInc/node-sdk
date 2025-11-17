@@ -1,5 +1,4 @@
 /* eslint-disable max-classes-per-file */
-import fetch, {Headers} from 'node-fetch';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {joinUri} from './joinUri';
 import {Config, configOrDefault, getModuleOrGlobalConfig, InternalConfig} from '../config/configure';
@@ -148,7 +147,7 @@ export namespace ApiV3 {
 
           const {status, statusText, headers} = response;
           if (status >= 200 && status <= 299) {
-            const data: T = await response.json();
+            const data: T = (await response.json()) as T;
             if (process.env['LOG_REQUESTS'] === 'true') {
               requestLog.push(`(${response.status}) body:`, JSON.stringify(data));
               console.debug(...requestLog);
@@ -215,7 +214,7 @@ export namespace ApiV3 {
             requestLog.push('Unexpected Error:', error.message, error.stack);
             console.debug(...requestLog);
           }
-          const httpError = new HttpError(error.message, ErrorCode.Unexpected);
+          const httpError = new HttpError(`request to ${url} failed, reason: ${error.message}`, ErrorCode.Unexpected);
           httpError.stack = error.stack;
           reject(httpError);
         }

@@ -1,6 +1,6 @@
 {
   "name": "@zaiusinc/node-sdk",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Node SDK for Optimizely Data Platform",
   "repository": "https://github.com/ZaiusInc/node-sdk",
   "license": "Apache-2.0",
@@ -31,10 +31,7 @@
     "generate-docs": "typedoc && yarn prepare-readme-export"
   },
   "engines": {
-    "node": ">=18.0"
-  },
-  "dependencies": {
-    "node-fetch": "^2.7.0"
+    "node": ">=22.0"
   },
   "devDependencies": {
     "@eslint/compat": "^1.2.7",
@@ -43,7 +40,6 @@
     "@types/jest": "^29.5.14",
     "@types/nock": "^11.1.0",
     "@types/node": "^22.13.9",
-    "@types/node-fetch": "^2.6.12",
     "@zaiusinc/eslint-config-presets": "2.0.0",
     "deep-freeze": "0.0.1",
     "eslint": "^9.21.0",

@@ -1,6 +1,5 @@
 import 'jest';
 import nock from 'nock';
-import {Headers} from 'node-fetch';
 import {configOrDefault, InternalConfig} from '../config/configure';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {ApiV3} from './ApiV3';
@@ -249,7 +248,7 @@ describe('request', () => {
       .put('/v3/foo', '"foo"')
       .replyWithError('unknown error');
 
-    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects.toThrowError(
+    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects.toThrow(
       new ApiV3.HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'),
     );
   });
