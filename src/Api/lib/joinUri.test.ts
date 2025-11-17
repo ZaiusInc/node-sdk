@@ -1,4 +1,3 @@
-import 'jest';
 import {joinUri} from './joinUri';
 
 describe('joinUri', () => {

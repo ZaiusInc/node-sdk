@@ -1,4 +1,5 @@
 import {ODPClient} from './index';
+import { vi } from 'vitest';
 import * as fields from './Schema/fields';
 import * as objects from './Schema/objects';
 import * as identifiers from './Schema/identifiers';
@@ -17,7 +18,7 @@ describe('SchemaApi', () => {
   });
 
   it('should create field', async () => {
-    jest.spyOn(fields, 'createField').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(fields, 'createField').mockReturnValue(Promise.resolve({} as any));
 
     const objectName = 'testObject';
     const field: FieldDefinition = {
@@ -30,7 +31,7 @@ describe('SchemaApi', () => {
   });
 
   it('should create object', async () => {
-    jest.spyOn(objects, 'createObject').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(objects, 'createObject').mockReturnValue(Promise.resolve({} as any));
 
     const objectDefinition: ObjectDefinition = {
       fields: [],
@@ -42,7 +43,7 @@ describe('SchemaApi', () => {
   });
 
   it('should get object', async () => {
-    jest.spyOn(objects, 'getObject').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(objects, 'getObject').mockReturnValue(Promise.resolve({} as any));
 
     const objectName = 'testObject';
     await api.getObject(objectName);
@@ -50,14 +51,14 @@ describe('SchemaApi', () => {
   });
 
   it('should get all objects', async () => {
-    jest.spyOn(objects, 'getAllObjects').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(objects, 'getAllObjects').mockReturnValue(Promise.resolve({} as any));
 
     await api.getAllObjects();
     expect(objects.getAllObjects).toHaveBeenCalledWith(odpClient.v3Api);
   });
 
   it('should create identifier', async () => {
-    jest.spyOn(identifiers, 'createIdentifier').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(identifiers, 'createIdentifier').mockReturnValue(Promise.resolve({} as any));
 
     const identifier: IdentifierDefinition = {
       display_name: 'test id',
@@ -69,7 +70,7 @@ describe('SchemaApi', () => {
   });
 
   it('should enable module', async () => {
-    jest.spyOn(modules, 'enableModule').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(modules, 'enableModule').mockReturnValue(Promise.resolve({} as any));
 
     const module = 'testModule';
     await api.enableModule(module);
@@ -77,14 +78,14 @@ describe('SchemaApi', () => {
   });
 
   it('should get enabled modules', async () => {
-    jest.spyOn(modules, 'getEnabledModules').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(modules, 'getEnabledModules').mockReturnValue(Promise.resolve({} as any));
 
     await api.getEnabledModules();
     expect(modules.getEnabledModules).toHaveBeenCalledWith(odpClient.v3Api);
   });
 
   it('should create relation', async () => {
-    jest.spyOn(relations, 'createRelation').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(relations, 'createRelation').mockReturnValue(Promise.resolve({} as any));
 
     const objectName = 'testObject';
     const relation: RelationDefinition = {

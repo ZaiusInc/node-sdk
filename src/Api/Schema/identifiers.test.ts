@@ -1,5 +1,5 @@
-import 'jest';
 import {InternalConfig} from '../config/configure';
+import { vi } from 'vitest';
 import {ApiV3} from '../lib/ApiV3';
 import {IdentifierDefinition} from '../Types';
 import {ApiIdentifierExistsError} from './ApiIdentifierExistsError';
@@ -31,7 +31,7 @@ describe('identifiers', () => {
     });
 
     it('sends a post to /schema/objects', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
+      const postFn = vi.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
       const identifier: IdentifierDefinition = {
         name: 'my_thing_id',
         display_name: 'My Thing ID',
@@ -43,7 +43,7 @@ describe('identifiers', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest
+      const postFn = vi
         .spyOn(apiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const identifier: IdentifierDefinition = {
@@ -56,7 +56,7 @@ describe('identifiers', () => {
     });
 
     it('throws an exists error if the identifier already exists', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
+      const postFn = vi.spyOn(apiV3, 'post').mockRejectedValueOnce(
         new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
@@ -86,7 +86,7 @@ describe('identifiers', () => {
     });
 
     it('allows identifiers prefixed with app_id', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
+      const postFn = vi.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
       const identifier: IdentifierDefinition = {
         name: 'test_my_thing_id',
         display_name: 'Test App My Thing ID',

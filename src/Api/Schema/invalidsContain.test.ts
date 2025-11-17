@@ -1,4 +1,3 @@
-import 'jest';
 import {ApiV3} from '../lib/ApiV3';
 import {invalidsContain} from './invalidsContain';
 import V3InvalidSchemaDetail = ApiV3.V3InvalidSchemaDetail;

@@ -1,4 +1,3 @@
-import 'jest';
 import nock from 'nock';
 import {odp} from './index';
 import {InternalConfig} from './config/configure';

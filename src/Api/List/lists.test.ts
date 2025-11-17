@@ -1,4 +1,3 @@
-import 'jest';
 import nock from 'nock';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';

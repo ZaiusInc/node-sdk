@@ -1,4 +1,5 @@
 import { IdentifierApi } from './IdentifierApi';
+import { vi } from 'vitest';
 import { ODPClient } from './index';
 import { ConsentUpdate, IdentifierMetadata, ReachabilityUpdate } from './Types';
 import * as metadata from './Identifiers/identifiers';
@@ -16,7 +17,7 @@ describe('IdentifierApi', () => {
 
   it('should get consent',
     async () => {
-      jest.spyOn(consent, 'getConsent').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(consent, 'getConsent').mockReturnValue(Promise.resolve({} as any));
 
       const identifierName = 'testName';
       const identifierValue = 'testValue';
@@ -25,7 +26,7 @@ describe('IdentifierApi', () => {
     });
 
   it('should get metadata', async () => {
-    jest.spyOn(metadata, 'getMetadata').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(metadata, 'getMetadata').mockReturnValue(Promise.resolve({} as any));
 
     const identifierFieldName = 'testField';
     const identifierValue = 'testValue';
@@ -34,7 +35,7 @@ describe('IdentifierApi', () => {
   });
 
   it('should get reachability', async () => {
-    jest.spyOn(reachability, 'getReachability').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(reachability, 'getReachability').mockReturnValue(Promise.resolve({} as any));
 
     const identifierName = 'testName';
     const value = 'testValue';
@@ -43,7 +44,7 @@ describe('IdentifierApi', () => {
   });
 
   it('should update consent', async () => {
-    jest.spyOn(consent, 'updateConsent').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(consent, 'updateConsent').mockReturnValue(Promise.resolve({} as any));
 
     const updates: ConsentUpdate = {
       identifier_field_name: '',
@@ -55,7 +56,7 @@ describe('IdentifierApi', () => {
   });
 
   it('should update metadata', async () => {
-    jest.spyOn(metadata, 'updateMetadata').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(metadata, 'updateMetadata').mockReturnValue(Promise.resolve({} as any));
 
     const updates: IdentifierMetadata = {
       identifier_field_name: '',
@@ -67,7 +68,7 @@ describe('IdentifierApi', () => {
   });
 
   it('should update reachability', async () => {
-    jest.spyOn(reachability, 'updateReachability').mockReturnValue(Promise.resolve({} as any));
+    vi.spyOn(reachability, 'updateReachability').mockReturnValue(Promise.resolve({} as any));
 
     const updates: ReachabilityUpdate = {
       identifier_field_name: '',

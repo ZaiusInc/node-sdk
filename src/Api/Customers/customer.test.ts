@@ -1,4 +1,5 @@
 import {ApiV3} from '../lib/ApiV3';
+import {MockInstance, vi} from 'vitest';
 import {CustomerPayload} from '../Types';
 import {customer} from './customer';
 import {InternalConfig} from '../config/configure';
@@ -6,12 +7,12 @@ import {InternalConfig} from '../config/configure';
 describe('customer', () => {
   const mockConfiguration: InternalConfig = {
     apiBasePath: 'https://api.zaius.com/v3/',
-    apiKey: 'api-key'
+    apiKey: 'api-key',
   };
   const apiV3: ApiV3.API = new ApiV3.API(mockConfiguration);
-  let postMock!: jest.SpyInstance;
+  let postMock!: MockInstance;
   beforeEach(() => {
-    postMock = jest.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
+    postMock = vi.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
 
   it('sends a transformed post with one customer to /profiles', async () => {
@@ -25,12 +26,12 @@ describe('customer', () => {
     const payload: CustomerPayload[] = [
       {identifiers: {email: 'test1@optimizely.com'}, attributes: {name: 'Jim Bob'}},
       {identifiers: {email: 'test2@optimizely.com'}, attributes: {name: 'Bob Joe'}},
-      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim'}}
+      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim'}},
     ];
     const transformedPayload = [
       {attributes: {name: 'Jim Bob', email: 'test1@optimizely.com'}},
       {attributes: {name: 'Bob Joe', email: 'test2@optimizely.com'}},
-      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com'}}
+      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com'}},
     ];
     await customer(apiV3, payload);
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);
@@ -39,13 +40,13 @@ describe('customer', () => {
   it('sanitizes the payload', async () => {
     const payload: CustomerPayload = {
       identifiers: {
-        email: 'test@optimizely.com'
+        email: 'test@optimizely.com',
       },
       attributes: {
         name: 'Jim Bob',
         blank: ' ',
-        nullValue: null
-      }
+        nullValue: null,
+      },
     };
     const transformedPayload = {attributes: {name: 'Jim Bob', email: 'test@optimizely.com'}};
     await customer(apiV3, payload);
@@ -56,12 +57,12 @@ describe('customer', () => {
     const payload: CustomerPayload[] = [
       {identifiers: {email: 'test1@optimizely.com'}, attributes: {name: 'Jim Bob', blank: ' ', nullValue: null}},
       {identifiers: {email: 'test2@optimizely.com'}, attributes: {name: 'Bob Joe', blank: ' ', nullValue: null}},
-      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim', blank: ' ', nullValue: null}}
+      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim', blank: ' ', nullValue: null}},
     ];
     const transformedPayload = [
       {attributes: {name: 'Jim Bob', email: 'test1@optimizely.com'}},
       {attributes: {name: 'Bob Joe', email: 'test2@optimizely.com'}},
-      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com'}}
+      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com'}},
     ];
     await customer(apiV3, payload);
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);
@@ -70,16 +71,16 @@ describe('customer', () => {
   it('applies PayloadOptions', async () => {
     const payload: CustomerPayload = {
       identifiers: {
-        email: 'test@optimizely.com'
+        email: 'test@optimizely.com',
       },
       attributes: {
         name: 'Jim Bob',
         blank: ' ',
-        nullValue: null
-      }
+        nullValue: null,
+      },
     };
     const transformedPayload = {
-      attributes: {name: 'Jim Bob', email: 'test@optimizely.com', blank: null, nullValue: null}
+      attributes: {name: 'Jim Bob', email: 'test@optimizely.com', blank: null, nullValue: null},
     };
     await customer(apiV3, payload, {excludeNulls: false});
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);
@@ -89,12 +90,12 @@ describe('customer', () => {
     const payload: CustomerPayload[] = [
       {identifiers: {email: 'test1@optimizely.com'}, attributes: {name: 'Jim Bob', blank: ' ', nullValue: null}},
       {identifiers: {email: 'test2@optimizely.com'}, attributes: {name: 'Bob Joe', blank: ' ', nullValue: null}},
-      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim', blank: ' ', nullValue: null}}
+      {identifiers: {email: 'test3@optimizely.com'}, attributes: {name: 'Joe Jim', blank: ' ', nullValue: null}},
     ];
     const transformedPayload = [
       {attributes: {name: 'Jim Bob', email: 'test1@optimizely.com', blank: ' '}},
       {attributes: {name: 'Bob Joe', email: 'test2@optimizely.com', blank: ' '}},
-      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com', blank: ' '}}
+      {attributes: {name: 'Joe Jim', email: 'test3@optimizely.com', blank: ' '}},
     ];
     await customer(apiV3, payload, {trimToNull: false});
     expect(postMock).toHaveBeenCalledWith('/profiles', transformedPayload);

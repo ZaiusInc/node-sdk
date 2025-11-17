@@ -1,4 +1,5 @@
 import { ODPClient } from './index';
+import { vi } from 'vitest';
 import * as lists from './List/lists';
 import * as subscriptions from './List/subscriptions';
 import {ListsApi} from './ListsApi';
@@ -15,7 +16,7 @@ describe('ListsApi', () => {
 
   it('should create list',
     async () => {
-      jest.spyOn(lists, 'createList').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(lists, 'createList').mockReturnValue(Promise.resolve({} as any));
 
       const listName = 'testName';
       await api.createList(listName);
@@ -24,7 +25,7 @@ describe('ListsApi', () => {
 
   it('should get lists',
     async () => {
-      jest.spyOn(lists, 'getLists').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(lists, 'getLists').mockReturnValue(Promise.resolve({} as any));
 
       await api.getLists();
       expect(lists.getLists).toHaveBeenCalledWith(odpClient.v3Api);
@@ -32,7 +33,7 @@ describe('ListsApi', () => {
 
   it('should subscribe',
     async () => {
-      jest.spyOn(subscriptions, 'subscribe').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(subscriptions, 'subscribe').mockReturnValue(Promise.resolve({} as any));
 
       const listId = 'testId';
       const identifiers = {
@@ -44,7 +45,7 @@ describe('ListsApi', () => {
 
   it('should unsubscribe',
     async () => {
-      jest.spyOn(subscriptions, 'unsubscribe').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(subscriptions, 'unsubscribe').mockReturnValue(Promise.resolve({} as any));
 
       const listId = 'testId';
       const identifiers = {
@@ -56,7 +57,7 @@ describe('ListsApi', () => {
 
   it('should update subscription',
     async () => {
-      jest.spyOn(subscriptions, 'updateSubscriptions').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(subscriptions, 'updateSubscriptions').mockReturnValue(Promise.resolve({} as any));
 
       const listId = 'testId';
       const updates: ListUpdateRequest[] = [{
