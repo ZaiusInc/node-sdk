@@ -1,6 +1,5 @@
-import 'jest';
 import nock from 'nock';
-import {Headers} from 'node-fetch';
+import { vi } from 'vitest';
 import {configOrDefault, InternalConfig} from '../config/configure';
 import {RequestDetail} from '../config/RequestInterceptor';
 import {ApiV3} from './ApiV3';
@@ -39,7 +38,7 @@ describe('request', () => {
   });
 
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   it('normalizes successful responses', async () => {
@@ -75,7 +74,7 @@ describe('request', () => {
         .times(2)
         .reply(502, '{"error": "JSON failure"}', {'content-type': 'application/json'});
 
-      const requestFn = jest.spyOn(apiV3, 'request');
+      const requestFn = vi.spyOn(apiV3, 'request');
       const response = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(response.data).toEqual({error: 'JSON failure'});
       expect(requestFn).toHaveBeenCalledTimes(2);
@@ -84,7 +83,7 @@ describe('request', () => {
     it('retries once when the response is a 502 and handle a non-JSON response', async () => {
       nock('https://api.zaius.com').post('/v3/bar', {}).times(2).reply(502, 'non JSON failure');
 
-      const requestFn = jest.spyOn(apiV3, 'request');
+      const requestFn = vi.spyOn(apiV3, 'request');
       const response = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(response.data).toEqual({error: 'non JSON failure'});
       expect(requestFn).toHaveBeenCalledTimes(2);
@@ -93,7 +92,7 @@ describe('request', () => {
     it('does not retry when it receives a 4XX', async () => {
       nock('https://api.zaius.com').post('/v3/bar', {}).reply(400, '400');
 
-      const requestFn = jest.spyOn(apiV3, 'request');
+      const requestFn = vi.spyOn(apiV3, 'request');
       await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(requestFn).toHaveBeenCalledTimes(1);
     });
@@ -101,7 +100,7 @@ describe('request', () => {
     it('can succeed after a retry', async () => {
       nock('https://api.zaius.com').post('/v3/bar', {}).reply(502, '"NO"').post('/v3/bar', {}).reply(200, '"OK"');
 
-      const requestFn = jest.spyOn(apiV3, 'request');
+      const requestFn = vi.spyOn(apiV3, 'request');
       const result = await apiV3.request('POST', '/bar', {}).catch((e) => e.response);
       expect(requestFn).toHaveBeenCalledTimes(2);
       expect(result.status).toEqual(200);
@@ -249,7 +248,7 @@ describe('request', () => {
       .put('/v3/foo', '"foo"')
       .replyWithError('unknown error');
 
-    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects.toThrowError(
+    await expect(apiV3.request('POST', '/bar', {foo: 'bar'})).rejects.toThrow(
       new ApiV3.HttpError('request to https://foo.bar/v3/foo failed, reason: unknown error'),
     );
   });

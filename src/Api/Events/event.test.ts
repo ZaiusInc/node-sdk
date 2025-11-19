@@ -1,5 +1,5 @@
 import deepFreeze from 'deep-freeze';
-import 'jest';
+import {MockInstance, vi} from 'vitest';
 import {ApiV3} from '../lib/ApiV3';
 import {EventPayload} from '../Types';
 import {event} from './event';
@@ -11,9 +11,9 @@ describe('event', () => {
     apiKey: 'api-key',
   };
   const apiV3: ApiV3.API = new ApiV3.API(mockConfiguration);
-  let postMock!: jest.SpyInstance;
+  let postMock!: MockInstance;
   beforeEach(() => {
-    postMock = jest.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
+    postMock = vi.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
 
   it('sends a post to /events', async () => {

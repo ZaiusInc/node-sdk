@@ -1,4 +1,5 @@
 import {ODPClient} from './index';
+import { vi } from 'vitest';
 import {CustomerPayload, EventPayload, ObjectPayload} from './Types';
 import * as events from './Events/event';
 import * as customers from './Customers/customer';
@@ -14,7 +15,7 @@ describe('ODPClient', () => {
 
   it('should send event',
     async () => {
-      jest.spyOn(events, 'event').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(events, 'event').mockReturnValue(Promise.resolve({} as any));
 
       const payload: EventPayload = {
         data: {},
@@ -27,7 +28,7 @@ describe('ODPClient', () => {
 
   it('should send customer',
     async () => {
-      jest.spyOn(customers, 'customer').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(customers, 'customer').mockReturnValue(Promise.resolve({} as any));
 
       const payload: CustomerPayload = {
         attributes: {}, identifiers: {}
@@ -38,7 +39,7 @@ describe('ODPClient', () => {
 
   it('should send object',
     async () => {
-      jest.spyOn(objects, 'object').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(objects, 'object').mockReturnValue(Promise.resolve({} as any));
 
       const payload: ObjectPayload = {
         type: 'order'
@@ -50,7 +51,7 @@ describe('ODPClient', () => {
 
   it('should send graphql query',
     async () => {
-      jest.spyOn(graphql, 'graphql').mockReturnValue(Promise.resolve({} as any));
+      vi.spyOn(graphql, 'graphql').mockReturnValue(Promise.resolve({} as any));
 
       const query = 'test query';
       await odpClient.graphql(query);

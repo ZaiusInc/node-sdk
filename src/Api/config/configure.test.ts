@@ -1,4 +1,4 @@
-import 'jest';
+import { vi } from 'vitest';
 import {
   clearModuleScopedConfig,
   configOrDefault,
@@ -9,7 +9,7 @@ import {
 import {AsyncLocalStorage} from 'async_hooks';
 import {OCPContext} from '../../types';
 
-jest.mock('../lib/ApiV3');
+vi.mock('../lib/ApiV3');
 
 describe('configure', () => {
 

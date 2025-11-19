@@ -1,4 +1,3 @@
-import { Headers } from 'node-fetch';
 import { ApiV3 } from '.';
 
 /**

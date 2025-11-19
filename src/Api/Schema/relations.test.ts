@@ -1,5 +1,5 @@
-import 'jest';
 import {InternalConfig} from '../config/configure';
+import { vi } from 'vitest';
 import {ApiV3} from '../lib/ApiV3';
 import {RelationDefinition} from '../Types';
 import {ApiRelationExistsError} from './ApiRelationExistsError';
@@ -31,7 +31,7 @@ describe('relations', () => {
     });
 
     it('sends a post to /schema/objects/customers/relations', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
+      const postFn = vi.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
       const relation: RelationDefinition = {
         name: 'favorite_product',
         display_name: 'Favorite product',
@@ -44,7 +44,7 @@ describe('relations', () => {
     });
 
     it('throws an error if the api returns an error', async () => {
-      const postFn = jest
+      const postFn = vi
         .spyOn(apiV3, 'post')
         .mockRejectedValueOnce(new ApiV3.HttpError('Bad Request', undefined, {} as any));
       const relation: RelationDefinition = {
@@ -58,7 +58,7 @@ describe('relations', () => {
     });
 
     it('throws an exists error if the relation already exists', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockRejectedValueOnce(
+      const postFn = vi.spyOn(apiV3, 'post').mockRejectedValueOnce(
         new ApiV3.HttpError('Bad Request', undefined, {
           data: {
             detail: {
@@ -89,7 +89,7 @@ describe('relations', () => {
     });
 
     it('allows relations without prefixes when the field is not owned by the app', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
+      const postFn = vi.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
       const relation: RelationDefinition = {
         name: 'loyalty_tier',
         display_name: 'Loyalty Tier',
@@ -102,7 +102,7 @@ describe('relations', () => {
     });
 
     it('allows relations prefixed with app_id', async () => {
-      const postFn = jest.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
+      const postFn = vi.spyOn(apiV3, 'post').mockResolvedValueOnce({} as any);
       const relation: RelationDefinition = {
         name: 'test_loyalty_tier',
         display_name: 'Test App Loyalty Tier',

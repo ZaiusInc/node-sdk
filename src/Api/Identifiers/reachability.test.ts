@@ -1,5 +1,5 @@
-import 'jest';
 import nock from 'nock';
+import { vi } from 'vitest';
 import {InternalConfig} from '../config/configure';
 import {ApiV3} from '../lib/ApiV3';
 import {ReachabilityUpdate} from '../Types';
@@ -78,7 +78,7 @@ describe('reachability', () => {
     });
 
     it('converts date if provided as a Date object', async () => {
-      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
+      vi.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
         identifier_value: 'foo@optimizely.com',
@@ -98,7 +98,7 @@ describe('reachability', () => {
     });
 
     it('converts date if provided as an string', async () => {
-      jest.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
+      vi.spyOn(Date.prototype, 'getTime').mockReturnValueOnce(1579648074373);
       const update: ReachabilityUpdate = Object.freeze({
         identifier_field_name: 'email',
         identifier_value: 'foo@optimizely.com',

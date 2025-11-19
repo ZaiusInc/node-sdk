@@ -1,6 +1,4 @@
-import 'jest';
 import nock from 'nock';
-import {Headers} from 'node-fetch';
 import {odp} from './index';
 import {InternalConfig} from './config/configure';
 

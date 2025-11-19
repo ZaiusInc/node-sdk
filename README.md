@@ -20,6 +20,62 @@ Or [npm](https://www.npmjs.com/):
 npm install @zaiusinc/node-sdk
 ```
 
+## Migration Guide
+
+### Migrating from v2.x to v3.x
+
+Version 3.0.0 introduces breaking changes related to the removal of the `node-fetch` dependency in favor of Node.js native fetch APIs.
+
+#### Node.js Version Requirement
+
+The minimum Node.js version has been increased:
+- **v2.x**: Node.js >= 18.0
+- **v3.x**: Node.js >= 22.0
+
+Ensure your environment is running Node.js 22.0 or higher before upgrading.
+
+#### Headers Type Changes
+
+The `Headers` interface is no longer imported from `node-fetch`. Instead, the SDK now uses Node.js native `Headers` type from the global fetch API.
+
+**Before (v2.x):**
+```typescript
+import { Headers } from 'node-fetch';
+import { odp, ODP } from '@zaiusinc/node-sdk';
+
+const response: ODP.ApiV3.HttpResponse<any> = await odp.v3Api.get('...');
+const headers: Headers = response.headers; // Headers from node-fetch
+```
+
+**After (v3.x):**
+```typescript
+import { odp, ODP } from '@zaiusinc/node-sdk';
+
+const response: ODP.ApiV3.HttpResponse<any> = await odp.v3Api.get('...');
+const headers: Headers = response.headers; // Native Node.js Headers (global)
+```
+
+The native `Headers` type is available globally in Node.js 18+ and provides the same standard [Fetch API Headers interface](https://developer.mozilla.org/en-US/docs/Web/API/Headers).
+
+#### Dependency Changes
+
+The `node-fetch` package has been completely removed. If your code was directly importing or using `node-fetch` alongside this SDK, you can:
+
+1. Remove `node-fetch` and `@types/node-fetch` from your dependencies if they're no longer needed
+2. Use Node.js native `fetch()` which is available globally in Node.js 18+
+3. Use the native `Headers`, `Request`, and `Response` types from the global scope
+
+This is not mandatory, but that'll help get rid of one more dependency from the package.
+
+**Example:**
+```typescript
+// No need to import fetch or Headers anymore
+const response = await fetch('https://api.example.com/data');
+const headers = new Headers({
+  'Content-Type': 'application/json'
+});
+```
+
 ## Usage
 
 To communicate with ODP, you need to obtain and configure an instance of `ODPClient`. 

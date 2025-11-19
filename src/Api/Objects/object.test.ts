@@ -1,5 +1,5 @@
-import 'jest';
 import {ApiV3} from '../lib/ApiV3';
+import {MockInstance, vi} from 'vitest';
 import {ObjectPayload} from '../Types';
 import {object} from './object';
 import deepFreeze from 'deep-freeze';
@@ -17,10 +17,10 @@ const mockAppConfiguration: InternalConfig = {
 };
 
 describe('object', () => {
-  let postMock!: jest.SpyInstance;
+  let postMock!: MockInstance;
   const apiV3 = new ApiV3.API(mockAppConfiguration);
   beforeEach(() => {
-    postMock = jest.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
+    postMock = vi.spyOn(apiV3, 'post').mockReturnValue(Promise.resolve({} as any));
   });
 
   it('sends a post to /objects/{type}', async () => {
