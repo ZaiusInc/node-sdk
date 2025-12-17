@@ -18,7 +18,6 @@ jobs:
   release:
     uses: ./.github/workflows/reusable-release.yaml
     secrets:
-      npmJSToken: ${{ secrets.NPMJS_TOKEN }}
       githubPackagesToken: ${{ secrets.GHA_PAT }}
       gitReleasesToken: ${{ secrets.RELEASE_GITHUB_TOKEN }}
     with:
