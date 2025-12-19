@@ -14,8 +14,6 @@ on:
         type: boolean
         default: true
     secrets:
-      npmJSToken:
-        required: false
       githubPackagesToken:
         required: true
       gitReleasesToken:
@@ -97,5 +95,3 @@ jobs:
           else 
             yarn publish --verbose --access public  --registry https://registry.npmjs.org
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.npmJSToken }}
