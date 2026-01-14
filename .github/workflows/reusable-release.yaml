@@ -23,6 +23,9 @@ jobs:
   release:
     name: Release a package in GitHub & publish to NPM registry
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # For git operations
+      id-token: write # < REQUIRED FOR OIDC
     steps:
       - uses: actions/checkout@v4
 
@@ -86,6 +89,8 @@ jobs:
           registry-url: https://registry.npmjs.org
           scope: '@zaiusinc'
 
+      # OIDC authorization (https://github.com/release-it/release-it/blob/main/docs/npm.md)
+      # requires connecting to GitHub repo and workflow in package settings in npmjs.com
       - name: release-and-publish-to-npm
         if: ${{ inputs.release_to_npm }}
         run: |
