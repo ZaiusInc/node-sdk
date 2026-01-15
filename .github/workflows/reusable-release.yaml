@@ -101,5 +101,5 @@ jobs:
           if [[ $version == *-* ]]; then
             echo "$version is tagged... Skipping publishing to npmjs"
           else 
-            yarn publish --verbose --access public  --registry https://registry.npmjs.org
+            npm publish --access public --registry https://registry.npmjs.org --verbose
           fi
