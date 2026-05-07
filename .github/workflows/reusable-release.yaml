@@ -100,8 +100,14 @@ jobs:
           registry-url: https://registry.npmjs.org
           scope: '@zaiusinc'
 
-      # OIDC requires npm v11.5.1 or later
-      - run: npm install -g npm@latest
+      # OIDC requires npm v11.5.1 or later.
+      # Pinned to 11.5.1 (not @latest) and using --force to work around an
+      # upstream Node packaging bug where the bundled npm in newer 22.x
+      # releases has a broken node_modules tree (e.g. missing promise-retry),
+      # which makes a normal `npm install -g npm@latest` fail with
+      # MODULE_NOT_FOUND before it can even start the upgrade.
+      # See: https://github.com/nodejs/node/issues/62425
+      - run: npm install --global --force npm@11.5.1
 
       # OIDC authorization (https://github.com/release-it/release-it/blob/main/docs/npm.md)
       # requires connecting to GitHub repo and workflow in package settings in npmjs.com
