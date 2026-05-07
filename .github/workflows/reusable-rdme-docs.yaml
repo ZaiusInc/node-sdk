@@ -4,6 +4,12 @@ name: reusable-readme-docs
 
 on:
   workflow_call:
+    inputs:
+      node_version:
+        description: 'Node.js version (e.g. 20.x). If empty, derived from package.json'
+        required: false
+        default: ''
+        type: string
     secrets:
       readmeApiKey:
         required: true
@@ -17,11 +23,12 @@ jobs:
 
       - name: Determine Node.js version
         id: node
+        if: inputs.node_version == ''
         uses: ZaiusInc/node-sdk/.github/actions/determine-node-version@master
 
       - uses: actions/setup-node@v3
         with:
-          node-version: ${{ env.node_version }}
+          node-version: ${{ inputs.node_version || env.node_version }}
           cache: 'yarn'
 
       - name: Install
