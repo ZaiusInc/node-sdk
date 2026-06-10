@@ -2,7 +2,11 @@
   "name": "@zaiusinc/node-sdk",
   "version": "3.0.0",
   "description": "Node SDK for Optimizely Data Platform",
+  "homepage": "https://github.com/ZaiusInc/node-sdk#readme",
   "repository": "https://github.com/ZaiusInc/node-sdk",
+  "bugs": {
+    "url": "https://github.com/ZaiusInc/node-sdk/issues"
+  },
   "license": "Apache-2.0",
   "licenses": [
     {
