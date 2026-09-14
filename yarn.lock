@@ -856,7 +856,7 @@
 
 "@zaiusinc/eslint-config-presets@^3.1.0":
   version "3.1.0"
-  resolved "https://npm.pkg.github.com/download/@zaiusinc/eslint-config-presets/3.1.0/89ce040d2f0e2e23b6317b33b856305df832e85d#89ce040d2f0e2e23b6317b33b856305df832e85d"
+  resolved "https://registry.yarnpkg.com/@zaiusinc/eslint-config-presets/-/eslint-config-presets-3.1.0.tgz#89ce040d2f0e2e23b6317b33b856305df832e85d"
   integrity sha512-sBZKWI1poTvm7CsRMo4VSFnIb5lneFIcxWu8dnhb11vPD7PUTguQu/X4PqqHgqCdHY8DQN48zWBybRSlrYx0jw==
   dependencies:
     "@eslint/compat" "^1.2.7"
